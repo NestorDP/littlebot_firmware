@@ -30,7 +30,7 @@ PART=TM4C123GH6PM
 #
 # The base directory for TivaWare.
 #
-ROOT=/home/nestor/SW-TM4C-2.2.0.295
+ROOT= ${TIVAWARE_PATH}
 
 #
 # Include the common make definitions.
@@ -40,7 +40,7 @@ include ${ROOT}/makedefs
 #
 # Where to find header files that do not live in the source directory.
 #
-IPATH=/home/nestor/SW-TM4C-2.2.0.295
+IPATH=${TIVAWARE_PATH}
 CFLAGS+= -I include/
 
 OBJDIR = ${COMPILER}/
