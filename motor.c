@@ -15,7 +15,16 @@ void MotorConfigure(void){
   PWMOutputState(PWM0_BASE, PWM_OUT_6_BIT | PWM_OUT_7_BIT, true);
   PWMGenEnable(PWM0_BASE, PWM_GEN_3);
 
-  // Configure GPIO 
+  // Configure GPIO
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOB)){}
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOD)){}
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE)){}
+  GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_3);
+  GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_2);
+  GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_3);
+  GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_1);
 
 }
-
