@@ -85,23 +85,16 @@ int main(void)
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     MotorConfigure();
-
-    PWMPulseWidthSet(PWM0_BASE, MOTOR_LEFT_PWM_OUT, 16000);
-    PWMPulseWidthSet(PWM0_BASE, MOTOR_RIGHT_PWM_OUT, 10000);
-    
-
-    // GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
+    MotorVelocity(RIGHT, 20000, FORWARD);
 
     while(1)
     {
-        GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_PIN_3);
-        for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
-        {
-        }
-        GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0x0);
-        for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
-        {
-        }
+        // for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
+        // {
+        // }
+        // for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
+        // {
+        // }
     }
 }
 

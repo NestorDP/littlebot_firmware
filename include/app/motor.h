@@ -10,18 +10,24 @@
 #include "driverlib/pwm.h"
 #include "driverlib/sysctl.h"
 
-// PWM configutations
-#define MOTOR_LEFT_PWM_OUT      PWM_OUT_6
-#define MOTOR_LEFT_PWM_CONFIG   GPIO_PC5_M0PWM6
-#define MOTOR_LEFT_PWM_PIN      GPIO_PIN_4
+#define LEFT      1
+#define RIGHT     0
+#define FORWARD   0
+#define BACKWARD  1
 
-#define MOTOR_RIGHT_PWM_OUT     PWM_OUT_7
-#define MOTOR_RIGHT_PWM_CONFIG  GPIO_PC5_M0PWM7
-#define MOTOR_RIGHT_PWM_PIN     GPIO_PIN_5
+// PWM configutations
+#define MOTOR_RIGHT_PWM_OUT    PWM_OUT_6
+#define MOTOR_RIGHT_PWM_CONFIG GPIO_PC5_M0PWM6
+#define MOTOR_RIGHT_PWM_PIN    GPIO_PIN_4
+
+#define MOTOR_LEFT_PWM_OUT     PWM_OUT_7
+#define MOTOR_LEFT_PWM_CONFIG  GPIO_PC5_M0PWM7
+#define MOTOR_LEFT_PWM_PIN     GPIO_PIN_5
 
 // GPIO pins configurations
 
 
 void MotorConfigure(void);
+uint8_t MotorVelocity(uint8_t side, uint16_t vel, uint8_t dir); 
 
 #endif // __APP_MOTOR_H__
