@@ -74,7 +74,7 @@ ${COMPILER}:
 # Rules for building the main example.
 #
 ${COMPILER}/main.axf: ${COMPILER}/main.o
-${COMPILER}/main.axf: ${COMPILER}/teste.o
+${COMPILER}/main.axf: ${COMPILER}/motor.o
 ${COMPILER}/main.axf: ${COMPILER}/startup_${COMPILER}.o
 ${COMPILER}/main.axf: ${ROOT}/driverlib/${COMPILER}/libdriver.a
 ${COMPILER}/main.axf: main.ld
