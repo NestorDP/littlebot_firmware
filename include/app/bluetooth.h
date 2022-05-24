@@ -20,5 +20,7 @@
 
 
 void BluetoothConfigure(void);
+// uint32_t BluetoothRead(uint16_t* right_vel, uint16_t* left_vel);
+uint32_t BluetoothWrite(uint16_t* right_vel, uint16_t* left_vel);
 
 #endif // __APP_BLUETOOTH_H__

@@ -95,7 +95,7 @@
 int main(void)
 {
     volatile uint32_t ui32Loop;
-    int A = 0;
+    uint16_t A = 0;
 
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
@@ -106,7 +106,7 @@ int main(void)
 
     while(1)
     {
-        UARTprintf("\ndistance %d", A++);
+        BluetoothWrite(&A, &A);
         for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
         {
         }

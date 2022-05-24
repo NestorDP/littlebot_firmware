@@ -13,3 +13,12 @@ void BluetoothConfigure(void){
   UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
   UARTStdioConfig(1, 115200, 16000000);
 }
+
+// uint32_t BluetoothRead(uint16_t* right_vel, uint16_t* left_vel){
+
+// }
+
+uint32_t BluetoothWrite(uint16_t *right_vel, uint16_t* left_vel){
+  UARTprintf("%d#%d\n", *right_vel, *left_vel);
+  return 2;
+}
