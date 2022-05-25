@@ -1,6 +1,0 @@
-{
-  "files.associations": {
-    "uartstdio.h": "c",
-    "gpio.h": "c"
-  }
-}
