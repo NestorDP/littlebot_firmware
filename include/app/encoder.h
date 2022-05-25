@@ -40,7 +40,7 @@ void EncoderTimerLeft(void);
 void EncoderRightHandler();
 void EncoderLeftHandler();
 
-volatile uint32_t pulse_right;
-volatile uint32_t pulse_left;
+// volatile uint32_t pulse_right;
+// volatile uint32_t pulse_left;
 
 #endif // __APP_ENCODER_H__

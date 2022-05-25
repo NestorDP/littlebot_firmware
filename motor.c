@@ -31,12 +31,12 @@ void MotorConfigure(void){
 uint8_t MotorVelocity(uint8_t side, uint16_t vel, uint8_t dir){
   if(side == LEFT){
     if(dir == FORWARD){
-      GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
-      GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_3, 0);
-    }
-    else{
       GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0);
       GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_3, GPIO_PIN_3);
+    }
+    else{
+      GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
+      GPIOPinWrite(GPIO_PORTB_BASE, GPIO_PIN_3, 0);
     }
     PWMPulseWidthSet(PWM0_BASE, MOTOR_LEFT_PWM_OUT, vel);
   }

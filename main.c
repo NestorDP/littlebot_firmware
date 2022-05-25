@@ -18,9 +18,9 @@
 #include "utils/uartstdio.h"
 #include "utils/uartstdio.c"
 
-
 #include "app/motor.h"
 #include "app/bluetooth.h"
+#include "app/encoder.h"
 
 
 int main(void)
@@ -33,11 +33,14 @@ int main(void)
     
     MotorConfigure();
     BluetoothConfigure();
+    // EncoderConfigure();
 
     while(1)
     {
         BluetoothRead(&A, &B);
         MotorVelocity(RIGHT, A, FORWARD);
+        MotorVelocity(LEFT, B, FORWARD);
+        // UARTprintf("\nola MAIN!!!%d right  %d left\n", pulse_right, pulse_left);
         UARTprintf("\nola MAIN!!!%d right  %d left\n", A, B);
         for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
         {

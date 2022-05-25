@@ -25,11 +25,9 @@ uint32_t BluetoothRead(uint16_t *right_vel, uint16_t* left_vel){
 
   msg_split = strtok(msg, "#"); // NOLINT
   *right_vel = atoi(msg_split);
-  
 
   msg_split = strtok(NULL, "#"); // NOLINT
   *left_vel = atoi(msg_split);
-
 }
 
 uint32_t BluetoothWrite(uint16_t *right_vel, uint16_t* left_vel){
