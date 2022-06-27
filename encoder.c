@@ -8,10 +8,7 @@
 #include "app/encoder.h"
 
 
-
 void EncoderConfigure(void){
-	// pulse_right=0;
-	// pulse_left=0;
 	EncoderGpioRight();
 	EncoderGpioLeft();
 	EncoderTimerRight();
@@ -69,8 +66,27 @@ void EncoderTimerLeft(void){
 }
 
 
+uint32_t EncoderGetRightValue(void){
+	// resultado em milesegundos	
+	// pulse_right = pulse_right/80000; 
+
+	// resultado em microsegundos
+	pulse_right = pulse_right/80;
+	return pulse_right;
+}
+
+uint32_t EncoderGetLeftValue(void){
+	// resultado em milesegundos
+	// pulse = pulse/80000;
+
+	// resultado em microsegundos
+	pulse_left = pulse_left/80;
+
+	return pulse_left;
+}	
+
+
 void EncoderRightHandler(){
-	volatile uint32_t pulse_right;
 
 	// clear interrupt flag
 	GPIOIntClear(GPIO_PORTA_BASE, GPIO_PIN_5);
@@ -81,13 +97,6 @@ void EncoderRightHandler(){
 	// record value								
 	pulse_right = TimerValueGet(WTIMER2_BASE,TIMER_A); 
 
-	// resultado em milesegundos	
-	// pulse = pulse/80000; 
-
-	// resultado em microsegundos
-	pulse_right = pulse_right/80;
-	UARTprintf("\nola ENCODER!!!right \t%d \n", pulse_right);													
-
 	// Loads value 0 into the timer.
 	HWREG(WTIMER2_BASE + TIMER_O_TAV) = 0;
 
@@ -97,7 +106,6 @@ void EncoderRightHandler(){
 
 
 void EncoderLeftHandler(){
-	volatile uint32_t pulse_left;
 
 	// clear interrupt flag
 	GPIOIntClear(GPIO_PORTE_BASE, GPIO_PIN_3);
@@ -107,13 +115,6 @@ void EncoderLeftHandler(){
 
 	// record value
 	pulse_left = TimerValueGet(WTIMER1_BASE,TIMER_A);
-	
-	// resultado em milesegundos
-	// pulse = pulse/80000;
-
-	// resultado em microsegundos
-	pulse_left = pulse_left/80;
-	UARTprintf("ola ENCODER!!! left \t%d \r", pulse_left);
 
 	// Loads value 0 into the timer.
 	HWREG(WTIMER1_BASE + TIMER_O_TAV) = 0;
@@ -121,6 +122,3 @@ void EncoderLeftHandler(){
 	// start timer to recor
 	TimerEnable(WTIMER1_BASE,TIMER_A);
 }
-
-
-

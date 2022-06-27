@@ -17,7 +17,7 @@ Source code littlebot firmware
   make
   sudo cp lm4flash /usr/local/bin
   ```
-
+talvex precise dar permissão à porta USB sudo chmod /dev/bus/usb/00x/0xx (x são os números da porta)
   ### TivaWare driver
   Dwonload SW-TM4C: TivaWare for C Series Software
    ```sh

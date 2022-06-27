@@ -2,8 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-
-#include "stdlib.h"
+#include <stdlib.h>
 
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
@@ -33,15 +32,20 @@ int main(void)
     
     MotorConfigure();
     BluetoothConfigure();
-    // EncoderConfigure();
+    EncoderConfigure();
+
+    BluetoothRead(&A, &B);
+    MotorVelocity(RIGHT, A, FORWARD);
+    MotorVelocity(LEFT, B, FORWARD);
+    UARTprintf("\nola MAIN!!!%d right  %d left\n", A, B);
+
+    // UARTprintf("\nola MAIN!!!%d right \n", getTimerRight());
 
     while(1)
     {
-        BluetoothRead(&A, &B);
-        MotorVelocity(RIGHT, A, FORWARD);
-        MotorVelocity(LEFT, B, FORWARD);
-        // UARTprintf("\nola MAIN!!!%d right  %d left\n", pulse_right, pulse_left);
-        UARTprintf("\nola MAIN!!!%d right  %d left\n", A, B);
+        UARTprintf("ola MAIN!!!%d right \n", EncoderGetRightValue());
+        UARTprintf("ola MAIN!!!%d left \n", EncoderGetLeftValue());
+
         for(ui32Loop = 0; ui32Loop < 200000; ui32Loop++)
         {
         }
@@ -50,21 +54,3 @@ int main(void)
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-*/

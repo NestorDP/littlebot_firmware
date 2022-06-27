@@ -36,11 +36,13 @@ void EncoderGpioRight(void);
 void EncoderGpioLeft(void);
 void EncoderTimerRight(void);
 void EncoderTimerLeft(void);
+uint32_t EncoderGetRightValue(void);
+uint32_t EncoderGetLeftValue(void);
 
 void EncoderRightHandler();
 void EncoderLeftHandler();
 
-// volatile uint32_t pulse_right;
-// volatile uint32_t pulse_left;
+static volatile uint32_t pulse_right;
+static volatile uint32_t pulse_left;
 
 #endif // __APP_ENCODER_H__
