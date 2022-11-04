@@ -55,6 +55,7 @@ DEB_FLAG = -g -DDEBUG
 PORT_TARGET = GCC/ARM_CM4F/
 OBJ_DIR     = obj/
 DRIVERS_DIR = littlebot_drivers/
+API_DIR			= littlebot_api/
 SRC_DIR     = src/
 
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
@@ -79,16 +80,19 @@ FREERTOS_PORT_OBJS  = port.o
 
 FREERTOS_PORT_SOURCE= $(shell ls $(FREERTOS_PORT_DIR)*.c)
 DRIVERS_SOURCES     = $(shell ls $(DRIVERS_DIR)*.c)
+API_SOURCES         = $(shell ls $(API_DIR)*.c)
 SRC_SOURCES         = $(shell ls $(SRC_DIR)*.c)
 
 FREERTOS_PORT_OBJS  = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
 DRIVERS_OBJS        = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
+API_OBJS            = $(patsubst $(API_DIR)%,$(OBJ_DIR)%,$(API_SOURCES:.c=.o))
 SRC_OBJS            = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
 
 OBJS  = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
 OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
 OBJS  += $(FREERTOS_PORT_OBJS)
 OBJS  += $(DRIVERS_OBJS)
+OBJS  += $(API_OBJS)
 OBJS  += $(SRC_OBJS)
 
 # Get the location of libgcc.a, libc.a and libm.a from the GCC front-end.
@@ -106,9 +110,7 @@ INC_FLAGS     = -I $(INC_FREERTOS) -I $(SRC_DIR) -I $(FREERTOS_PORT_DIR) -I $(IN
 
 # Dependency on HW specific settings
 #---------------------
-DEP_BSP          = $(INC_DIR)drivers/bsp.h
 DEP_FRTOS_CONFIG = $(SRC_DIR)FreeRTOSConfig.h
-DEP_SETTINGS     = $(DEP_FRTOS_CONFIG)
 
 # Definition of the linker script and final targets
 #---------------------
@@ -142,7 +144,7 @@ _debug_flags :
 	$(eval CFLAGS += $(DEB_FLAG))
 
 # FreeRTOS core
-$(OBJ_DIR)%.o:  $(FREERTOS_SRC_DIR)%.c $(DEP_FRTOS_CONFIG) $(DEP_SETTINGS)
+$(OBJ_DIR)%.o:  $(FREERTOS_SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
 
 # HW specific part, in FreeRTOS/Source/portable/$(PORT_TARGETET)
@@ -157,8 +159,12 @@ $(OBJ_DIR)%.o : $(FREERTOS_MEMMANG_DIR)%.c $(DEP_FRTOS_CONFIG)
 $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
+# api
+$(OBJ_DIR)%.o : $(API_DIR)%.c
+	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
+
 # Main Code
-$(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_SETTINGS)
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
 # Cleanup directives:
