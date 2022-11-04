@@ -39,8 +39,8 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "tm4c123glx_freertos_tivaware_gcc/led_task.h"
-#include "tm4c123glx_freertos_tivaware_gcc/switch_task.h"
+#include "littlebot_firmware/led_task.h"
+#include "littlebot_firmware/switch_task.h"
 
 
 //*****************************************************************************
@@ -166,9 +166,9 @@ main(void)
     //
     // Set the clocking to run at 50 MHz from the PLL.
     //
-    SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |
-                       SYSCTL_OSC_MAIN);
+    // SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
 
+    SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     //
     // Initialize the UART and configure it for 115,200, 8-N-1 operation.
     //

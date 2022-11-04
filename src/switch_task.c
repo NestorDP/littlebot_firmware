@@ -38,10 +38,10 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "drivers/buttons.h"
-#include "tm4c123glx_freertos_tivaware_gcc/switch_task.h"
-#include "tm4c123glx_freertos_tivaware_gcc/led_task.h"
-#include "tm4c123glx_freertos_tivaware_gcc/priorities.h"
+#include "littlebot_drivers/buttons.h"
+#include "littlebot_firmware/switch_task.h"
+#include "littlebot_firmware/led_task.h"
+#include "littlebot_firmware/priorities.h"
 
 
 //*****************************************************************************

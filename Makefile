@@ -54,7 +54,7 @@ DEB_FLAG = -g -DDEBUG
 #---------------------
 PORT_TARGET = GCC/ARM_CM4F/
 OBJ_DIR     = obj/
-DRIVERS_DIR = drivers/
+DRIVERS_DIR = littlebot_drivers/
 SRC_DIR     = src/
 
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
