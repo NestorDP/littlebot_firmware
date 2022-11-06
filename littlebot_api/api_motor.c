@@ -1,12 +1,13 @@
 #include "littlebot_api/api_motor.h"
 
-static void ConfigMotor (LittlebotMotor *self, uint8_t side){
-  MotorConfigure();
-  self->side = side;
-  MotorVelocity(1, 23000, 1);
+
+void MotorInterfaceContruct(MotorInterface *self, uint8_t side){
+  motor_side_ = side;
+  self->ConfigMotor = MotorConfigure;
+  self->SetLinVelocit = fcSetLinVelocit;
+
 }
 
-
-static void SetLinVelocit (LittlebotMotor *self, uint16_t vel, uint8_t dir) {
-  MotorVelocity(self->side, vel, dir);
+void fcSetLinVelocit(uint16_t vel, uint8_t dir){
+  MotorVelocity(motor_side_, vel, dir);
 }

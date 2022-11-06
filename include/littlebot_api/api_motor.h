@@ -32,17 +32,21 @@
 // #include "driverlib/pwm.h"
 // #include "driverlib/sysctl.h"
 
-typedef struct MotorInterfaceClass LittlebotMotor;
+
+typedef void (*ptfConfigMotor)(void);
+typedef void (*ptfSetLinVelocit)(uint16_t vel, uint8_t dir);
 
 //structure of function pointer
-struct MotorInterfaceClass {
-    uint8_t side;
-    void (*ConfigMotor)(LittlebotMotor *self, uint8_t side);
-    void (*SetLinVelocit)(LittlebotMotor *self, uint16_t vel, uint8_t dir);
-};
+typedef struct {
+    ptfConfigMotor ConfigMotor;
+    ptfSetLinVelocit SetLinVelocit;
+} MotorInterface ;
 
+void MotorInterfaceContruct(MotorInterface *self, uint8_t side);
 
+void fcSetLinVelocit(uint16_t vel, uint8_t dir);
 
+static volatile uint8_t motor_side_;
 
 // SetAngVelocit
 // GetLinVelocit

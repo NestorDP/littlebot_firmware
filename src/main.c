@@ -39,8 +39,8 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 
-// #include "littlebot_api/api_motor.h"
-#include "littlebot_drivers/motor.h"
+#include "littlebot_api/api_motor.h"
+//#include "littlebot_drivers/motor.h"
 //*****************************************************************************
 //
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -143,9 +143,20 @@ int main(void)
     //
     g_pUARTSemaphore = xSemaphoreCreateMutex();
 
-    MotorConfigure();
-    MotorVelocity(LEFT, 22000, FORWARD);
+    // MotorConfigure();
+    // MotorVelocity(LEFT, 22000, FORWARD);
  
+    MotorInterface left, right;
+    MotorInterfaceContruct(&left, 1);
+    MotorInterfaceContruct(&right, 0);
+
+    left.ConfigMotor();
+    left.SetLinVelocit(23000, 0);
+
+    right.ConfigMotor();
+    right.SetLinVelocit(20000,1);
+
+
 
     //
     // Create the LED task.
