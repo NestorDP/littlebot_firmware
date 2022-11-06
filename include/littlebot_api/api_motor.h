@@ -26,35 +26,21 @@
 
 #include "littlebot_drivers/motor.h"
 
-// #include "inc/hw_memmap.h"
-// #include "driverlib/gpio.h"
-// #include "driverlib/pin_map.h"
-// #include "driverlib/pwm.h"
-// #include "driverlib/sysctl.h"
-
 typedef struct MotorInterfaceClass MotorInterface;
 
 typedef void (*ptfConfigMotor)(void);
-typedef void (*ptfSetLinVelocit)(MotorInterface *self, uint16_t vel, uint8_t dir);
+typedef void (*ptfSetVelocit)(MotorInterface *self, uint16_t vel, uint8_t dir);
 
 //structure of function pointer
 struct MotorInterfaceClass{
     uint8_t motor_side_;
     ptfConfigMotor ConfigMotor;
-    ptfSetLinVelocit SetLinVelocit;
+    ptfSetVelocit SetVelocit;
 };
 
 void MotorInterfaceContruct(MotorInterface *self, uint8_t side);
 
-void fcSetLinVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
-
-
-// SetAngVelocit
-// GetLinVelocit
-// GetAngVelocit
-
-
-
+void fcSetVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
 
 
 #endif // INCLUDE_LITTLEBOT_API_API_MOTOR_H__

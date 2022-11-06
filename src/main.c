@@ -145,13 +145,13 @@ int main(void)
 
  
     MotorInterface left, right;
-    MotorInterfaceContruct(&left, 1);
-    MotorInterfaceContruct(&right, 0);
+    MotorInterfaceConstruct(&left, 1);
+    MotorInterfaceConstruct(&right, 0);
 
     left.ConfigMotor();
-    left.SetLinVelocit(&left, 23000, 0);
+    left.SetVelocit(&left, 23000, 0);
     right.ConfigMotor();
-    right.SetLinVelocit(&right, 23000, 0);
+    right.SetVelocit(&right, 23000, 0);
 
     //
     // Create the LED task.
