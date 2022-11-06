@@ -24,7 +24,6 @@
 
 
 
-
 TOOLCHAIN = arm-none-eabi-
 CC        = $(TOOLCHAIN)gcc
 CXX       = $(TOOLCHAIN)g++
@@ -47,6 +46,7 @@ CFLAGS  += -std=c99
 CFLAGS  += -ffunction-sections 
 CFLAGS  += -fdata-sections 
 CFLAGS  += -DPART_TM4C123GH6PM
+CFLAGS  += -specs=nano.specs -specs=nosys.specs
 
 DEB_FLAG = -g -DDEBUG
 
@@ -76,8 +76,6 @@ FREERTOS_MEMMANG_OBJS = heap_2.o
 #FREERTOS_MEMMANG_OBJS = heap_4.o
 #FREERTOS_MEMMANG_OBJS = heap_5.o
 
-FREERTOS_PORT_OBJS  = port.o
-
 FREERTOS_PORT_SOURCE= $(shell ls $(FREERTOS_PORT_DIR)*.c)
 DRIVERS_SOURCES     = $(shell ls $(DRIVERS_DIR)*.c)
 API_SOURCES         = $(shell ls $(API_DIR)*.c)
@@ -88,7 +86,7 @@ DRIVERS_OBJS        = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.
 API_OBJS            = $(patsubst $(API_DIR)%,$(OBJ_DIR)%,$(API_SOURCES:.c=.o))
 SRC_OBJS            = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
 
-OBJS  = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
+OBJS   = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
 OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
 OBJS  += $(FREERTOS_PORT_OBJS)
 OBJS  += $(DRIVERS_OBJS)
@@ -114,7 +112,7 @@ DEP_FRTOS_CONFIG = $(SRC_DIR)FreeRTOSConfig.h
 
 # Definition of the linker script and final targets
 #---------------------
-LINKER_SCRIPT = $(addprefix , tm4c123gh6pm.lds)
+LINKER_SCRIPT = tm4c123gh6pm.lds
 ELF_IMAGE     = image.elf
 TARGET_IMAGE  = image.bin
 
@@ -134,7 +132,7 @@ $(OBJ_DIR) :
 
 # Linker
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJ_DIR) -L$(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) -o $@ -ldriver '$(LIBGCC)' '$(LIBC)' '$(LIBM)'
+	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) -o $@ -ldriver '$(LIBGCC)' '$(LIBC)' '$(LIBM)'
 
 debug : _debug_flags all
 
@@ -155,11 +153,11 @@ $(OBJ_DIR)port.o : $(FREERTOS_PORT_DIR)port.c $(DEP_FRTOS_CONFIG)
 $(OBJ_DIR)%.o : $(FREERTOS_MEMMANG_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
-# Drivers
+# littlebot drivers
 $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
-# api
+# littebot api
 $(OBJ_DIR)%.o : $(API_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 

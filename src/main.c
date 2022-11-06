@@ -1,29 +1,26 @@
-//*****************************************************************************
-//
-// freertos_demo.c - Simple FreeRTOS example.
-//
-// Copyright (c) 2012-2016 Texas Instruments Incorporated.  All rights reserved.
-// Software License Agreement
-// 
-// Texas Instruments (TI) is supplying this software for use solely and
-// exclusively on TI's microcontroller products. The software is owned by
-// TI and/or its suppliers, and is protected under applicable copyright
-// laws. You may not combine this software with "viral" open-source
-// software in order to form a larger program.
-// 
-// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
-// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
-// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
-// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-// DAMAGES, FOR ANY REASON WHATSOEVER.
-// 
-// This is part of revision 2.1.3.156 of the EK-TM4C123GXL Firmware Package.
-//
-//*****************************************************************************
-//#define PART_TM4C123GH6PM
+// Copyright (c) 2022 Nestor D. Pereira Neto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -42,45 +39,8 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 
-
-//*****************************************************************************
-//
-//! \addtogroup example_list
-//! <h1>FreeRTOS Example (freertos_demo)</h1>
-//!
-//! This application demonstrates the use of FreeRTOS on Launchpad.
-//!
-//! The application blinks the user-selected LED at a user-selected frequency.
-//! To select the LED press the left button and to select the frequency press
-//! the right button.  The UART outputs the application status at 115,200 baud,
-//! 8-n-1 mode.
-//!
-//! This application utilizes FreeRTOS to perform the tasks in a concurrent
-//! fashion.  The following tasks are created:
-//!
-//! - An LED task, which blinks the user-selected on-board LED at a
-//!   user-selected rate (changed via the buttons).
-//!
-//! - A Switch task, which monitors the buttons pressed and passes the
-//!   information to LED task.
-//!
-//! In addition to the tasks, this application also uses the following FreeRTOS
-//! resources:
-//!
-//! - A Queue to enable information transfer between tasks.
-//!
-//! - A Semaphore to guard the resource, UART, from access by multiple tasks at
-//!   the same time.
-//!
-//! - A non-blocking FreeRTOS Delay to put the tasks in blocked state when they
-//!   have nothing to do.
-//!
-//! For additional details on FreeRTOS, refer to the FreeRTOS web page at:
-//! http://www.freertos.org/
-//
-//*****************************************************************************
-
-
+// #include "littlebot_api/api_motor.h"
+#include "littlebot_drivers/motor.h"
 //*****************************************************************************
 //
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -160,8 +120,7 @@ ConfigureUART(void)
 // Initialize FreeRTOS and start the initial set of tasks.
 //
 //*****************************************************************************
-int
-main(void)
+int main(void)
 {
     //
     // Set the clocking to run at 50 MHz from the PLL.
@@ -183,6 +142,10 @@ main(void)
     // Create a mutex to guard the UART.
     //
     g_pUARTSemaphore = xSemaphoreCreateMutex();
+
+    MotorConfigure();
+    MotorVelocity(LEFT, 22000, FORWARD);
+ 
 
     //
     // Create the LED task.
