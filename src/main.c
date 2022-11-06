@@ -143,20 +143,15 @@ int main(void)
     //
     g_pUARTSemaphore = xSemaphoreCreateMutex();
 
-    // MotorConfigure();
-    // MotorVelocity(LEFT, 22000, FORWARD);
  
     MotorInterface left, right;
     MotorInterfaceContruct(&left, 1);
     MotorInterfaceContruct(&right, 0);
 
     left.ConfigMotor();
-    left.SetLinVelocit(23000, 0);
-
+    left.SetLinVelocit(&left, 23000, 0);
     right.ConfigMotor();
-    right.SetLinVelocit(20000,1);
-
-
+    right.SetLinVelocit(&right, 23000, 0);
 
     //
     // Create the LED task.
