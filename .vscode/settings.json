@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "portable.h": "c",
+    "FreeRTOS.h": "c",
+    "semphr.h": "c",
+    "stdbool.h": "c",
+    "ENCODER.C": "cpp"
+  }
+}

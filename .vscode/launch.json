@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+"version": "0.2.0",
+  "configurations": [
+      {
+          "name": "Launch gdb-multiarch",
+          "type": "cppdbg",
+          "request": "launch",
+          "miDebuggerPath": "arm-none-eabi-gdb",
+          "miDebuggerArgs": "-ex",
+          "MIMode": "gdb",
+          "program": "${workspaceFolder}/image.elf",
+            "setupCommands": [
+              {"text": "target remote localhost:3333"},
+              {"text": "file 'image.elf'"},
+              {"text": "load"},
+              {"text": "break main","ignoreFailures": true}
+          ],
+          "launchCompleteCommand": "None",
+          "externalConsole": false,
+          "cwd": "${workspaceFolder}"
+      }
+  ]
+}
