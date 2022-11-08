@@ -34,8 +34,10 @@ void EncoderConfigure(void);
 
 void EncoderGpioRight(void);
 void EncoderGpioLeft(void);
+
 void EncoderTimerRight(void);
 void EncoderTimerLeft(void);
+
 uint32_t EncoderGetRightValue(void);
 uint32_t EncoderGetLeftValue(void);
 

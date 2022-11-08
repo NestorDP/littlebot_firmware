@@ -36,19 +36,20 @@ AR        = $(TOOLCHAIN)ar
 #--------------------
 CPUFLAG  = -mthumb -mcpu=cortex-m4
 WFLAG    = -Wall 
-WFLAG   +=-Wextra
-FPUFLAG +=-mfpu=fpv4-sp-d16 -mfloat-abi=hard
+WFLAG   += -Wextra
+FPUFLAG += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 CFLAGS   = $(CPUFLAG) 
 CFLAGS  += $(WFLAG) 
 CFLAGS  += $(FPUFLAG)
 CFLAGS  += -std=c99 
+CFLAGS  += -nostdlib
 CFLAGS  += -ffunction-sections 
 CFLAGS  += -fdata-sections 
 CFLAGS  += -DPART_TM4C123GH6PM
 CFLAGS  += -specs=nano.specs -specs=nosys.specs
 
-DEB_FLAG = -g -DDEBUG
+DEBFLAG  = -g -DDEBUG
 
 # Directories variables 
 #---------------------
@@ -61,6 +62,8 @@ SRC_DIR     = src/
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
 FREERTOS_MEMMANG_DIR = $(FREERTOS_SRC_DIR)portable/MemMang/
 FREERTOS_PORT_DIR    = $(FREERTOS_SRC_DIR)portable/$(PORT_TARGET)
+
+DRIVERLIB_UTILS_DIR  = $(TIVAWARE_DIR)/utils/
 
 # Object files
 #---------------------
@@ -76,19 +79,23 @@ FREERTOS_OBJS += stream_buffer.o
 FREERTOS_MEMMANG_OBJS = heap_4.o
 #FREERTOS_MEMMANG_OBJS = heap_5.o
 
-FREERTOS_PORT_SOURCE= $(shell ls $(FREERTOS_PORT_DIR)*.c)
-DRIVERS_SOURCES     = $(shell ls $(DRIVERS_DIR)*.c)
-API_SOURCES         = $(shell ls $(API_DIR)*.c)
-SRC_SOURCES         = $(shell ls $(SRC_DIR)*.c)
+# Include all .o utils files that you have using in project
+DRIVERLIB_UTILS_OBJS = uartstdio.o
 
-FREERTOS_PORT_OBJS  = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
-DRIVERS_OBJS        = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
-API_OBJS            = $(patsubst $(API_DIR)%,$(OBJ_DIR)%,$(API_SOURCES:.c=.o))
-SRC_OBJS            = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
+FREERTOS_PORT_SOURCE = $(shell ls $(FREERTOS_PORT_DIR)*.c)
+DRIVERS_SOURCES      = $(shell ls $(DRIVERS_DIR)*.c)
+API_SOURCES          = $(shell ls $(API_DIR)*.c)
+SRC_SOURCES          = $(shell ls $(SRC_DIR)*.c)
+
+FREERTOS_PORT_OBJS   = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
+DRIVERS_OBJS         = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
+API_OBJS             = $(patsubst $(API_DIR)%,$(OBJ_DIR)%,$(API_SOURCES:.c=.o))
+SRC_OBJS             = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
 
 OBJS   = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
 OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
-OBJS  += $(FREERTOS_PORT_OBJS)
+OBJS  += $(addprefix $(OBJ_DIR), $(DRIVERLIB_UTILS_OBJS)) 
+OBJS  += $(FREERTOS_PORT_OBJS) 
 OBJS  += $(DRIVERS_OBJS)
 OBJS  += $(API_OBJS)
 OBJS  += $(SRC_OBJS)
@@ -139,7 +146,7 @@ debug : _debug_flags all
 debug_rebuild : _debug_flags rebuild
 
 _debug_flags :
-	$(eval CFLAGS += $(DEB_FLAG))
+	$(eval CFLAGS += $(DEBFLAG))
 
 # FreeRTOS core
 $(OBJ_DIR)%.o:  $(FREERTOS_SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
@@ -151,6 +158,10 @@ $(OBJ_DIR)port.o : $(FREERTOS_PORT_DIR)port.c $(DEP_FRTOS_CONFIG)
 
 # Rules for all MemMang implementations are provided
 $(OBJ_DIR)%.o : $(FREERTOS_MEMMANG_DIR)%.c $(DEP_FRTOS_CONFIG)
+	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
+
+# Tivaware driverlib utils
+$(OBJ_DIR)%.o : $(DRIVERLIB_UTILS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
 # littlebot drivers

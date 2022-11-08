@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -28,8 +29,6 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 #include "driverlib/sysctl.h"
-#include "driverlib/uart.h"
-#include "utils/uartstdio.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -39,8 +38,11 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 
+#include "littlebot_drivers/bluetooth.h"
 #include "littlebot_api/api_motor.h"
-//#include "littlebot_drivers/motor.h"
+
+
+
 //*****************************************************************************
 //
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -128,30 +130,42 @@ int main(void)
     // SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
 
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+    
     //
     // Initialize the UART and configure it for 115,200, 8-N-1 operation.
     //
-    ConfigureUART();
+    //ConfigureUART();
 
     //
     // Print demo introduction.
     //
-    UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
+    //UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
     //
     // Create a mutex to guard the UART.
     //
-    g_pUARTSemaphore = xSemaphoreCreateMutex();
+    //g_pUARTSemaphore = xSemaphoreCreateMutex();
 
- 
-    MotorInterface left, right;
-    MotorInterfaceConstruct(&left, 1);
-    MotorInterfaceConstruct(&right, 0);
+    // FILE *stream;
 
-    left.ConfigMotor();
-    left.SetVelocit(&left, 23000, 0);
-    right.ConfigMotor();
-    right.SetVelocit(&right, 23000, 0);
+    // stream->
+
+
+    // fprintf(stdout, "Olá mundo!\n");
+    // MotorInterface left, right;
+    // MotorInterfaceConstruct(&left, 1);
+    // MotorInterfaceConstruct(&right, 0);
+
+    // left.ConfigMotor();
+    // left.SetVelocit(&left, 23000, 0);
+    // right.ConfigMotor();
+    // right.SetVelocit(&right, 23000, 0);
+
+    // char message[40] = "mensagem";
+    // BluetoothWrite("HHHHHHHHH");
+    // BluetoothConfigure();
+    // BluetoothRead(message, 40);
+    // BluetoothWrite("HHHHHHHHH");
 
     //
     // Create the LED task.
