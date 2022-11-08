@@ -31,6 +31,7 @@ AS        = $(TOOLCHAIN)as
 LD        = $(TOOLCHAIN)ld
 OBJCOPY   = $(TOOLCHAIN)objcopy
 AR        = $(TOOLCHAIN)ar
+SIZE      = $(TOOLCHAIN)size
 
 # GCC flags
 #--------------------
@@ -127,7 +128,7 @@ TARGET_IMAGE  = image.bin
 #---------------------
 print-%  : ; @echo $* = $($*)
 
-all : $(TARGET_IMAGE)
+all : $(TARGET_IMAGE) size
 
 rebuild : clean all
 
@@ -176,6 +177,12 @@ $(OBJ_DIR)%.o : $(API_DIR)%.c
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
+# Size code:
+#---------------------
+size : 
+	$(SIZE) $(ELF_IMAGE)
+
+
 # Cleanup directives:
 #---------------------
 clean_obj :
@@ -204,4 +211,4 @@ help :
 	@echo
 
 
-.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help
+.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help size
