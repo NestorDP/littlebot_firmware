@@ -21,6 +21,8 @@
 #ifndef INCLUDE_LITTLEBOT_API_SERIAL_H__
 #define INCLUDE_LITTLEBOT_API_SERIAL_H__
 
+#define UART_BUFFERED
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>

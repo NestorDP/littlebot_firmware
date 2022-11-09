@@ -1,5 +1,6 @@
 #include "littlebot_drivers/bluetooth.h"
 
+#define UART_BUFFERED
 
 void BluetoothConfigure(uint32_t baud_rate){
   uint32_t baud = baud_rate;

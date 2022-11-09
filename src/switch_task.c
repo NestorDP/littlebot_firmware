@@ -84,9 +84,6 @@ static void SwitchTask(void *pvParameters)
         //
         ui8CurButtonState = ButtonsPoll(0, 0);
 
-        serial.ReceiveMessage(&serial, message, sizeof(message));
-        serial.SendMessage(&serial, message);
-
         //
         // Check if previous debounced state is equal to the current state.
         //

@@ -99,8 +99,6 @@ int main(void)
     serial.ReceiveMessage(&serial, message, sizeof(message));
     serial.SendMessage(&serial, message);
 
-    // BluetoothWrite(message);
-    // BluetoothRead(message, 40);
 
     //
     // Create the LED task.
