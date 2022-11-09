@@ -39,7 +39,7 @@
 #include "littlebot_firmware/switch_task.h"
 
 #include "littlebot_api/wheel_control.h"
-#include "littlebot_api/serialization.h"
+#include "littlebot_api/serial.h"
 
 
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -91,8 +91,8 @@ int main(void)
     // right.ConfigMotor();
     // right.SetVelocit(&right, 23000, 0);
 
-    SerializationInterface serial;
-    SerializationInterfaceContruct(&serial, 115200);
+    SerialInterface serial;
+    SerialInterfaceContruct(&serial, 115200);
 
     char message[10];
 
@@ -106,6 +106,14 @@ int main(void)
     // Create the LED task.
     //
     if(LEDTaskInit() != 0)
+    {
+
+        while(1)
+        {
+        }
+    }
+
+    if(SwitchTaskInit() != 0)
     {
 
         while(1)
