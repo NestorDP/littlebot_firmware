@@ -20,7 +20,7 @@
 #include "utils/uartstdio.h"
 
 
-void BluetoothConfigure(void);
+void BluetoothConfigure(uint32_t baud_rate);
 uint32_t BluetoothRead(char *msg, uint32_t len);
 uint32_t BluetoothWrite(char *msg);
 

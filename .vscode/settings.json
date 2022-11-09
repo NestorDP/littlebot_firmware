@@ -4,6 +4,7 @@
     "FreeRTOS.h": "c",
     "semphr.h": "c",
     "stdbool.h": "c",
-    "ENCODER.C": "cpp"
+    "ENCODER.C": "cpp",
+    "stdlib.h": "c"
   }
 }

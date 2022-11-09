@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef INCLUDE_LITTLEBOT_API_API_MOTOR_H__
-#define INCLUDE_LITTLEBOT_API_API_MOTOR_H__
+#ifndef INCLUDE_LITTLEBOT_API_WHEEL_CONTROL_H__
+#define INCLUDE_LITTLEBOT_API_WHEEL_CONTROL_H__
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -43,4 +43,4 @@ void MotorInterfaceContruct(MotorInterface *self, uint8_t side);
 void fcSetVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
 
 
-#endif // INCLUDE_LITTLEBOT_API_API_MOTOR_H__
+#endif // INCLUDE_LITTLEBOT_API_WHEEL_CONTROL_H__

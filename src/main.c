@@ -38,38 +38,21 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 
-#include "littlebot_drivers/bluetooth.h"
-#include "littlebot_api/api_motor.h"
+#include "littlebot_api/wheel_control.h"
+#include "littlebot_api/serialization.h"
 
 
-
-//*****************************************************************************
-//
 // The mutex that protects concurrent access of UART from multiple tasks.
-//
-//*****************************************************************************
 xSemaphoreHandle g_pUARTSemaphore;
 
-//*****************************************************************************
-//
 // The error routine that is called if the driver library encounters an error.
-//
-//*****************************************************************************
 #ifdef DEBUG
 void
-__error__(char *pcFilename, uint32_t ui32Line)
-{
-}
-
+__error__(char *pcFilename, uint32_t ui32Line){}
 #endif
 
-//*****************************************************************************
-//
-// This hook is called by FreeRTOS when an stack overflow error is detected.
-//
-//*****************************************************************************
-void
-vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
+
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 {
     //
     // This function can not return, so loop forever.  Interrupts are disabled
@@ -84,41 +67,21 @@ vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 
 
 
-//*****************************************************************************
-//
-// Initialize FreeRTOS and start the initial set of tasks.
-//
-//*****************************************************************************
 int main(void)
 {
     //
     // Set the clocking to run at 50 MHz from the PLL.
     //
-    // SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ | SYSCTL_OSC_MAIN);
-
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
-    //
-    // Initialize the UART and configure it for 115,200, 8-N-1 operation.
-    //
-    //ConfigureUART();
 
-    //
-    // Print demo introduction.
-    //
-    //UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
-
-    //
-    // Create a mutex to guard the UART.
-    //
-    //g_pUARTSemaphore = xSemaphoreCreateMutex();
 
     // FILE *stream;
 
     // stream->
-
-
     // fprintf(stdout, "Olá mundo!\n");
+
+
     // MotorInterface left, right;
     // MotorInterfaceConstruct(&left, 1);
     // MotorInterfaceConstruct(&right, 0);
@@ -128,27 +91,21 @@ int main(void)
     // right.ConfigMotor();
     // right.SetVelocit(&right, 23000, 0);
 
-    // char message[40] = "mensagem";
-    // BluetoothWrite("HHHHHHHHH");
-    // BluetoothConfigure();
+    SerializationInterface serial;
+    SerializationInterfaceContruct(&serial, 115200);
+
+    char message[10];
+
+    serial.ReceiveMessage(&serial, message, sizeof(message));
+    serial.SendMessage(&serial, message);
+
+    // BluetoothWrite(message);
     // BluetoothRead(message, 40);
-    // BluetoothWrite("HHHHHHHHH");
 
     //
     // Create the LED task.
     //
     if(LEDTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
-    }
-
-    //
-    // Create the switch task.
-    //
-    if(SwitchTaskInit() != 0)
     {
 
         while(1)
