@@ -42,6 +42,8 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/priorities.h"
 
+#include "littlebot_api/serial.h"
+
 //*****************************************************************************
 //
 // The stack size for the LED toggle task.
@@ -101,6 +103,13 @@ static void LEDTask(void *pvParameters)
     //
     ui32WakeTime = xTaskGetTickCount();
 
+    SerialInterface serial;
+    SerialInterfaceContruct(&serial, 115200);
+
+    char message[10] = "teste\n";
+    char message1[10] = "oioioi\n";
+    serial.SendMessage(&serial, message);
+
     //
     // Loop forever.
     //
@@ -108,6 +117,7 @@ static void LEDTask(void *pvParameters)
         //
         // Read the next message, if available on queue.
         //
+        serial.SendMessage(&serial, message1);
         if( xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS ) {
             //
             // If left button, update to next LED.

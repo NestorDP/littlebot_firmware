@@ -64,6 +64,43 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
     }
 }
 
+//*****************************************************************************
+//
+// Configure the UART and its pins.  This must be called before UARTprintf().
+//
+//*****************************************************************************
+void
+ConfigureUART(void)
+{
+    //
+    // Enable the GPIO Peripheral used by the UART.
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+
+    //
+    // Enable UART0
+    //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+
+    //
+    // Configure GPIO Pins for UART mode.
+    //
+    GPIOPinConfigure(GPIO_PA0_U0RX);
+    GPIOPinConfigure(GPIO_PA1_U0TX);
+    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+
+    //
+    // Use the internal 16MHz oscillator as the UART clock source.
+    //
+    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
+
+    //
+    // Initialize the UART for console I/O.
+    //
+    UARTStdioConfig(0, 115200, 16000000);
+}
+
+
 
 
 
@@ -91,14 +128,29 @@ int main(void)
     // right.ConfigMotor();
     // right.SetVelocit(&right, 23000, 0);
 
-    SerialInterface serial;
-    SerialInterfaceContruct(&serial, 115200);
 
-    char message[10];
+    // SerialInterface serial;
+    // SerialInterfaceContruct(&serial, 115200);
 
-    serial.ReceiveMessage(&serial, message, sizeof(message));
-    serial.SendMessage(&serial, message);
+    // char message[10] = "teste\n";
+    // char message1[10] = "oioioi\n";
+    // //serial.SendMessage(&serial, "message");
 
+    
+    //
+    // Initialize the UART and configure it for 115,200, 8-N-1 operation.
+    //
+    ConfigureUART();
+
+    //
+    // Print demo introduction.
+    //
+    UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
+
+    //
+    // Create a mutex to guard the UART.
+    //
+    g_pUARTSemaphore = xSemaphoreCreateMutex();
 
     //
     // Create the LED task.

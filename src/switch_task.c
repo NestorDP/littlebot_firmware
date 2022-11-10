@@ -75,6 +75,7 @@ static void SwitchTask(void *pvParameters)
     //
     ui16LastTime = xTaskGetTickCount();
 
+
     //
     // Loop forever.
     //
@@ -83,6 +84,13 @@ static void SwitchTask(void *pvParameters)
         // Poll the debounced state of the buttons.
         //
         ui8CurButtonState = ButtonsPoll(0, 0);
+        
+        // if(UARTPeek('\r') != -1){
+        //     serial.SendMessage(&serial, message1);
+        //     serial.ReceiveMessage(&serial, message, sizeof(message));
+            
+        // }
+
 
         //
         // Check if previous debounced state is equal to the current state.

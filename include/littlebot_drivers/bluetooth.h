@@ -23,6 +23,5 @@
 void BluetoothConfigure(uint32_t baud_rate);
 uint32_t BluetoothRead(char *msg, uint32_t len);
 uint32_t BluetoothWrite(char *msg);
-uint8_t BluetoothTestBuffer(void);
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_BLUETOOTH_H__

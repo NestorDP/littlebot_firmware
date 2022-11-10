@@ -48,7 +48,7 @@ CFLAGS  += -nostdlib
 CFLAGS  += -ffunction-sections 
 CFLAGS  += -fdata-sections 
 CFLAGS  += -DPART_TM4C123GH6PM
-CFLAGS  += -DUART_BUFFERED
+# CFLAGS  += -DUART_BUFFERED
 CFLAGS  += -specs=nano.specs -specs=nosys.specs
 
 DEBFLAG  = -g -DDEBUG
@@ -76,9 +76,9 @@ FREERTOS_OBJS += event_groups.o
 FREERTOS_OBJS += stream_buffer.o
 
 #FREERTOS_MEMMANG_OBJS = heap_1.o
-#FREERTOS_MEMMANG_OBJS = heap_2.o
+FREERTOS_MEMMANG_OBJS = heap_2.o
 #FREERTOS_MEMMANG_OBJS = heap_3.o
-FREERTOS_MEMMANG_OBJS = heap_4.o
+#FREERTOS_MEMMANG_OBJS = heap_4.o
 #FREERTOS_MEMMANG_OBJS = heap_5.o
 
 # Include all .o utils files that you have using in project

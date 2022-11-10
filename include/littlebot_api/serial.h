@@ -33,13 +33,11 @@ typedef struct SerialInterfaceClass SerialInterface;
 
 typedef void (*ptfReceiveMessage)(SerialInterface *self, char *msg, uint32_t len_msg);
 typedef void (*ptfSendMessage)(SerialInterface *self, char *msg);
-typedef uint8_t (*ptfIsAvailable)(SerialInterface *self);
 
 //structure of function pointer
 struct SerialInterfaceClass{
     ptfReceiveMessage ReceiveMessage;
     ptfSendMessage SendMessage;
-    ptfIsAvailable IsAvailable;
 };
 
 void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
@@ -47,8 +45,6 @@ void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
 void fcReceiveMessage(SerialInterface *self, char *msg, uint32_t len_msg);
 
 void fcSendMessage(SerialInterface *self, char *msg);
-
-uint8_t fcIsAvailable(SerialInterface *self);
 
 
 #endif // INCLUDE_LITTLEBOT_API_SERIAL_H__
