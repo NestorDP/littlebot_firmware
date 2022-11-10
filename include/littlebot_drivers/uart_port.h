@@ -1,5 +1,5 @@
-#ifndef INCLUDE_LITTLEBOT_DRIVER_BLUETOOTH_H__
-#define INCLUDE_LITTLEBOT_DRIVER_BLUETOOTH_H__
+#ifndef INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__
+#define INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -20,8 +20,8 @@
 #include "utils/uartstdio.h"
 
 
-void BluetoothConfigure(uint32_t baud_rate);
-uint32_t BluetoothRead(char *msg, uint32_t len);
-uint32_t BluetoothWrite(char *msg);
+void UartPortConfigure(uint32_t baud_rate);
+uint32_t UartPortRead(char *msg, uint32_t len);
+uint32_t UartPortWrite(char *msg);
 
-#endif // INCLUDE_LITTLEBOT_DRIVER_BLUETOOTH_H__
+#endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__

@@ -1,8 +1,6 @@
-#include "littlebot_drivers/bluetooth.h"
+#include "littlebot_drivers/uart_port.h"
 
-#define UART_BUFFERED
-
-void BluetoothConfigure(uint32_t baud_rate){
+void UartPortConfigure(uint32_t baud_rate){
   uint32_t baud = baud_rate;
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
   SysCtlDelay(3);
@@ -15,11 +13,11 @@ void BluetoothConfigure(uint32_t baud_rate){
   UARTStdioConfig(1, baud, 16000000);
 }
 
-uint32_t BluetoothRead(char *msg, uint32_t len){
+uint32_t UartPortRead(char *msg, uint32_t len){
   UARTgets(msg, len);
 }
 
-uint32_t BluetoothWrite(char *msg){
+uint32_t UartPortWrite(char *msg){
   UARTprintf("%s\n", msg);
   // return 2;
 }

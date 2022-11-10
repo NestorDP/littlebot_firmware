@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "littlebot_drivers/bluetooth.h"
+#include "littlebot_drivers/uart_port.h"
 
 typedef struct SerialInterfaceClass SerialInterface;
 
