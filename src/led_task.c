@@ -104,7 +104,7 @@ static void LEDTask(void *pvParameters)
     ui32WakeTime = xTaskGetTickCount();
 
     SerialInterface serial;
-    SerialInterfaceContruct(&serial, 115200);
+    SerialInterfaceContruct(&serial, 115200, 1);
 
     char message[10] = "teste\n";
     char message1[10] = "oioioi\n";

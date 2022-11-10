@@ -1,7 +1,7 @@
 #include "littlebot_api/serial.h"
 
-void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate) {
-  UartPortConfigure(baud_rate);
+void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate, uint8_t port) {
+  UartPortConfigure(baud_rate, port);
   self->ReceiveMessage = fcReceiveMessage;
   self->SendMessage = fcSendMessage;
 }

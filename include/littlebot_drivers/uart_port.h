@@ -20,7 +20,7 @@
 #include "utils/uartstdio.h"
 
 
-void UartPortConfigure(uint32_t baud_rate);
+void UartPortConfigure(uint32_t baud_rate, uint8_t port);
 uint32_t UartPortRead(char *msg, uint32_t len);
 uint32_t UartPortWrite(char *msg);
 
