@@ -23,3 +23,7 @@ uint32_t BluetoothWrite(char *msg){
   UARTprintf("%s\n", msg);
   // return 2;
 }
+
+uint8_t BluetoothTestBuffer(void) {
+  return UARTPeek('\n');
+}
