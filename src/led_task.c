@@ -103,12 +103,6 @@ static void LEDTask(void *pvParameters)
     //
     ui32WakeTime = xTaskGetTickCount();
 
-    
-    SerialInterface serial;
-    SerialInterfaceContruct(&serial, 115200);
-
-    char message[10] = "teste\n";
-    char message1[10] = "oioioi\n";
 
 
     //
@@ -118,8 +112,6 @@ static void LEDTask(void *pvParameters)
         //
         // Read the next message, if available on queue.
         //
-        
-        serial.Write(&serial, message);
 
 
 
@@ -156,7 +148,7 @@ static void LEDTask(void *pvParameters)
                 // blinking LED.
                 //
                 xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-                UARTprintf("Led %d is blinking. [R, G, B]\n", g_ui8ColorsIndx);
+                //UARTprintf("Led %d is blinking. [R, G, B]\n", g_ui8ColorsIndx);
                 xSemaphoreGive(g_pUARTSemaphore);
             }
 
@@ -174,7 +166,7 @@ static void LEDTask(void *pvParameters)
                 // blinking frequency.
                 //
                 xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-                UARTprintf("Led blinking frequency is %d ms.\n", (ui32LEDToggleDelay * 2));
+                //UARTprintf("Led blinking frequency is %d ms.\n", (ui32LEDToggleDelay * 2));
                 xSemaphoreGive(g_pUARTSemaphore);
             }
         }
@@ -224,8 +216,8 @@ uint32_t LEDTaskInit(void)
     //
     // Print the current loggling LED and frequency.
     //
-    UARTprintf("\nLed %d is blinking. [R, G, B]\n", g_ui8ColorsIndx);
-    UARTprintf("Led blinking frequency is %d ms.\n", (LED_TOGGLE_DELAY * 2));
+    //UARTprintf("\nLed %d is blinking. [R, G, B]\n", g_ui8ColorsIndx);
+    //UARTprintf("Led blinking frequency is %d ms.\n", (LED_TOGGLE_DELAY * 2));
 
     //
     // Create a queue for sending messages to the LED task.

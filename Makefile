@@ -47,9 +47,9 @@ CFLAGS  += -std=c99
 CFLAGS  += -nostdlib
 CFLAGS  += -ffunction-sections 
 CFLAGS  += -fdata-sections 
+CFLAGS  += -specs=nano.specs -specs=nosys.specs
 CFLAGS  += -DPART_TM4C123GH6PM
 CFLAGS  += -DUART_BUFFERED
-CFLAGS  += -specs=nano.specs -specs=nosys.specs
 
 DEBFLAG  = -g -DDEBUG
 

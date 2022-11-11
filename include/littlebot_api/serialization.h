@@ -24,35 +24,38 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "littlebot_api/serial.h"
 
-typedef struct SerializationInterfaceClass SerializationInterface;
+typedef struct SerializationClass Serialization;
 
-typedef void (*ptfReceiveMessage)(SerializationInterface *self, char *msg);
-typedef void (*ptfSendMessage)(SerializationInterface *self, char *msg);
-typedef void (*ptfSetVelocity)(SerializationInterface *self, float vel);
-typedef float (*ptfGetVelocity)(SerializationInterface *self);
+typedef void (*ptfReceiveMessage)(Serialization *self);
+typedef void (*ptfSendMessage)(Serialization *self);
+typedef void (*ptfSetVelocity)(Serialization *self, float vel);
+typedef float (*ptfGetVelocity)(Serialization *self);
 
 //structure of function pointer
-struct SerializationInterfaceClass{
+struct SerializationClass{
   float encoder_velocity;
   float motor_velocity;
+  char serialized_msg[200];
+  SerialInterface serial;
   ptfReceiveMessage ReceiveMessage;
   ptfSendMessage SendMessage;
   ptfSetVelocity SetVelocity;
   ptfGetVelocity GetVelocity
 };
 
-void SerializationInterfaceConstruct(SerializationInterface *self);
+void SerializationConstruct (Serialization *self);
 
-void fcReceiveMessage(SerializationInterface *self, char *msg);
+void fcReceiveMessage (Serialization *self);
 
-void fcSendMessage(SerializationInterface *self, char *msg);
+void fcSendMessage (Serialization *self);
 
-void fcSetVelocity (SerializationInterface *self, float vel);
+void fcSetVelocity (Serialization *self, float vel);
 
-float fcGetVelocity (SerializationInterface *self);
+float fcGetVelocity (Serialization *self);
 
 
 #endif // INCLUDE_LITTLEBOT_API_SERIALIZATION_H__

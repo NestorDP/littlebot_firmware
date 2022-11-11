@@ -102,7 +102,7 @@ static void SwitchTask(void *pvParameters)
                     // Guard UART from concurrent access.
                     //
                     xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-                    UARTprintf("Left Button is pressed.\n");
+                    //UARTprintf("Left Button is pressed.\n");
                     xSemaphoreGive(g_pUARTSemaphore);
                 } else if((ui8CurButtonState & ALL_BUTTONS) == RIGHT_BUTTON) {
                     ui8Message = RIGHT_BUTTON;
@@ -111,7 +111,7 @@ static void SwitchTask(void *pvParameters)
                     // Guard UART from concurrent access.
                     //
                     xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-                    UARTprintf("Right Button is pressed.\n");
+                    //UARTprintf("Right Button is pressed.\n");
                     xSemaphoreGive(g_pUARTSemaphore);
                 }
 
@@ -123,7 +123,7 @@ static void SwitchTask(void *pvParameters)
                     // Error. The queue should never be full. If so print the
                     // error message on UART and wait for ever.
                     //
-                    UARTprintf("\nQueue full. This should never happen.\n");
+                    //UARTprintf("\nQueue full. This should never happen.\n");
                     while(1) {
                         ;
                     }

@@ -19,11 +19,11 @@
 #include "utils/uartstdio.h"
 
 
-void UARTStdioIntHandler(void);
+void UARTStdioIntHandler (void);
 
 
-void UartPortConfigure(uint32_t baud_rate);
-uint32_t UartPortGet(char *msg, uint32_t len);
-uint32_t UartPortPut(char *msg);
+void UartPortConfigure (uint32_t baud_rate);
+uint32_t UartPortGet (char *msg, uint32_t len);
+uint32_t UartPortPut (char *msg);
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__

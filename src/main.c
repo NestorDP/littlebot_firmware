@@ -40,6 +40,7 @@
 
 #include "littlebot_api/wheel_control.h"
 #include "littlebot_api/serial.h"
+#include "littlebot_api/serialization.h"
 
 
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -73,32 +74,11 @@ int main(void)
     //
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
+    Serialization serialization;
+    SerializationConstruct(&serialization);
 
-
-    // FILE *stream;
-
-    // stream->
-    // fprintf(stdout, "Olá mundo!\n");
-
-
-    // MotorInterface left, right;
-    // MotorInterfaceConstruct(&left, 1);
-    // MotorInterfaceConstruct(&right, 0);
-
-    // left.ConfigMotor();
-    // left.SetVelocit(&left, 23000, 0);
-    // right.ConfigMotor();
-    // right.SetVelocit(&right, 23000, 0);
-
-
-    // SerialInterface serial2;
-    // SerialInterfaceContruct(&serial2, 115200);
-
-    // char message[10] = "teste\n";
-    // char message1[10] = "oioioi\n";
-    // //serial.SendMessage(&serial, "message");
-
-    
+    serialization.ReceiveMessage(&serialization);
+    serialization.SendMessage(&serialization);
 
     //
     // Create a mutex to guard the UART.
