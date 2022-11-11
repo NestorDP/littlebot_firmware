@@ -11,5 +11,5 @@ void fcReceiveMessage(SerialInterface *self, char *msg, uint32_t len_msg) {
 }
 
 void fcSendMessage(SerialInterface *self, char *msg) {
-  UartPortWrite("testee ");
+  UartPortWrite(msg);
 }

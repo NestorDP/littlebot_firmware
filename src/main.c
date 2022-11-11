@@ -51,7 +51,7 @@ void
 __error__(char *pcFilename, uint32_t ui32Line){}
 #endif
 
-void UARTStdioIntHandler(void);
+
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 {
@@ -64,34 +64,6 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
     {
     }
 }
-
-//*****************************************************************************
-//
-// Configure the UART and its pins.  This must be called before UARTprintf().
-//
-//*****************************************************************************
-void
-ConfigureUART(void)
-{
-    // SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-    // SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-    // GPIOPinConfigure(GPIO_PA0_U0RX);
-    // GPIOPinConfigure(GPIO_PA1_U0TX);
-    // GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    // UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-    // UARTStdioConfig(0, 115200, 16000000);
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
-    GPIOPinConfigure(GPIO_PB0_U1RX);
-    GPIOPinConfigure(GPIO_PB1_U1TX);
-    GPIOPinTypeUART(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
-    UARTStdioConfig(1, 9600, 16000000);
-}
-
-
-
 
 
 int main(void)
@@ -127,15 +99,6 @@ int main(void)
     // //serial.SendMessage(&serial, "message");
 
     
-    //
-    // Initialize the UART and configure it for 115,200, 8-N-1 operation.
-    //
-    ConfigureUART();
-
-    //
-    // Print demo introduction.
-    //
-    UARTprintf("\n\nWelcome to the EK-TM4C123GXL FreeRTOS Demo!\n");
 
     //
     // Create a mutex to guard the UART.

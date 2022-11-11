@@ -103,6 +103,13 @@ static void LEDTask(void *pvParameters)
     //
     ui32WakeTime = xTaskGetTickCount();
 
+    
+    SerialInterface serial;
+    SerialInterfaceContruct(&serial, 115200);
+
+    char message[10] = "teste\n";
+    char message1[10] = "oioioi\n";
+
 
     //
     // Loop forever.
@@ -112,7 +119,11 @@ static void LEDTask(void *pvParameters)
         // Read the next message, if available on queue.
         //
         
-        //UARTwrite(message1, 10);
+        serial.SendMessage(&serial, message);
+
+
+
+
         if( xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS ) {
             //
             // If left button, update to next LED.
