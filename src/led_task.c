@@ -119,7 +119,7 @@ static void LEDTask(void *pvParameters)
         // Read the next message, if available on queue.
         //
         
-        serial.SendMessage(&serial, message);
+        serial.Write(&serial, message);
 
 
 

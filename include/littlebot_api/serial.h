@@ -29,20 +29,20 @@
 
 typedef struct SerialInterfaceClass SerialInterface;
 
-typedef void (*ptfReceiveMessage)(SerialInterface *self, char *msg, uint32_t len_msg);
-typedef void (*ptfSendMessage)(SerialInterface *self, char *msg);
+typedef void (*ptfRead)(SerialInterface *self, char *msg, uint32_t len_msg);
+typedef void (*ptfWrite)(SerialInterface *self, char *msg);
 
 //structure of function pointer
 struct SerialInterfaceClass{
-    ptfReceiveMessage ReceiveMessage;
-    ptfSendMessage SendMessage;
+    ptfRead Read;
+    ptfWrite Write;
 };
 
 void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
 
-void fcReceiveMessage(SerialInterface *self, char *msg, uint32_t len_msg);
+void fcRead(SerialInterface *self, char *msg, uint32_t len_msg);
 
-void fcSendMessage(SerialInterface *self, char *msg);
+void fcWrite(SerialInterface *self, char *msg);
 
 
 #endif // INCLUDE_LITTLEBOT_API_SERIAL_H__

@@ -12,11 +12,11 @@ void UartPortConfigure(uint32_t baud_rate) {
     UARTStdioConfig(1, baud, 16000000);
 }
 
-uint32_t UartPortRead(char *msg, uint32_t len){
+uint32_t UartPortGet(char *msg, uint32_t len){
   UARTgets(msg, len);
 }
 
-uint32_t UartPortWrite(char *msg){
+uint32_t UartPortPut(char *msg){
   UARTprintf("%s\n", msg);
   // return 2;
 }

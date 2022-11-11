@@ -11,7 +11,6 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
-#include "driverlib/interrupt.h"
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -24,7 +23,7 @@ void UARTStdioIntHandler(void);
 
 
 void UartPortConfigure(uint32_t baud_rate);
-uint32_t UartPortRead(char *msg, uint32_t len);
-uint32_t UartPortWrite(char *msg);
+uint32_t UartPortGet(char *msg, uint32_t len);
+uint32_t UartPortPut(char *msg);
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__
