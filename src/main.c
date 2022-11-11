@@ -51,6 +51,7 @@ void
 __error__(char *pcFilename, uint32_t ui32Line){}
 #endif
 
+void UARTStdioIntHandler(void);
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 {
@@ -72,32 +73,21 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
 void
 ConfigureUART(void)
 {
-    //
-    // Enable the GPIO Peripheral used by the UART.
-    //
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    // SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    // SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+    // GPIOPinConfigure(GPIO_PA0_U0RX);
+    // GPIOPinConfigure(GPIO_PA1_U0TX);
+    // GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    // UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
+    // UARTStdioConfig(0, 115200, 16000000);
 
-    //
-    // Enable UART0
-    //
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-
-    //
-    // Configure GPIO Pins for UART mode.
-    //
-    GPIOPinConfigure(GPIO_PA0_U0RX);
-    GPIOPinConfigure(GPIO_PA1_U0TX);
-    GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-    //
-    // Use the internal 16MHz oscillator as the UART clock source.
-    //
-    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-
-    //
-    // Initialize the UART for console I/O.
-    //
-    UARTStdioConfig(0, 115200, 16000000);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
+    GPIOPinConfigure(GPIO_PB0_U1RX);
+    GPIOPinConfigure(GPIO_PB1_U1TX);
+    GPIOPinTypeUART(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
+    UARTStdioConfig(1, 9600, 16000000);
 }
 
 
@@ -129,8 +119,8 @@ int main(void)
     // right.SetVelocit(&right, 23000, 0);
 
 
-    // SerialInterface serial;
-    // SerialInterfaceContruct(&serial, 115200);
+    // SerialInterface serial2;
+    // SerialInterfaceContruct(&serial2, 115200);
 
     // char message[10] = "teste\n";
     // char message1[10] = "oioioi\n";

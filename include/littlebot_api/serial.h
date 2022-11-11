@@ -21,8 +21,6 @@
 #ifndef INCLUDE_LITTLEBOT_API_SERIAL_H__
 #define INCLUDE_LITTLEBOT_API_SERIAL_H__
 
-#define UART_BUFFERED
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -40,7 +38,7 @@ struct SerialInterfaceClass{
     ptfSendMessage SendMessage;
 };
 
-void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate, uint8_t port);
+void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
 
 void fcReceiveMessage(SerialInterface *self, char *msg, uint32_t len_msg);
 

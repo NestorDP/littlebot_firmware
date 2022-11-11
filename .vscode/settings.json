@@ -5,6 +5,8 @@
     "semphr.h": "c",
     "stdbool.h": "c",
     "ENCODER.C": "cpp",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "hw_memmap.h": "c",
+    "interrupt.h": "c"
   }
 }

@@ -103,12 +103,6 @@ static void LEDTask(void *pvParameters)
     //
     ui32WakeTime = xTaskGetTickCount();
 
-    SerialInterface serial;
-    SerialInterfaceContruct(&serial, 115200, 1);
-
-    char message[10] = "teste\n";
-    char message1[10] = "oioioi\n";
-    serial.SendMessage(&serial, message);
 
     //
     // Loop forever.
@@ -117,7 +111,8 @@ static void LEDTask(void *pvParameters)
         //
         // Read the next message, if available on queue.
         //
-        serial.SendMessage(&serial, message1);
+        
+        //UARTwrite(message1, 10);
         if( xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS ) {
             //
             // If left button, update to next LED.
@@ -168,8 +163,7 @@ static void LEDTask(void *pvParameters)
                 // blinking frequency.
                 //
                 xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-                UARTprintf("Led blinking frequency is %d ms.\n",
-                           (ui32LEDToggleDelay * 2));
+                UARTprintf("Led blinking frequency is %d ms.\n", (ui32LEDToggleDelay * 2));
                 xSemaphoreGive(g_pUARTSemaphore);
             }
         }

@@ -9,9 +9,9 @@
 
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
-#include "driverlib/pwm.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
+#include "driverlib/interrupt.h"
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -20,8 +20,9 @@
 #include "utils/uartstdio.h"
 
 
-void UartPortConfigure(uint32_t baud_rate, uint8_t port);
+void UartPortConfigure(uint32_t baud_rate);
 uint32_t UartPortRead(char *msg, uint32_t len);
 uint32_t UartPortWrite(char *msg);
+// (UARTCharsAvail(UART1_BASE)
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__
