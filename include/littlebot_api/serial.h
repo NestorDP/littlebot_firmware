@@ -34,8 +34,8 @@ typedef void (*ptfWrite)(SerialInterface *self, char *msg);
 
 //structure of function pointer
 struct SerialInterfaceClass{
-    ptfRead Read;
-    ptfWrite Write;
+  ptfRead Read;
+  ptfWrite Write;
 };
 
 void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
