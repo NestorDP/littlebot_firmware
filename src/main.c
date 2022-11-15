@@ -78,7 +78,7 @@ int main(void)
     SerializationConstruct(&serialization);
 
     serialization.ReceiveMessage(&serialization);
-    serialization.SendMessage(&serialization);
+    //serialization.SendMessage(&serialization);
 
     //
     // Create a mutex to guard the UART.
