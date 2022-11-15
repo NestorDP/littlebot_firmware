@@ -37,8 +37,8 @@ typedef float (*ptfGetVelocity)(Serialization *self);
 
 //structure of function pointer
 struct SerializationClass{
-  float encoder_velocity;
-  float motor_velocity;
+  float encoder_velocity[2];
+  float motor_velocity[2];
   char serialized_msg[200];
   SerialInterface serial;
   ptfReceiveMessage ReceiveMessage;
@@ -47,6 +47,7 @@ struct SerializationClass{
   ptfGetVelocity GetVelocity
 };
 
+// Functions
 void SerializationConstruct (Serialization *self);
 
 void fcReceiveMessage (Serialization *self);
@@ -57,5 +58,15 @@ void fcSetVelocity (Serialization *self, float vel);
 
 float fcGetVelocity (Serialization *self);
 
+
+// Variables
+static const enum Motors{left, right};
+
+static unsigned char *ptr_to_float;
+
+static char var_float[sizeof(float)];
+
+
+static uint8_t i;
 
 #endif // INCLUDE_LITTLEBOT_API_SERIALIZATION_H__
