@@ -22,8 +22,6 @@
 # https://github.com/jkovacic/FreeRTOS-GCC-tm4c123glx/blob/master/Makefile
 
 
-
-
 TOOLCHAIN = arm-none-eabi-
 CC        = $(TOOLCHAIN)gcc
 CXX       = $(TOOLCHAIN)g++
@@ -57,9 +55,9 @@ DEBFLAG  = -g -DDEBUG
 #---------------------
 PORT_TARGET = GCC/ARM_CM4F/
 OBJ_DIR     = obj/
-DRIVERS_DIR = littlebot_drivers/
-API_DIR			= littlebot_api/
 SRC_DIR     = src/
+DRIVERS_DIR = $(SRC_DIR)littlebot_drivers/
+API_DIR	    = $(SRC_DIR)littlebot_api/
 
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
 FREERTOS_MEMMANG_DIR = $(FREERTOS_SRC_DIR)portable/MemMang/
