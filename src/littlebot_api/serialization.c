@@ -14,9 +14,16 @@ void SerializationConstruct(Serialization *self) {
 
 
 void fcReceiveMessage (Serialization *self) {
+  char var_left[sizeof(float)];
+  char var_right[sizeof(float)];
+
   self->serial.Read (&self->serial, self->serialized_msg, sizeof(self->serialized_msg));
-  //char *rec_msg = (char *) self->serialized_msg;
-  self->velocity[left] = atoi(self->serialized_msg);
+
+  strncpy (var_left, self->serialized_msg, 4);
+  strncpy (var_right, self->serialized_msg + 4, 4);
+
+  self->velocity[left] = atoi(var_left);
+  self->velocity[right] = atoi(var_right);
 }
 
 
@@ -35,7 +42,7 @@ void fcSendMessage (Serialization *self) {
       self->serialized_msg[i] = *(ptr_to_left + i);
     }
   }
-
+  
   self->serial.Write (&self->serial, self->serialized_msg);
 }
 
