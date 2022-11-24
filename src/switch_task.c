@@ -101,18 +101,18 @@ static void SwitchTask(void *pvParameters)
                     //
                     // Guard UART from concurrent access.
                     //
-                    xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
+                    //xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
                     //UARTprintf("Left Button is pressed.\n");
-                    xSemaphoreGive(g_pUARTSemaphore);
+                    //xSemaphoreGive(g_pUARTSemaphore);
                 } else if((ui8CurButtonState & ALL_BUTTONS) == RIGHT_BUTTON) {
                     ui8Message = RIGHT_BUTTON;
 
                     //
                     // Guard UART from concurrent access.
                     //
-                    xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
+                    //xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
                     //UARTprintf("Right Button is pressed.\n");
-                    xSemaphoreGive(g_pUARTSemaphore);
+                    //xSemaphoreGive(g_pUARTSemaphore);
                 }
 
                 //

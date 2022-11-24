@@ -44,7 +44,9 @@
 
 
 // The mutex that protects concurrent access of UART from multiple tasks.
-xSemaphoreHandle g_pUARTSemaphore;
+xSemaphoreHandle g_pSerializationSemaphore;
+
+
 
 // The error routine that is called if the driver library encounters an error.
 #ifdef DEBUG
@@ -74,16 +76,8 @@ int main(void)
     //
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
-    Serialization serialization;
-    SerializationConstruct(&serialization);
-
-    serialization.ReceiveMessage(&serialization);
-    //serialization.SendMessage(&serialization);
-
-    //
-    // Create a mutex to guard the UART.
-    //
-    g_pUARTSemaphore = xSemaphoreCreateMutex();
+    //Serialization serialization;
+    //SerializationConstruct(&serialization);
 
     //
     // Create the LED task.
