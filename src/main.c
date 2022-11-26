@@ -38,13 +38,25 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 
-#include "littlebot_api/wheel_control.h"
+#include "littlebot_api/motor_interface.h"
 #include "littlebot_api/serial.h"
 #include "littlebot_api/serialization.h"
+
+// The item size and queue size for the LED message queue.
+#define LED_ITEM_SIZE           sizeof(uint8_t)
+#define LED_QUEUE_SIZE          5
+
+#define VELOCITY_ITEM_SIZE    sizeof(float)
+#define VELOCITY_QUEUE_SIZE   8
 
 
 // The mutex that protects concurrent access of UART from multiple tasks.
 xSemaphoreHandle g_pSerializationSemaphore;
+
+// The queue that holds variables to sharade between tasks.
+xQueueHandle g_pLEDQueue;
+xQueueHandle g_pVelocity;
+xQueueHandle g_pFeedBackVelocity;
 
 
 
@@ -56,59 +68,51 @@ __error__(char *pcFilename, uint32_t ui32Line){}
 
 
 
-void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
-{
-    //
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
     // This function can not return, so loop forever.  Interrupts are disabled
     // on entry to this function, so no processor interrupts will interrupt
     // this loop.
-    //
-    while(1)
-    {
-    }
+    while(1) {}
 }
 
 
-int main(void)
-{
-    //
+int main(void) {
     // Set the clocking to run at 50 MHz from the PLL.
-    //
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     //Serialization serialization;
     //SerializationConstruct(&serialization);
 
-    //
+    MotorInterface motor_left, motor_right;
+    MotorInterfaceContruct(&motor_left, left);
+    MotorInterfaceContruct(&motor_right, right);
+
+    // Create queues for exchange variables between tasks.
+    g_pVelocity         = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFeedBackVelocity = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
+
+
+    // Create the MOTOR CONTROLLER task.
+    if(MotorControllerTaskInit(&motor_left) != 0) {
+        while(1) {}
+    }
+
     // Create the LED task.
-    //
-    if(LEDTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
+    if(LEDTaskInit() != 0) {
+        while(1) {}
     }
 
-    if(SwitchTaskInit() != 0)
-    {
-
-        while(1)
-        {
-        }
+    // Create the SWITCH task.
+    if(SwitchTaskInit() != 0) {
+        while(1) {}
     }
 
-    //
     // Start the scheduler.  This should not return.
-    //
     vTaskStartScheduler();
 
-    //
     // In case the scheduler returns for some reason, print an error and loop
     // forever.
-    //
 
-    while(1)
-    {
-    }
+    while(1) {}
 }

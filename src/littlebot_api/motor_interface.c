@@ -1,4 +1,4 @@
-#include "littlebot_api/wheel_control.h"
+#include "littlebot_api/motor_interface.h"
 
 
 void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){

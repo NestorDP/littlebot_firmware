@@ -143,31 +143,21 @@ static void SwitchTask(void *pvParameters)
 // Initializes the switch task.
 //
 //*****************************************************************************
-uint32_t SwitchTaskInit(void)
-{
-    //
+uint32_t SwitchTaskInit(void){
     // Unlock the GPIO LOCK register for Right button to work.
-    //
     HWREG(GPIO_PORTF_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
     HWREG(GPIO_PORTF_BASE + GPIO_O_CR) = 0xFF;
-
-    //
+    
     // Initialize the buttons
-    //
     ButtonsInit();
 
-    //
     // Create the switch task.
-    //
     if(xTaskCreate( SwitchTask, (const portCHAR *)"Switch",
                     SWITCHTASKSTACKSIZE, NULL, tskIDLE_PRIORITY +
-                    PRIORITY_SWITCH_TASK, NULL) != pdTRUE)
-    {
+                    PRIORITY_SWITCH_TASK, NULL) != pdTRUE){
         return(1);
     }
 
-    //
     // Success.
-    //
     return(0);
 }

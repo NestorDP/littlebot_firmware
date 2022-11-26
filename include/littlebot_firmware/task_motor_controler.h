@@ -21,6 +21,24 @@
 #ifndef TASK_MOTOR_CONTROLLER_R_H__
 #define TASK_MOTOR_CONTROLLER_R_H__
 
-extern uint32_t MotorControllerRTaskInit(void);
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "driverlib/gpio.h"
+#include "driverlib/rom.h"
+#include "utils/uartstdio.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
+
+#include "littlebot_api/motor_interface.h"
+
+
+
+extern uint32_t MotorControllerTaskInit(MotorInterface motor);
 
 #endif // TASK_MOTOR_CONTROLLER_R_H__

@@ -51,27 +51,17 @@
 //*****************************************************************************
 #define LEDTASKSTACKSIZE        128         // Stack size in words
 
-//*****************************************************************************
-//
-// The item size and queue size for the LED message queue.
-//
-//*****************************************************************************
-#define LED_ITEM_SIZE           sizeof(uint8_t)
-#define LED_QUEUE_SIZE          5
+
 
 //*****************************************************************************
 //
 // Default LED toggle delay value. LED toggling frequency is twice this number.
 //
 //*****************************************************************************
-#define LED_TOGGLE_DELAY        100
+#define LED_TOGGLE_DELAY        1000
 
-//*****************************************************************************
-//
 // The queue that holds messages sent to the LED task.
-//
-//*****************************************************************************
-xQueueHandle g_pLEDQueue;
+extern xQueueHandle g_pLEDQueue;
 
 //
 // [G, R, B] range is 0 to 0xFFFF per color.
@@ -164,8 +154,7 @@ uint32_t LEDTaskInit(void)
     g_pui32Colors[g_ui8ColorsIndx] = 0x8000;
     RGBColorSet(g_pui32Colors);
 
-    // Create a queue for sending messages to the LED task.
-    g_pLEDQueue = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
+
 
     // Create the LED task.
     if( xTaskCreate(LEDTask, (const portCHAR *)"LED", LEDTASKSTACKSIZE, NULL,
