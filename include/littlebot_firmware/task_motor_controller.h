@@ -35,10 +35,10 @@
 #include "queue.h"
 #include "semphr.h"
 
+#include "littlebot_firmware/priorities.h"
 #include "littlebot_api/motor_interface.h"
 
 
-
-extern uint32_t MotorControllerTaskInit(MotorInterface motor);
+extern uint32_t MotorControllerTaskInit(MotorInterface *motor);
 
 #endif // TASK_MOTOR_CONTROLLER_R_H__

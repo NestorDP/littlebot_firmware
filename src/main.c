@@ -80,19 +80,19 @@ int main(void) {
     // Set the clocking to run at 50 MHz from the PLL.
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
-    //Serialization serialization;
-    //SerializationConstruct(&serialization);
 
     MotorInterface motor_left, motor_right;
-    MotorInterfaceContruct(&motor_left, left);
-    MotorInterfaceContruct(&motor_right, right);
+    MotorInterfaceConstruct(&motor_left, left);
+    MotorInterfaceConstruct(&motor_right, right);
 
     // Create queues for exchange variables between tasks.
     g_pVelocity         = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFeedBackVelocity = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
-
+    // FILE a; 
+    // a._read;
+    
     // Create the MOTOR CONTROLLER task.
     if(MotorControllerTaskInit(&motor_left) != 0) {
         while(1) {}

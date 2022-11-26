@@ -1,18 +1,14 @@
 // Copyright (c) 2022
 
 
-#include "littlebot_firmware/motor_controller_task.h"
+#include "littlebot_firmware/task_motor_controller.h"
 
-// extern xQueueHandle g_pVelocity;
-// extern xQueueHandle g_pFeedBackVelocity;
+extern xQueueHandle g_pVelocity;
+extern xQueueHandle g_pFeedBackVelocity;
 
 
-static void vTaskMotorController(void *pvParameters)
-// {
-//     portTickType ui32WakeTime;
-//     uint32_t ui32LEDToggleDelay;
-//     uint8_t i8Message;
-
+static void vTaskMotorController(void *pvParameters) {
+    MotorInterface *pxMotor;
 //     ui32LEDToggleDelay = SERIAL_READ_TOGGLE_DELAY;
 
 //     ui32WakeTime = xTaskGetTickCount();
@@ -46,20 +42,18 @@ static void vTaskMotorController(void *pvParameters)
 //         RGBDisable();
 //         xTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);
 //     }
-// }
+}
 
 
-uint32_t MotorControllerTaskInit(MotorInterface *mt) {
-    
-    motor = mt;
+uint32_t MotorControllerTaskInit(MotorInterface *pxMotor) {
 
     // Create the motor controller task.
     if( xTaskCreate(
                 vTaskMotorController, 
                 "LeftMotorController", 
-                LEDTASKSTACKSIZE, 
-                NULL,
-                tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK, 
+                128, 
+                (void *) pxMotor,
+                tskIDLE_PRIORITY + PRIORITY_MOTOR_CONTROLLER_TASK, 
                 NULL
                 ) != pdTRUE) {
         return(1);
