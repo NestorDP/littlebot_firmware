@@ -20,9 +20,13 @@ static void SerialWriteTask(void *pvParameters) {
 
     ui32WakeTime = xTaskGetTickCount();
 
+    SerialInterface *s = (SerialInterface *) pvParameters;
+
     while(1) {
         // comm->SetVelocity(comm)
         // comm->SendMessage(comm);
+
+        s->Write(s, "DENTRO DA TASK");
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
         RGBDisable();
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
@@ -32,10 +36,15 @@ static void SerialWriteTask(void *pvParameters) {
 
 uint32_t SerialWriteTaskInit(void *param) {
     // Create the serial write task.
+    SerialInterface *ser;
+    ser = (SerialInterface *) param;
+
+    ser->Write(ser, "teste");
+
     if( xTaskCreate(SerialWriteTask,
-                   (const portCHAR *)"LED",
+                   (const portCHAR *)"SERIAL_WRITE",
                    SERIAL_WRITE_TASK_STACK_SIZE,
-                   param,
+                   (void *) ser,
                    tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK,
                    NULL) != pdTRUE) {
         return(1);

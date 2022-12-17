@@ -17,8 +17,10 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "littlebot_firmware/priorities.h"
 #include "littlebot_api/serialization.h"
+#include "littlebot_api/serial.h"
+#include "littlebot_firmware/priorities.h"
+
 
 extern uint32_t SerialWriteTaskInit(void *param);
 

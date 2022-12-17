@@ -83,7 +83,9 @@ int main(void) {
     
     // Create communication object
     Serialization comm;
-    SerializationConstruct(&comm);
+    SerialInterface s;
+    SerializationConstruct(&comm);    
+    SerialInterfaceContruct(&s, 115200);
 
     // Create motors objects
     MotorInterface motor_left, motor_right;
@@ -95,18 +97,16 @@ int main(void) {
     g_pFeedBackVelocity = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
-    SerialInterface s;
-    SerialInterfaceContruct(&s, 115200);
-    
+   
     // while (1)
     // {
     //     s.Write(&s, "teste\n");
     // }
 
     // Create the MOTOR CONTROLLER task.
-    // if(SerialWriteTaskInit((void *) &comm) != 0) {
-    //     while(1) {}
-    // }
+    if(SerialWriteTaskInit((void *) &s) != 0) {
+        while(1) {}
+    }
      
     // Create the MOTOR CONTROLLER task.
     // if(MotorControllerTaskInit(&motor_left) != 0) {
