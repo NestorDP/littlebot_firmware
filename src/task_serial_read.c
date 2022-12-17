@@ -1,8 +1,8 @@
 // Copyright (c) 2022
 
-#include "littlebot_firmware/task_serial_write.h"
+#include "littlebot_firmware/task_serial_read.h"
 
-#define SERIAL_WRITE_TASK_STACK_SIZE 128         // Stack size in words
+#define SERIAL_READ_TASK_STACK_SIZE 128         // Stack size in words
 
 #define SERIAL_READ_TOGGLE_DELAY     100
 
@@ -11,9 +11,10 @@
 
 // extern xSemaphoreHandle g_pSerializationSemaphore;
 
-static void SerialWriteTask(void *pvParameters) {
+static void SerialReadTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32ToggleDelay;
+    char msg[10];
     Serialization *comm = (Serialization *) pvParameters;
 
     ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
@@ -25,7 +26,7 @@ static void SerialWriteTask(void *pvParameters) {
         // comm->SetVelocity(comm)
         // comm->SendMessage(comm);
 
-        s->Write(s, "DENTRO DA TASK");
+        s->Read(s, msg, 10);
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
         RGBDisable();
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
@@ -33,18 +34,18 @@ static void SerialWriteTask(void *pvParameters) {
 }
 
 
-uint32_t SerialWriteTaskInit(void *param) {
+uint32_t SerialReadTaskInit(void *param) {
     // Create the serial write task.
     SerialInterface *ser;
     ser = (SerialInterface *) param;
 
     ser->Write(ser, "teste");
 
-    if( xTaskCreate(SerialWriteTask,
-                   (const portCHAR *)"SERIAL_WRITE",
-                   SERIAL_WRITE_TASK_STACK_SIZE,
+    if( xTaskCreate(SerialReadTask,
+                   (const portCHAR *)"SERIAL_READ",
+                   SERIAL_READ_TASK_STACK_SIZE,
                    (void *) ser,
-                   tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
+                   tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK,
                    NULL) != pdTRUE) {
         return(1);
     }

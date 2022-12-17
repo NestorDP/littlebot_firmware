@@ -98,21 +98,21 @@ int main(void) {
     g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
    
-    // while (1)
-    // {
-    //     s.Write(&s, "teste\n");
-    // }
-
-    // Create the MOTOR CONTROLLER task.
-    if(SerialWriteTaskInit((void *) &s) != 0) {
-        while(1) {}
-    }
-     
     // Create the MOTOR CONTROLLER task.
     // if(MotorControllerTaskInit(&motor_left) != 0) {
     //     while(1) {}
     // }
 
+    // Create the SERIAL_WRITE task.
+    if(SerialWriteTaskInit((void *) &s) != 0) {
+        while(1) {}
+    }
+
+    // Create the SERIAL_READ task.
+    if(SerialReadTaskInit((void *) &s) != 0) {
+        while(1) {}
+    }
+     
     // Create the LED task.
     if(LEDTaskInit() != 0) {
         while(1) {}
