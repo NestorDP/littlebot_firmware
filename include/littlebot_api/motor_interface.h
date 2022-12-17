@@ -38,7 +38,7 @@ struct MotorInterfaceClass{
     ptfSetVelocit SetVelocit;
 };
 
-void MotorInterfaceContruct(MotorInterface *self, uint8_t side);
+void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
 void fcSetVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
 

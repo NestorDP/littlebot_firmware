@@ -37,6 +37,7 @@
 
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
+#include "littlebot_firmware/task_serial_write.h"
 
 #include "littlebot_api/motor_interface.h"
 #include "littlebot_api/serial.h"
@@ -80,7 +81,11 @@ int main(void) {
     // Set the clocking to run at 50 MHz from the PLL.
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
+    // Create communication object
+    Serialization comm;
+    SerializationConstruct(&comm);
 
+    // Create motors objects
     MotorInterface motor_left, motor_right;
     MotorInterfaceConstruct(&motor_left, left);
     MotorInterfaceConstruct(&motor_right, right);
@@ -90,13 +95,23 @@ int main(void) {
     g_pFeedBackVelocity = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
-    // FILE a; 
-    // a._read;
+    SerialInterface s;
+    SerialInterfaceContruct(&s, 115200);
     
+    // while (1)
+    // {
+    //     s.Write(&s, "teste\n");
+    // }
+
     // Create the MOTOR CONTROLLER task.
-    if(MotorControllerTaskInit(&motor_left) != 0) {
-        while(1) {}
-    }
+    // if(SerialWriteTaskInit((void *) &comm) != 0) {
+    //     while(1) {}
+    // }
+     
+    // Create the MOTOR CONTROLLER task.
+    // if(MotorControllerTaskInit(&motor_left) != 0) {
+    //     while(1) {}
+    // }
 
     // Create the LED task.
     if(LEDTaskInit() != 0) {

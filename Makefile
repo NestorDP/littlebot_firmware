@@ -34,9 +34,9 @@ SIZE      = $(TOOLCHAIN)size
 # GCC flags
 #--------------------
 CPUFLAG  = -mthumb -mcpu=cortex-m4
+FPUFLAG  = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 WFLAG    = -Wall 
 WFLAG   += -Wextra
-FPUFLAG += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 CFLAGS   = $(CPUFLAG) 
 CFLAGS  += $(WFLAG) 

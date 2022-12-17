@@ -1,26 +1,4 @@
-//*****************************************************************************
-//
-// led_task.c - A simple flashing LED task.
-//
-// Copyright (c) 2012-2016 Texas Instruments Incorporated.  All rights reserved.
-// Software License Agreement
-// 
-// Texas Instruments (TI) is supplying this software for use solely and
-// exclusively on TI's microcontroller products. The software is owned by
-// TI and/or its suppliers, and is protected under applicable copyright
-// laws. You may not combine this software with "viral" open-source
-// software in order to form a larger program.
-// 
-// THIS SOFTWARE IS PROVIDED "AS IS" AND WITH ALL FAULTS.
-// NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT
-// NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. TI SHALL NOT, UNDER ANY
-// CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-// DAMAGES, FOR ANY REASON WHATSOEVER.
-// 
-// This is part of revision 2.1.3.156 of the EK-TM4C123GXL Firmware Package.
-//
-//*****************************************************************************
+
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -44,39 +22,20 @@
 
 #include "littlebot_api/serial.h"
 
-//*****************************************************************************
-//
-// The stack size for the LED toggle task.
-//
-//*****************************************************************************
+
 #define LEDTASKSTACKSIZE        128         // Stack size in words
 
-
-
-//*****************************************************************************
-//
-// Default LED toggle delay value. LED toggling frequency is twice this number.
-//
-//*****************************************************************************
-#define LED_TOGGLE_DELAY        1000
+#define LED_TOGGLE_DELAY        100
 
 // The queue that holds messages sent to the LED task.
 extern xQueueHandle g_pLEDQueue;
 
-//
 // [G, R, B] range is 0 to 0xFFFF per color.
-//
 static uint32_t g_pui32Colors[3] = { 0x0000, 0x0000, 0x0000 };
 static uint8_t g_ui8ColorsIndx;
 
 extern xSemaphoreHandle g_pUARTSemaphore;
 
-//*****************************************************************************
-//
-// This task toggles the user selected LED at a user selected frequency. User
-// can make the selections by pressing the left and right buttons.
-//
-//*****************************************************************************
 static void LEDTask(void *pvParameters)
 {
     portTickType ui32WakeTime;
@@ -89,9 +48,6 @@ static void LEDTask(void *pvParameters)
     // Get the current tick count.
     ui32WakeTime = xTaskGetTickCount();
 
-
-    //
-    // Loop forever.
     while(1) {
         // Read the next message, if available on queue.
 
