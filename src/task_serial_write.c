@@ -3,13 +3,12 @@
 #include "littlebot_firmware/task_serial_write.h"
 
 #define SERIAL_WRITE_TASK_STACK_SIZE 128         // Stack size in words
-
 #define SERIAL_READ_TOGGLE_DELAY     100
 
 
 // xQueueHandle g_pLittlebotQueue;
 
-// extern xSemaphoreHandle g_pSerializationSemaphore;
+extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
@@ -25,20 +24,18 @@ static void SerialWriteTask(void *pvParameters) {
         // comm->SetVelocity(comm)
         // comm->SendMessage(comm);
 
+        xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
         s->Write(s, "DENTRO DA TASK");
-        xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
-        RGBDisable();
+        xSemaphoreGive(g_pSerializationSemaphore);
+
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
     }
 }
 
 
 uint32_t SerialWriteTaskInit(void *param) {
-    // Create the serial write task.
     SerialInterface *ser;
     ser = (SerialInterface *) param;
-
-    ser->Write(ser, "teste");
 
     if( xTaskCreate(SerialWriteTask,
                    (const portCHAR *)"SERIAL_WRITE",

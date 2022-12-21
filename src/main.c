@@ -56,8 +56,8 @@ xSemaphoreHandle g_pSerializationSemaphore;
 
 // The queue that holds variables to sharade between tasks.
 xQueueHandle g_pLEDQueue;
-xQueueHandle g_pVelocity;
-xQueueHandle g_pFeedBackVelocity;
+xQueueHandle g_pVelocityQueue;
+xQueueHandle g_pFBVelocityQueue;
 
 
 
@@ -93,10 +93,12 @@ int main(void) {
     MotorInterfaceConstruct(&motor_right, right);
 
     // Create queues for exchange variables between tasks.
-    g_pVelocity         = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFeedBackVelocity = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pLEDQueue         = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
+    g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pLEDQueue        = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
+    // Create semaphore to protect the serial port.
+    g_pSerializationSemaphore = xSemaphoreCreateMutex();
    
     // Create the MOTOR CONTROLLER task.
     // if(MotorControllerTaskInit(&motor_left) != 0) {
@@ -109,9 +111,9 @@ int main(void) {
     }
 
     // Create the SERIAL_READ task.
-    if(SerialReadTaskInit((void *) &s) != 0) {
-        while(1) {}
-    }
+    // if(SerialReadTaskInit((void *) &s) != 0) {
+    //     while(1) {}
+    // }
      
     // Create the LED task.
     if(LEDTaskInit() != 0) {
