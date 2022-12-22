@@ -25,7 +25,7 @@ static void SerialWriteTask(void *pvParameters) {
         // comm->SendMessage(comm);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        s->Write(s, "DENTRO DA TASK");
+        s->Write(s, "DENTRO DA 11111TASK");
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
@@ -34,13 +34,11 @@ static void SerialWriteTask(void *pvParameters) {
 
 
 uint32_t SerialWriteTaskInit(void *param) {
-    SerialInterface *ser;
-    ser = (SerialInterface *) param;
 
     if( xTaskCreate(SerialWriteTask,
                    (const portCHAR *)"SERIAL_WRITE",
                    SERIAL_WRITE_TASK_STACK_SIZE,
-                   (void *) ser,
+                   param,
                    tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
                    NULL) != pdTRUE) {
         return(1);
