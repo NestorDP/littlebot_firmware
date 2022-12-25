@@ -8,8 +8,8 @@
 
 // xQueueHandle g_pLittlebotQueue;
 
-extern Serialization comm;
-extern SerialInterface s;
+extern Serialization protocol;
+extern SerialInterface bluetooth;
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
@@ -29,8 +29,8 @@ static void SerialWriteTask(void *pvParameters) {
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        comm.SendMessage(&comm, str, &a, &b);
-        s.Write(&s, str);
+        protocol.SendMessage(&protocol, str, &a, &b);
+        bluetooth.Write(&bluetooth, str);
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);

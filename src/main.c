@@ -60,8 +60,8 @@ xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
 
-SerialInterface ;
-Serialization comm;
+SerialInterface bluetooth;
+Serialization protocol;
 
 
 // The error routine that is called if the driver library encounters an error.
@@ -86,8 +86,8 @@ int main(void) {
     
     // Create communication object
     // SerialInterface s;
-    SerialInterfaceContruct(&s, 115200);
-    SerializationConstruct(&comm);
+    SerialInterfaceContruct(&bluetooth, 115200);
+    SerializationConstruct(&protocol);
 
 
     // Create motors objects
