@@ -25,28 +25,17 @@ void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
 
 
 void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel) {
-  char serialized_msg[200];
-  char *ptr_to_left;
-  char *ptr_to_right;
+  char str_left[20];
+  char str_right[20];
 
-  ptr_to_left = (char *) left_vel;
-  ptr_to_right = (char *) right_vel;
+  FloaToStr(*left_vel, str_left, 2);
+  FloaToStr(*right_vel, str_right, 2);
 
-  for (i = 0; i < 2 * 4; i++){
-    if(i < 4){
-      serialized_msg[i] = *(ptr_to_right + i);
-    }
-    else{
-      serialized_msg[i] = *(ptr_to_left + i);
-    }
-  }
-
-  float a = 12.118;
-
-  FloaToStr(*left_vel, msg, 2);
-  
-  // self->serial.Write (&self->serial, msg);
+  strcpy(msg, str_left);
+  strcat(msg, "#");
+  strcat(msg, str_right);
 }
+
 
 void FloaToStr(float n, char *str, int afterpoint) {
       // Extract integer part
@@ -70,6 +59,7 @@ void FloaToStr(float n, char *str, int afterpoint) {
         intToStr((int)fpart, str + i + 1, afterpoint);
     }
 }
+
 
 int intToStr(int x, char str[], int d)
 {

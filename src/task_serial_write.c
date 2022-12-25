@@ -18,8 +18,8 @@ static void SerialWriteTask(void *pvParameters) {
 
     ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
     ui32WakeTime = xTaskGetTickCount();
-    float a = 37.123;
-    float b = 78.123;
+    float a = 47.123;
+    float b = 53.123;
 
     float val;
     char str[150];
