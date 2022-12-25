@@ -18,9 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# This makefile was written based on the 
-# https://github.com/jkovacic/FreeRTOS-GCC-tm4c123glx/blob/master/Makefile
-
 
 TOOLCHAIN = arm-none-eabi-
 CC        = $(TOOLCHAIN)gcc
@@ -84,12 +81,10 @@ DRIVERLIB_UTILS_OBJS = uartstdio.o
 
 FREERTOS_PORT_SOURCE = $(shell ls $(FREERTOS_PORT_DIR)*.c)
 DRIVERS_SOURCES      = $(shell ls $(DRIVERS_DIR)*.c)
-# API_SOURCES          = $(shell ls $(API_DIR)*.c)
 SRC_SOURCES          = $(shell ls $(SRC_DIR)*.c)
 
 FREERTOS_PORT_OBJS   = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
 DRIVERS_OBJS         = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
-# API_OBJS             = $(patsubst $(API_DIR)%,$(OBJ_DIR)%,$(API_SOURCES:.c=.o))
 SRC_OBJS             = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
 
 OBJS   = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
@@ -97,7 +92,6 @@ OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
 OBJS  += $(addprefix $(OBJ_DIR), $(DRIVERLIB_UTILS_OBJS)) 
 OBJS  += $(FREERTOS_PORT_OBJS) 
 OBJS  += $(DRIVERS_OBJS)
-# OBJS  += $(API_OBJS)
 OBJS  += $(SRC_OBJS)
 
 # Get the location of libgcc.a, libc.a and libm.a from the GCC front-end.
@@ -167,10 +161,6 @@ $(OBJ_DIR)%.o : $(DRIVERLIB_UTILS_DIR)%.c
 # littlebot drivers
 $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
-
-# littebot api
-# $(OBJ_DIR)%.o : $(API_DIR)%.c
-# 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
 # Main Code
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)

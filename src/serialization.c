@@ -43,7 +43,7 @@ void fcSendMessage (Serialization *self) {
     }
   }
   
-  self->serial.Write (&self->serial, self->serialized_msg);
+  self->serial.Write (&self->serial, "self->serialized_msg");
 }
 
 

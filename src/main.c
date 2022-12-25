@@ -41,6 +41,7 @@
 
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial.h"
+#include "littlebot_firmware/serialization.h"
 
 // The item size and queue size for the LED message queue.
 #define LED_ITEM_SIZE           sizeof(uint8_t)
@@ -59,7 +60,8 @@ xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
 
-// SerialInterface s;
+SerialInterface s;
+Serialization comm;
 
 
 // The error routine that is called if the driver library encounters an error.
@@ -83,8 +85,10 @@ int main(void) {
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     // Create communication object
-    SerialInterface s;
-    SerialInterfaceContruct(&s, 115200);
+    // SerialInterface s;
+    // SerialInterfaceContruct(&s, 115200);
+    SerializationConstruct(&comm);
+
 
     // Create motors objects
     // MotorInterface motor_left, motor_right;

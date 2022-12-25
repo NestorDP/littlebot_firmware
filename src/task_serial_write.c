@@ -9,6 +9,7 @@
 // xQueueHandle g_pLittlebotQueue;
 
 extern SerialInterface s;
+extern Serialization comm;
 
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
@@ -24,7 +25,8 @@ static void SerialWriteTask(void *pvParameters) {
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        s.Write(&s, "DENTRO DA 11111TASK");
+        // s.Write(&s, "DENTRO DA TASK");
+        comm.SendMessage(&comm);
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);

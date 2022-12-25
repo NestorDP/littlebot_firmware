@@ -20,6 +20,7 @@
 // #include "littlebot_api/serialization.h"
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/priorities.h"
+#include "littlebot_firmware/serialization.h"
 
 
 extern uint32_t SerialWriteTaskInit(void *param);
