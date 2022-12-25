@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef INCLUDE_LITTLEBOT_API_SERIALIZATION_H__
-#define INCLUDE_LITTLEBOT_API_SERIALIZATION_H__
+#ifndef INCLUDE_LITTLEBOT_FIRMWARE_SERIALIZATION_H__
+#define INCLUDE_LITTLEBOT_FIRMWARE_SERIALIZATION_H__
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "littlebot_api/serial.h"
+#include "littlebot_firmware/serial.h"
 
 typedef struct SerializationClass Serialization;
 
@@ -66,4 +66,4 @@ static char var_float[sizeof(float)];
 
 static uint8_t i;
 
-#endif // INCLUDE_LITTLEBOT_API_SERIALIZATION_H__
+#endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIALIZATION_H__

@@ -20,9 +20,6 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/priorities.h"
 
-#include "littlebot_api/serial.h"
-
-
 #define LEDTASKSTACKSIZE        128         // Stack size in words
 
 #define LED_TOGGLE_DELAY        100

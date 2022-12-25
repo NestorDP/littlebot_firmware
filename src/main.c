@@ -39,9 +39,8 @@
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_serial_write.h"
 
-#include "littlebot_api/motor_interface.h"
-#include "littlebot_api/serial.h"
-#include "littlebot_api/serialization.h"
+#include "littlebot_firmware/motor_interface.h"
+#include "littlebot_firmware/serial.h"
 
 // The item size and queue size for the LED message queue.
 #define LED_ITEM_SIZE           sizeof(uint8_t)
@@ -59,6 +58,8 @@ xQueueHandle g_pLEDQueue;
 xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
+
+// SerialInterface s;
 
 
 // The error routine that is called if the driver library encounters an error.
@@ -82,15 +83,13 @@ int main(void) {
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     // Create communication object
-    Serialization comm;
     SerialInterface s;
-    SerializationConstruct(&comm);    
     SerialInterfaceContruct(&s, 115200);
 
     // Create motors objects
-    MotorInterface motor_left, motor_right;
-    MotorInterfaceConstruct(&motor_left, left);
-    MotorInterfaceConstruct(&motor_right, right);
+    // MotorInterface motor_left, motor_right;
+    // MotorInterfaceConstruct(&motor_left, left);
+    // MotorInterfaceConstruct(&motor_right, right);
 
     // Create queues for exchange variables between tasks.
     g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -99,11 +98,6 @@ int main(void) {
 
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
-   
-    // Create the MOTOR CONTROLLER task.
-    // if(MotorControllerTaskInit(&motor_left) != 0) {
-    //     while(1) {}
-    // }
 
     // Create the SERIAL_WRITE task.
     if(SerialWriteTaskInit((void *) &s) != 0) {
@@ -114,6 +108,12 @@ int main(void) {
     // if(SerialReadTaskInit((void *) &s) != 0) {
     //     while(1) {}
     // }
+   
+    // Create the MOTOR CONTROLLER task.
+    // if(MotorControllerTaskInit(&motor_left) != 0) {
+    //     while(1) {}
+    // }
+
      
     // Create the LED task.
     if(LEDTaskInit() != 0) {

@@ -7,6 +7,7 @@
     "ENCODER.C": "cpp",
     "stdlib.h": "c",
     "hw_memmap.h": "c",
-    "interrupt.h": "c"
+    "interrupt.h": "c",
+    "task_serial_write.h": "c"
   }
 }

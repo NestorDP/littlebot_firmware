@@ -18,31 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef INCLUDE_LITTLEBOT_API_SERIAL_H__
-#define INCLUDE_LITTLEBOT_API_SERIAL_H__
+#ifndef INCLUDE_LITTLEBOT_FIRMWARE_WHEEL_CONTROL_H__
+#define INCLUDE_LITTLEBOT_FIRMWARE_WHEEL_CONTROL_H__
 
-#include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <stdbool.h>
 
-#include "littlebot_drivers/uart_port.h"
+#include "littlebot_drivers/motor.h"
 
-typedef struct SerialInterfaceClass SerialInterface;
+typedef struct MotorInterfaceClass MotorInterface;
 
-typedef void (*ptfRead)(SerialInterface *self, char *msg, uint32_t len_msg);
-typedef void (*ptfWrite)(SerialInterface *self, char *msg);
+typedef void (*ptfConfigMotor)(void);
+typedef void (*ptfSetVelocit)(MotorInterface *self, uint16_t vel, uint8_t dir);
 
 //structure of function pointer
-struct SerialInterfaceClass{
-  ptfRead Read;
-  ptfWrite Write;
+struct MotorInterfaceClass{
+    uint8_t motor_side_;
+    ptfConfigMotor ConfigMotor;
+    ptfSetVelocit SetVelocit;
 };
 
-void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
+void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
-void fcRead(SerialInterface *self, char *msg, uint32_t len_msg);
-
-void fcWrite(SerialInterface *self, char *msg);
+void fcSetVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
 
 
-#endif // INCLUDE_LITTLEBOT_API_SERIAL_H__
+#endif // INCLUDE_LITTLEBOT_FIRMWARE_WHEEL_CONTROL_H__

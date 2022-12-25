@@ -1,4 +1,4 @@
-#include "littlebot_api/serialization.h"
+#include "littlebot_firmware/serialization.h"
 
 void SerializationConstruct(Serialization *self) {
   self->ReceiveMessage = fcReceiveMessage;

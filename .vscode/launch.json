@@ -5,22 +5,20 @@
 "version": "0.2.0",
   "configurations": [
       {
-          "name": "Launch gdb-multiarch",
-          "type": "cppdbg",
-          "request": "launch",
-          "miDebuggerPath": "arm-none-eabi-gdb",
-          "miDebuggerArgs": "-ex",
-          "MIMode": "gdb",
-          "program": "${workspaceFolder}/image.elf",
-            "setupCommands": [
-              {"text": "target remote localhost:3333"},
-              {"text": "file 'image.elf'"},
-              {"text": "load"},
-              {"text": "break main","ignoreFailures": true}
-          ],
-          "launchCompleteCommand": "None",
-          "externalConsole": false,
-          "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceRoot}",
+        "executable": "${workspaceRoot}/image.elf",
+        "name": "Debug Microcontroller",
+        "request": "launch",
+        "type": "cortex-debug",
+        "servertype": "openocd",
+        "serverpath": "openocd",
+        "configFiles": ["/usr/local/share/openocd/scripts/board/ti_ek-tm4c123gxl.cfg"],
+        "gdbTarget": "localhost:3333",
+        "rtos": "FreeRTOS",
+        // "device": "",
+        // "interface": "",
+        "showDevDebugOutput": "raw",
+        "runToMain": true
       }
   ]
 }

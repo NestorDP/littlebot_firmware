@@ -43,9 +43,6 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/priorities.h"
 
-#include "littlebot_api/serial.h"
-
-
 //*****************************************************************************
 //
 // The stack size for the display task.
