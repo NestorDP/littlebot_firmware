@@ -1,59 +1,45 @@
 #include "littlebot_firmware/serialization.h"
 
+
 void SerializationConstruct(Serialization *self) {
   self->ReceiveMessage = fcReceiveMessage;
   self->SendMessage = fcSendMessage;
-  self->SetVelocity = fcSetVelocity;
-  self->GetVelocity = fcGetVelocity;
-  self->feedback_velocity[left] = 0;
-  self->feedback_velocity[right] = 0;
-  self->velocity[left] = 0;
-  self->velocity[right] = 0;
+
   SerialInterfaceContruct(&self->serial, 115200);
 }
 
 
-void fcReceiveMessage (Serialization *self) {
-  char var_left[sizeof(float)];
-  char var_right[sizeof(float)];
+void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
+  char serialized_msg[200];
+  char var_left[4];
+  char var_right[4];
 
-  self->serial.Read (&self->serial, self->serialized_msg, sizeof(self->serialized_msg));
+  self->serial.Read (&self->serial, serialized_msg, sizeof(serialized_msg));
 
-  strncpy (var_left, self->serialized_msg, 4);
-  strncpy (var_right, self->serialized_msg + 4, 4);
+  strncpy (var_left, serialized_msg, 4);
+  strncpy (var_right, serialized_msg + 4, 4);
 
-  self->velocity[left] = atoi(var_left);
-  self->velocity[right] = atoi(var_right);
+  left_vel = (float *)var_left;
+  right_vel = (float *)var_right;
 }
 
 
-void fcSendMessage (Serialization *self) {
+void fcSendMessage (Serialization *self, float *left_vel, float *right_vel) {
+  char serialized_msg[200];
   char *ptr_to_left;
   char *ptr_to_right;
 
-  ptr_to_left = (char *) &self->feedback_velocity[left];
-  ptr_to_right = (char *) &self->feedback_velocity[right];
+  ptr_to_left = (char *) left_vel;
+  ptr_to_right = (char *) right_vel;
 
-  for (i = 0; i < 2 * sizeof(float); i++){
-    if(i < sizeof(float)){
-      self->serialized_msg[i] = *(ptr_to_right + i);
+  for (i = 0; i < 2 * 4; i++){
+    if(i < 4){
+      serialized_msg[i] = *(ptr_to_right + i);
     }
     else{
-      self->serialized_msg[i] = *(ptr_to_left + i);
+      serialized_msg[i] = *(ptr_to_left + i);
     }
   }
   
-  self->serial.Write (&self->serial, "self->serialized_msg");
-}
-
-
-void fcSetVelocity (Serialization *self, float *left_vel, float *right_vel) {
-  self->velocity[left] = *left_vel;
-  self->velocity[right] = *right_vel;
-}
-
-
-void fcGetVelocity (Serialization *self, float *left_fb_vel, float *right_fb_vel) {
-  *left_fb_vel = self->feedback_velocity[left];
-  *right_fb_vel = self->feedback_velocity[right];
+  self->serial.Write (&self->serial, serialized_msg);
 }

@@ -8,9 +8,7 @@
 
 // xQueueHandle g_pLittlebotQueue;
 
-extern SerialInterface s;
 extern Serialization comm;
-
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
@@ -19,14 +17,12 @@ static void SerialWriteTask(void *pvParameters) {
 
     ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
     ui32WakeTime = xTaskGetTickCount();
-
-    // SerialInterface *s = (SerialInterface *) pvParameters;
-
+    float a = 34.1;
+    float b = 78.1;
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        // s.Write(&s, "DENTRO DA TASK");
-        comm.SendMessage(&comm);
+        comm.SendMessage(&comm, &a, &b);
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
@@ -34,12 +30,12 @@ static void SerialWriteTask(void *pvParameters) {
 }
 
 
-uint32_t SerialWriteTaskInit(void *param) {
+uint32_t SerialWriteTaskInit(void) {
 
     if( xTaskCreate(SerialWriteTask,
                    (const portCHAR *)"SERIAL_WRITE",
                    SERIAL_WRITE_TASK_STACK_SIZE,
-                   param,
+                   NULL,
                    tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
                    NULL) != pdTRUE) {
         return(1);
