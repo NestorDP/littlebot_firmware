@@ -9,6 +9,7 @@
 // xQueueHandle g_pLittlebotQueue;
 
 extern Serialization comm;
+extern SerialInterface s;
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
@@ -20,9 +21,16 @@ static void SerialWriteTask(void *pvParameters) {
     float a = 34.1;
     float b = 78.1;
 
+    float val;
+    char str[20];
+    
+    strcpy(str, "98993489");
+    val = atof(str);
+
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        comm.SendMessage(&comm, &a, &b);
+        // comm.SendMessage(&comm, &a, &b);
+        s.Write(&s, str);
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);

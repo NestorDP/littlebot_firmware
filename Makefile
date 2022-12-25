@@ -39,10 +39,12 @@ CFLAGS   = $(CPUFLAG)
 CFLAGS  += $(WFLAG) 
 CFLAGS  += $(FPUFLAG)
 CFLAGS  += -std=c99 
+CFLAGS  += -MD
+CFLAGS  += -pedantic
 CFLAGS  += -nostdlib
 CFLAGS  += -ffunction-sections 
 CFLAGS  += -fdata-sections 
-CFLAGS  += -specs=nano.specs -specs=nosys.specs
+CFLAGS  += -specs=nosys.specs
 CFLAGS  += -DPART_TM4C123GH6PM
 CFLAGS  += -DUART_BUFFERED
 
@@ -99,6 +101,12 @@ OBJS  += $(SRC_OBJS)
 LIBGCC := ${shell ${CC} ${CFLAGS} -print-libgcc-file-name}
 LIBC   := ${shell ${CC} ${CFLAGS} -print-file-name=libc.a}
 LIBM   := ${shell ${CC} ${CFLAGS} -print-file-name=libm.a}
+LIBNOSYS := ${shell ${CC} ${CFLAGS} -print-file-name=libnosys.a}
+
+# Linker flags.
+#---------------------
+# LDFLAGS  = 
+# LDFLAGS  = 
 
 # Include paths to be passed to $(CC) where necessary
 #---------------------
@@ -133,7 +141,7 @@ $(OBJ_DIR) :
 
 # Linker
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) -o $@ -ldriver '$(LIBGCC)' '$(LIBC)' '$(LIBM)'
+	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) --gc-sections -o $@ -ldriver '$(LIBC)' '$(LIBGCC)' '$(LIBM)' '$(LIBNOSYS)'
 
 debug : _debug_flags all
 

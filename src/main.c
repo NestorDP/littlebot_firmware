@@ -86,7 +86,7 @@ int main(void) {
     
     // Create communication object
     // SerialInterface s;
-    // SerialInterfaceContruct(&s, 115200);
+    SerialInterfaceContruct(&s, 115200);
     SerializationConstruct(&comm);
 
 

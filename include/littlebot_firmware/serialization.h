@@ -27,6 +27,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <math.h>
+
 #include "littlebot_firmware/serial.h"
 
 typedef struct SerializationClass Serialization;
@@ -37,7 +39,6 @@ typedef void (*ptfSendMessage)(Serialization *self, float *left_vel, float *righ
 
 //structure of function pointer
 struct SerializationClass{
-  
   SerialInterface serial;
   ptfReceiveMessage ReceiveMessage;
   ptfSendMessage SendMessage
@@ -49,6 +50,12 @@ void SerializationConstruct (Serialization *self);
 void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel);
 
 void fcSendMessage (Serialization *self, float *left_vel, float *right_vel);
+
+
+
+void FloaToStr(float n, char *str, int afterpoint);
+int intToStr(int x, char str[], int d);
+void reverse(char* str, int len);
 
 
 // Variables
