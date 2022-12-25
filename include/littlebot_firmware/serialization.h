@@ -33,28 +33,27 @@
 
 typedef struct SerializationClass Serialization;
 
-typedef void (*ptfReceiveMessage)(Serialization *self, float *left_vel, float *right_vel);
+typedef void (*ptfDecode)(Serialization *self, char *msg, float *left_vel, float *right_vel);
 typedef void (*ptfEncode)(Serialization *self, char *msg, float *left_vel, float *right_vel);
 
 
 //structure of function pointer
 struct SerializationClass{
-  // SerialInterface serial;
-  ptfReceiveMessage ReceiveMessage;
+  ptfDecode Decode;
   ptfEncode Encode
 };
 
 // Functions
 void SerializationConstruct (Serialization *self);
 
-void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel);
+void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel);
 
 void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel);
 
+void FloaToStr(float num, char *str, int afterpoint);
 
+int intToStr(int num, char *str, int d);
 
-void FloaToStr(float n, char *str, int afterpoint);
-int intToStr(int x, char str[], int d);
 void reverse(char* str, int len);
 
 
@@ -62,7 +61,5 @@ void reverse(char* str, int len);
 static char var_float[sizeof(float)];
 
 static uint8_t i;
-
-
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIALIZATION_H__

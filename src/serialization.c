@@ -2,19 +2,15 @@
 
 
 void SerializationConstruct(Serialization *self) {
-  self->ReceiveMessage = fcReceiveMessage;
+  self->Decode = fcDecode;
   self->Encode = fcEncode;
-
-  // SerialInterfaceContruct(&self->serial, 115200);
 }
 
 
-void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
+void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel) {
   char serialized_msg[200];
   char var_left[4];
   char var_right[4];
-
-  // self->serial.Read (&self->serial, serialized_msg, sizeof(serialized_msg));
 
   strncpy (var_left, serialized_msg, 4);
   strncpy (var_right, serialized_msg + 4, 4);
@@ -37,12 +33,12 @@ void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel
 }
 
 
-void FloaToStr(float n, char *str, int afterpoint) {
+void FloaToStr(float num, char *str, int afterpoint) {
       // Extract integer part
-    int ipart = (int)n;
+    int ipart = (int)num;
  
     // Extract floating part
-    float fpart = n - (float)ipart;
+    float fpart = num - (float)ipart;
  
     // convert integer part to string
     int i = intToStr(ipart, str, 0);
@@ -61,12 +57,12 @@ void FloaToStr(float n, char *str, int afterpoint) {
 }
 
 
-int intToStr(int x, char str[], int d)
+int intToStr(int num, char *str, int d)
 {
     int i = 0;
-    while (x) {
-        str[i++] = (x % 10) + '0';
-        x = x / 10;
+    while (num) {
+        str[i++] = (num % 10) + '0';
+        num = num / 10;
     }
  
     // If number of digits required is more, then
