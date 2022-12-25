@@ -3,7 +3,7 @@
 
 void SerializationConstruct(Serialization *self) {
   self->ReceiveMessage = fcReceiveMessage;
-  self->SendMessage = fcSendMessage;
+  self->Encode = fcEncode;
 
   // SerialInterfaceContruct(&self->serial, 115200);
 }
@@ -24,7 +24,7 @@ void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
 }
 
 
-void fcSendMessage (Serialization *self, char *msg, float *left_vel, float *right_vel) {
+void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel) {
   char serialized_msg[200];
   char *ptr_to_left;
   char *ptr_to_right;

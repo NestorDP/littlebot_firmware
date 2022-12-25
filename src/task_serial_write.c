@@ -29,7 +29,7 @@ static void SerialWriteTask(void *pvParameters) {
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        protocol.SendMessage(&protocol, str, &a, &b);
+        protocol.Encode(&protocol, str, &a, &b);
         bluetooth.Write(&bluetooth, str);
         xSemaphoreGive(g_pSerializationSemaphore);
 
