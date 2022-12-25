@@ -5,7 +5,7 @@ void SerializationConstruct(Serialization *self) {
   self->ReceiveMessage = fcReceiveMessage;
   self->SendMessage = fcSendMessage;
 
-  SerialInterfaceContruct(&self->serial, 115200);
+  // SerialInterfaceContruct(&self->serial, 115200);
 }
 
 
@@ -14,7 +14,7 @@ void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
   char var_left[4];
   char var_right[4];
 
-  self->serial.Read (&self->serial, serialized_msg, sizeof(serialized_msg));
+  // self->serial.Read (&self->serial, serialized_msg, sizeof(serialized_msg));
 
   strncpy (var_left, serialized_msg, 4);
   strncpy (var_right, serialized_msg + 4, 4);
@@ -24,7 +24,7 @@ void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel) {
 }
 
 
-void fcSendMessage (Serialization *self, float *left_vel, float *right_vel) {
+void fcSendMessage (Serialization *self, char *msg, float *left_vel, float *right_vel) {
   char serialized_msg[200];
   char *ptr_to_left;
   char *ptr_to_right;
@@ -40,8 +40,12 @@ void fcSendMessage (Serialization *self, float *left_vel, float *right_vel) {
       serialized_msg[i] = *(ptr_to_left + i);
     }
   }
+
+  float a = 12.118;
+
+  FloaToStr(*left_vel, msg, 2);
   
-  self->serial.Write (&self->serial, serialized_msg);
+  // self->serial.Write (&self->serial, msg);
 }
 
 void FloaToStr(float n, char *str, int afterpoint) {

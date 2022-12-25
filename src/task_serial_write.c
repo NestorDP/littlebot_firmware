@@ -18,18 +18,18 @@ static void SerialWriteTask(void *pvParameters) {
 
     ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
     ui32WakeTime = xTaskGetTickCount();
-    float a = 34.1;
-    float b = 78.1;
+    float a = 37.123;
+    float b = 78.123;
 
     float val;
-    char str[20];
+    char str[150];
     
     strcpy(str, "98993489");
     val = atof(str);
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        // comm.SendMessage(&comm, &a, &b);
+        comm.SendMessage(&comm, str, &a, &b);
         s.Write(&s, str);
         xSemaphoreGive(g_pSerializationSemaphore);
 

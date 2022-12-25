@@ -60,7 +60,7 @@ xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
 
-SerialInterface s;
+SerialInterface ;
 Serialization comm;
 
 

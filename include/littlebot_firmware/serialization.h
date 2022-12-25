@@ -34,12 +34,12 @@
 typedef struct SerializationClass Serialization;
 
 typedef void (*ptfReceiveMessage)(Serialization *self, float *left_vel, float *right_vel);
-typedef void (*ptfSendMessage)(Serialization *self, float *left_vel, float *right_vel);
+typedef void (*ptfSendMessage)(Serialization *self, char *msg, float *left_vel, float *right_vel);
 
 
 //structure of function pointer
 struct SerializationClass{
-  SerialInterface serial;
+  // SerialInterface serial;
   ptfReceiveMessage ReceiveMessage;
   ptfSendMessage SendMessage
 };
@@ -49,7 +49,7 @@ void SerializationConstruct (Serialization *self);
 
 void fcReceiveMessage (Serialization *self, float *left_vel, float *right_vel);
 
-void fcSendMessage (Serialization *self, float *left_vel, float *right_vel);
+void fcSendMessage (Serialization *self, char *msg, float *left_vel, float *right_vel);
 
 
 
