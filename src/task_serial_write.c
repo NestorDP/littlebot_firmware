@@ -15,6 +15,7 @@ extern xSemaphoreHandle g_pSerializationSemaphore;
 static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32ToggleDelay;
+    char protocol_msg[200];
 
     ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
     ui32WakeTime = xTaskGetTickCount();
@@ -22,15 +23,12 @@ static void SerialWriteTask(void *pvParameters) {
     float b = 53.123;
 
     float val;
-    char str[150];
-    
-    strcpy(str, "98993489");
-    val = atof(str);
+    val = atof(protocol_msg);
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        protocol.Encode(&protocol, str, &a, &b);
-        bluetooth.Write(&bluetooth, str);
+        protocol.Encode(&protocol, protocol_msg, &a, &b);
+        bluetooth.Write(&bluetooth, protocol_msg);
         xSemaphoreGive(g_pSerializationSemaphore);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
