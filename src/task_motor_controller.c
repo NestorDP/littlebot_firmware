@@ -3,17 +3,27 @@
 
 #include "littlebot_firmware/task_motor_controller.h"
 
-extern xQueueHandle g_pVelocity;
-extern xQueueHandle g_pFeedBackVelocity;
+#define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
+#define MOTOR_CONTROLLER_TASK_DELAY     100
+
+extern xQueueHandle g_pVelocityQueue;
+extern xQueueHandle g_pFBVelocityQueue;
 
 
 static void vTaskMotorController(void *pvParameters) {
-    MotorInterface *pxMotor;
-//     ui32LEDToggleDelay = SERIAL_READ_TOGGLE_DELAY;
+    portTickType ui32WakeTime;
+    uint32_t ui32MotorTaskDelay;
+    
+    MotorInterface *pxMotor;    
+    float feed_back_velocity[2];
 
-//     ui32WakeTime = xTaskGetTickCount();
+    ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
+    ui32WakeTime = xTaskGetTickCount();
 
-//     while(1) {
+    feed_back_velocity[0] = 18.152;
+    feed_back_velocity[1] = 29.262;
+
+    while(1) {
 //         if( xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS ) {
 //             if(i8Message == LEFT_BUTTON) {
 //                 g_pui32Colors[g_ui8ColorsIndx] = 0x0000;
@@ -36,24 +46,26 @@ static void vTaskMotorController(void *pvParameters) {
 //                 xSemaphoreGive(g_pUARTSemaphore);
 //             }
 //         }
+    if(xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, portMAX_DELAY) != pdPASS) {
+        // Error. The queue should never be full. If so print the
+        // error message on UART and wait for ever.
+        while(1) {}
+    }
 
-//         RGBEnable();
-//         xTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);
-//         RGBDisable();
-//         xTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);
-//     }
+    xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
+    }
 }
 
 
-uint32_t MotorControllerTaskInit(MotorInterface *pxMotor) {
+uint32_t MotorControllerTaskInit(MotorInterface *motor, const char *name, UBaseType_t priority) {
 
     // Create the motor controller task.
     if( xTaskCreate(
                 vTaskMotorController, 
-                "LeftMotorController", 
+                name, 
                 128, 
-                (void *) pxMotor,
-                tskIDLE_PRIORITY + PRIORITY_MOTOR_CONTROLLER_TASK, 
+                (void *) motor,
+                tskIDLE_PRIORITY + priority, 
                 NULL
                 ) != pdTRUE) {
         return(1);

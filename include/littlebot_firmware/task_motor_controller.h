@@ -39,6 +39,6 @@
 #include "littlebot_firmware/motor_interface.h"
 
 
-extern uint32_t MotorControllerTaskInit(MotorInterface *motor);
+extern uint32_t MotorControllerTaskInit(MotorInterface *motor, const char *name, UBaseType_t priority);
 
 #endif // TASK_MOTOR_CONTROLLER_R_H__

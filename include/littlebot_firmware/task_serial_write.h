@@ -5,6 +5,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <math.h>
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"

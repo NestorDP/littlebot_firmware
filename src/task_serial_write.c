@@ -3,35 +3,39 @@
 #include "littlebot_firmware/task_serial_write.h"
 
 #define SERIAL_WRITE_TASK_STACK_SIZE 128         // Stack size in words
-#define SERIAL_READ_TOGGLE_DELAY     100
+#define SERIAL_READ_DELAY     100
 
-
-// xQueueHandle g_pLittlebotQueue;
 
 extern Serialization protocol;
 extern SerialInterface bluetooth;
+
+extern xQueueHandle g_pVelocityQueue;
+extern xQueueHandle g_pFBVelocityQueue;
 extern xSemaphoreHandle g_pSerializationSemaphore;
+
 
 static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
-    uint32_t ui32ToggleDelay;
+    uint32_t ui32WriteDelay;
+    
     char protocol_msg[200];
+    float feed_back_velocity[2];
 
-    ui32ToggleDelay = SERIAL_READ_TOGGLE_DELAY;
+    ui32WriteDelay = SERIAL_READ_DELAY;
     ui32WakeTime = xTaskGetTickCount();
-    float a = 47.123;
-    float b = 53.123;
 
     float val;
     val = atof(protocol_msg);
 
     while(1) {
+        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
+
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        protocol.Encode(&protocol, protocol_msg, &a, &b);
+        protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
         bluetooth.Write(&bluetooth, protocol_msg);
         xSemaphoreGive(g_pSerializationSemaphore);
 
-        xTaskDelayUntil(&ui32WakeTime, ui32ToggleDelay / portTICK_RATE_MS);
+        xTaskDelayUntil(&ui32WakeTime, ui32WriteDelay / portTICK_RATE_MS);
     }
 }
 
@@ -39,7 +43,7 @@ static void SerialWriteTask(void *pvParameters) {
 uint32_t SerialWriteTaskInit(void) {
 
     if( xTaskCreate(SerialWriteTask,
-                   (const portCHAR *)"SERIAL_WRITE",
+                   (const portCHAR *)"SerialWrite",
                    SERIAL_WRITE_TASK_STACK_SIZE,
                    NULL,
                    tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,

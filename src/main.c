@@ -38,7 +38,7 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_serial_write.h"
-
+#include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/serialization.h"
@@ -47,7 +47,7 @@
 #define LED_ITEM_SIZE           sizeof(uint8_t)
 #define LED_QUEUE_SIZE          5
 
-#define VELOCITY_ITEM_SIZE    sizeof(float)
+#define VELOCITY_ITEM_SIZE    2*sizeof(float)
 #define VELOCITY_QUEUE_SIZE   8
 
 
@@ -85,15 +85,14 @@ int main(void) {
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     // Create communication object
-    // SerialInterface s;
     SerialInterfaceContruct(&bluetooth, 115200);
     SerializationConstruct(&protocol);
 
 
     // Create motors objects
-    // MotorInterface motor_left, motor_right;
-    // MotorInterfaceConstruct(&motor_left, left);
-    // MotorInterfaceConstruct(&motor_right, right);
+    MotorInterface motor_left, motor_right;
+    MotorInterfaceConstruct(&motor_left, 1);
+    MotorInterfaceConstruct(&motor_right, 0);
 
     // Create queues for exchange variables between tasks.
     g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -113,10 +112,16 @@ int main(void) {
     //     while(1) {}
     // }
    
-    // Create the MOTOR CONTROLLER task.
-    // if(MotorControllerTaskInit(&motor_left) != 0) {
-    //     while(1) {}
-    // }
+    // Create the LEFT MOTOR CONTROLLER task.
+    if(MotorControllerTaskInit(&motor_left, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
+        while(1) {}
+    }
+
+    // Create the RIGHT MOTOR CONTROLLER task.
+    if(MotorControllerTaskInit(&motor_right, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {
+        while(1) {}
+    }
+
 
      
     // Create the LED task.
