@@ -48,7 +48,7 @@
 #define LED_QUEUE_SIZE          5
 
 #define VELOCITY_ITEM_SIZE    2*sizeof(float)
-#define VELOCITY_QUEUE_SIZE   8
+#define VELOCITY_QUEUE_SIZE   12
 
 
 // The mutex that protects concurrent access of UART from multiple tasks.
@@ -59,18 +59,15 @@ xQueueHandle g_pLEDQueue;
 xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
-
+// Resource to stablish the serial communication
 SerialInterface bluetooth;
 Serialization protocol;
-
 
 // The error routine that is called if the driver library encounters an error.
 #ifdef DEBUG
 void
 __error__(char *pcFilename, uint32_t ui32Line){}
 #endif
-
-
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
     // This function can not return, so loop forever.  Interrupts are disabled
@@ -81,13 +78,12 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
 
 
 int main(void) {
-    // Set the clocking to run at 50 MHz from the PLL.
+    // Set the clocking to run at 80 MHz from the PLL.
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     // Create communication object
     SerialInterfaceContruct(&bluetooth, 115200);
     SerializationConstruct(&protocol);
-
 
     // Create motors objects
     MotorInterface motor_left, motor_right;

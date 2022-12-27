@@ -25,6 +25,8 @@ static void SerialWriteTask(void *pvParameters) {
     ui32WakeTime = xTaskGetTickCount();
 
     float val;
+    // I still don't know why when I remove this line the pow() function is not found by 
+    // the linker
     val = atof(protocol_msg);
 
     while(1) {

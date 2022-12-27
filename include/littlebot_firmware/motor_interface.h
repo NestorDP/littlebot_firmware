@@ -30,17 +30,21 @@ typedef struct MotorInterfaceClass MotorInterface;
 
 typedef void (*ptfConfigMotor)(void);
 typedef void (*ptfSetVelocit)(MotorInterface *self, uint16_t vel, uint8_t dir);
+typedef uint8_t (*ptfGetSide)(MotorInterface *self);
 
 //structure of function pointer
 struct MotorInterfaceClass{
     uint8_t motor_side_;
     ptfConfigMotor ConfigMotor;
     ptfSetVelocit SetVelocit;
+    ptfGetSide GetSide;
 };
 
 void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
 void fcSetVelocit(MotorInterface *self, uint16_t vel, uint8_t dir);
+
+uint8_t fcGetSide(MotorInterface *self);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_WHEEL_CONTROL_H__
