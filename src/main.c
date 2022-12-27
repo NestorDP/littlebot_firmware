@@ -44,12 +44,10 @@
 #include "littlebot_firmware/serialization.h"
 
 // The item size and queue size for the LED message queue.
-#define LED_ITEM_SIZE           sizeof(uint8_t)
-#define LED_QUEUE_SIZE          5
-
-#define VELOCITY_ITEM_SIZE    2*sizeof(float)
-#define VELOCITY_QUEUE_SIZE   12
-
+#define LED_ITEM_SIZE       sizeof(uint8_t)
+#define LED_QUEUE_SIZE      5
+#define VELOCITY_ITEM_SIZE  2*sizeof(float)
+#define VELOCITY_QUEUE_SIZE 12
 
 // The mutex that protects concurrent access of UART from multiple tasks.
 xSemaphoreHandle g_pSerializationSemaphore;
@@ -85,11 +83,6 @@ int main(void) {
     SerialInterfaceContruct(&bluetooth, 115200);
     SerializationConstruct(&protocol);
 
-    // Create motors objects
-    MotorInterface motor_left, motor_right;
-    MotorInterfaceConstruct(&motor_left, 1);
-    MotorInterfaceConstruct(&motor_right, 0);
-
     // Create queues for exchange variables between tasks.
     g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFBVelocityQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -109,16 +102,14 @@ int main(void) {
     // }
    
     // Create the LEFT MOTOR CONTROLLER task.
-    if(MotorControllerTaskInit(&motor_left, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
+    if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
         while(1) {}
     }
 
     // Create the RIGHT MOTOR CONTROLLER task.
-    if(MotorControllerTaskInit(&motor_right, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {
+    if(MotorControllerTaskInit(0, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {
         while(1) {}
     }
-
-
      
     // Create the LED task.
     if(LEDTaskInit() != 0) {

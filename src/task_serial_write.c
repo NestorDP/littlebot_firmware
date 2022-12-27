@@ -43,7 +43,6 @@ static void SerialWriteTask(void *pvParameters) {
 
 
 uint32_t SerialWriteTaskInit(void) {
-
     if( xTaskCreate(SerialWriteTask,
                    (const portCHAR *)"SerialWrite",
                    SERIAL_WRITE_TASK_STACK_SIZE,
