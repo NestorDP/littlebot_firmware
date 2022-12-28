@@ -2,34 +2,32 @@
 
 #include "littlebot_firmware/task_serial_write.h"
 
-#define SERIAL_WRITE_TASK_STACK_SIZE 128         // Stack size in words
-#define SERIAL_READ_DELAY     100
-
+#define SERIAL_WRITE_TASK_STACK_SIZE 128 // Stack size in words
+#define SERIAL_WRITE_TASK_DELAY 100
 
 extern Serialization protocol;
 extern SerialInterface bluetooth;
 
-extern xQueueHandle g_pVelocityQueue;
 extern xQueueHandle g_pFBVelocityQueue;
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
-
-static void SerialWriteTask(void *pvParameters) {
+static void SerialWriteTask(void *pvParameters)
+{
     portTickType ui32WakeTime;
     uint32_t ui32WriteDelay;
-    
+
     char protocol_msg[200];
     float feed_back_velocity[2];
 
-    ui32WriteDelay = SERIAL_READ_DELAY;
+    ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
     ui32WakeTime = xTaskGetTickCount();
 
     float val;
-    // I still don't know why when I remove this line the pow() function is not found by 
+    // I still don't know why when I remove this line the pow() function is not found by
     // the linker
     val = atof(protocol_msg);
 
-    while(1) {
+    while (1){
         xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
@@ -41,17 +39,18 @@ static void SerialWriteTask(void *pvParameters) {
     }
 }
 
-
-uint32_t SerialWriteTaskInit(void) {
-    if( xTaskCreate(SerialWriteTask,
-                   (const portCHAR *)"SerialWrite",
-                   SERIAL_WRITE_TASK_STACK_SIZE,
-                   NULL,
-                   tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
-                   NULL) != pdTRUE) {
-        return(1);
+uint32_t SerialWriteTaskInit(void)
+{
+    if (xTaskCreate(SerialWriteTask,
+                    (const portCHAR *)"SerialWrite",
+                    SERIAL_WRITE_TASK_STACK_SIZE,
+                    NULL,
+                    tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
+                    NULL) != pdTRUE)
+    {
+        return (1);
     }
 
     // Success.
-    return(0);
+    return (0);
 }

@@ -28,6 +28,6 @@
 #include "littlebot_firmware/serialization.h"
 
 
-extern uint32_t SerialWriteTaskInit(void);
+uint32_t SerialWriteTaskInit(void);
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__

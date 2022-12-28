@@ -22,6 +22,6 @@
 #include "littlebot_firmware/priorities.h"
 
 
-extern uint32_t SerialReadTaskInit(void *param);
+uint32_t SerialReadTaskInit(void *param);
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__
