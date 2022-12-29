@@ -11,8 +11,7 @@ extern SerialInterface bluetooth;
 extern xQueueHandle g_pFBVelocityQueue;
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
-static void SerialWriteTask(void *pvParameters)
-{
+static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32WriteDelay;
 
@@ -39,10 +38,9 @@ static void SerialWriteTask(void *pvParameters)
     }
 }
 
-uint32_t SerialWriteTaskInit(void)
-{
+uint32_t SerialWriteTaskInit(void) {
     if (xTaskCreate(SerialWriteTask,
-                    (const portCHAR *)"SerialWrite",
+                    (const portCHAR *)"Serial writ",
                     SERIAL_WRITE_TASK_STACK_SIZE,
                     NULL,
                     tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,

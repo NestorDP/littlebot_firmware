@@ -97,9 +97,9 @@ int main(void) {
     }
 
     // Create the SERIAL_READ task.
-    // if(SerialReadTaskInit((void *) &s) != 0) {
-    //     while(1) {}
-    // }
+    if(SerialReadTaskInit() != 0) {
+        while(1) {}
+    }
    
     // Create the LEFT MOTOR CONTROLLER task.
     if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {

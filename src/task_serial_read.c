@@ -25,10 +25,10 @@ static void SerialReadTask(void *pvParameters) {
 
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        bluetooth.Read(&bluetooth, protocol_msg, sizeof(protocol_msg));
-        protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
+        bluetooth.Read(&bluetooth, protocol_msg);
+        // protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
         xSemaphoreGive(g_pSerializationSemaphore);
-        xQueueSend(g_pVelocityQueue, &velocity, 0);
+        // xQueueSend(g_pVelocityQueue, &velocity, 0);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
     }
@@ -36,18 +36,12 @@ static void SerialReadTask(void *pvParameters) {
 
 
 uint32_t SerialReadTaskInit(void *param) {
-    // Create the serial write task.
-    SerialInterface *ser;
-    ser = (SerialInterface *) param;
-
-    ser->Write(ser, "teste");
-
     if( xTaskCreate(SerialReadTask,
-                   (const portCHAR *)"SERIAL_READ",
-                   SERIAL_READ_TASK_STACK_SIZE,
-                   (void *) ser,
-                   tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK,
-                   NULL) != pdTRUE) {
+                    (const portCHAR *)"Serial read",
+                    SERIAL_READ_TASK_STACK_SIZE,
+                    NULL,
+                    tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK,
+                    NULL) != pdTRUE) {
         return(1);
     }
 
