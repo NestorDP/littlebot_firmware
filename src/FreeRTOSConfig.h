@@ -75,7 +75,7 @@ your application. */
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      ( ( unsigned long ) 80000000 )
 #define configTICK_RATE_HZ                      ( ( portTickType ) 1000 )
-#define configMAX_PRIORITIES                    10               // 16
+#define configMAX_PRIORITIES                    8               // 16
 #define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 200 )
 #define configMAX_TASK_NAME_LEN                 ( 12 )
 #define configUSE_16_BIT_TICKS                  0
@@ -90,12 +90,12 @@ your application. */
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
 #define configENABLE_BACKWARD_COMPATIBILITY     1
-#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 7
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE               ( ( size_t ) ( 20000 ) )
+#define configTOTAL_HEAP_SIZE               ( ( size_t ) ( 15000 ) )
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */

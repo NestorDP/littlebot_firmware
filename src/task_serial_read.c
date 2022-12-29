@@ -17,7 +17,7 @@ static void SerialReadTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32ReadDelay;
 
-    char protocol_msg[200];
+    char protocol_msg[80];
     float velocity[2];
 
     ui32ReadDelay = SERIAL_READ_TASK_DELAY;
@@ -26,9 +26,10 @@ static void SerialReadTask(void *pvParameters) {
     while(1) {
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
         bluetooth.Read(&bluetooth, protocol_msg);
-        // protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
         xSemaphoreGive(g_pSerializationSemaphore);
-        // xQueueSend(g_pVelocityQueue, &velocity, 0);
+
+        protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
+        xQueueSend(g_pVelocityQueue, &velocity, 0);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
     }

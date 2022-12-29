@@ -15,7 +15,7 @@ static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32WriteDelay;
 
-    char protocol_msg[200];
+    char protocol_msg[80];
     float feed_back_velocity[2];
 
     ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
@@ -28,9 +28,9 @@ static void SerialWriteTask(void *pvParameters) {
 
     while (1){
         xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
+        protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
         bluetooth.Write(&bluetooth, protocol_msg);
         xSemaphoreGive(g_pSerializationSemaphore);
 
