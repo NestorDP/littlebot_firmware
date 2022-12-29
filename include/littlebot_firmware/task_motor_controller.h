@@ -38,7 +38,8 @@
 #include "littlebot_firmware/priorities.h"
 #include "littlebot_firmware/motor_interface.h"
 
+extern uint8_t side_m;
 
-extern uint32_t MotorControllerTaskInit(MotorInterface *motor);
+extern uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t priority);
 
 #endif // TASK_MOTOR_CONTROLLER_R_H__

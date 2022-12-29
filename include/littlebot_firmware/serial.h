@@ -29,7 +29,7 @@
 
 typedef struct SerialInterfaceClass SerialInterface;
 
-typedef void (*ptfRead)(SerialInterface *self, char *msg, uint32_t len_msg);
+typedef void (*ptfRead)(SerialInterface *self, char *msg);
 typedef void (*ptfWrite)(SerialInterface *self, char *msg);
 
 //structure of function pointer
@@ -40,7 +40,7 @@ struct SerialInterfaceClass{
 
 void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
 
-void fcRead(SerialInterface *self, char *msg, uint32_t len_msg);
+void fcRead(SerialInterface *self, char *msg);
 
 void fcWrite(SerialInterface *self, char *msg);
 

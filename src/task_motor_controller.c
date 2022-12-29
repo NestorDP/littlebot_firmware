@@ -3,59 +3,54 @@
 
 #include "littlebot_firmware/task_motor_controller.h"
 
-extern xQueueHandle g_pVelocity;
-extern xQueueHandle g_pFeedBackVelocity;
+#define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
+#define MOTOR_CONTROLLER_TASK_DELAY      100
 
+extern xQueueHandle g_pVelocityQueue;
+extern xQueueHandle g_pFBVelocityQueue;
+
+uint8_t side_m;
 
 static void vTaskMotorController(void *pvParameters) {
-    MotorInterface *pxMotor;
-//     ui32LEDToggleDelay = SERIAL_READ_TOGGLE_DELAY;
+    portTickType ui32WakeTime;
+    uint32_t ui32MotorTaskDelay; 
 
-//     ui32WakeTime = xTaskGetTickCount();
+    float velocity[2] = {0, 0};
+    float feed_back_velocity[2] = {0, 0};  
 
-//     while(1) {
-//         if( xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS ) {
-//             if(i8Message == LEFT_BUTTON) {
-//                 g_pui32Colors[g_ui8ColorsIndx] = 0x0000;
-//                 g_ui8ColorsIndx++;
-//                 if(g_ui8ColorsIndx > 2) {
-//                     g_ui8ColorsIndx = 0;
-//                 }
-//                 g_pui32Colors[g_ui8ColorsIndx] = 0x8000;
-//                 RGBColorSet(g_pui32Colors);
-//                 xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-//                 xSemaphoreGive(g_pUARTSemaphore);
-//             }
+    uint8_t *side_motor;
+    side_motor = (uint8_t*)pvParameters;
 
-//             if(i8Message == RIGHT_BUTTON) {
-//                 ui32LEDToggleDelay *= 2;
-//                 if(ui32LEDToggleDelay > 1000) {
-//                     ui32LEDToggleDelay = SERIAL_READ_TOGGLE_DELAY / 2;
-//                 }
-//                 xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
-//                 xSemaphoreGive(g_pUARTSemaphore);
-//             }
-//         }
+    MotorInterface motor;
+    
+    MotorInterfaceConstruct(&motor, *side_motor);
+    ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
+    ui32WakeTime = xTaskGetTickCount();
 
-//         RGBEnable();
-//         xTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);
-//         RGBDisable();
-//         xTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);
-//     }
+    
+    while(1) {
+        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
+        feed_back_velocity[motor.GetSide(&motor)]; // chage for GetVelocity
+        xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, portMAX_DELAY);
+
+        // xQueueReceive(g_pVelocityQueue, &velocity, 0);
+        // motor.SetVelocit(&motor, velocity[motor.GetSide(&motor)]);
+
+        xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
+    }
+
+    
 }
 
 
-uint32_t MotorControllerTaskInit(MotorInterface *pxMotor) {
-
-    // Create the motor controller task.
-    if( xTaskCreate(
-                vTaskMotorController, 
-                "LeftMotorController", 
-                128, 
-                (void *) pxMotor,
-                tskIDLE_PRIORITY + PRIORITY_MOTOR_CONTROLLER_TASK, 
-                NULL
-                ) != pdTRUE) {
+uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t priority) {
+    side_m = side;
+    if( xTaskCreate(vTaskMotorController, 
+                    (const portCHAR *)name, 
+                    MOTOR_CONTROLLER_TASK_STACK_SIZE, 
+                    (void *) &side_m,
+                    tskIDLE_PRIORITY + priority, 
+                    NULL) != pdTRUE) {
         return(1);
     }
 

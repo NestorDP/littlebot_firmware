@@ -5,6 +5,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <math.h>
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -23,6 +28,6 @@
 #include "littlebot_firmware/serialization.h"
 
 
-extern uint32_t SerialWriteTaskInit(void);
+uint32_t SerialWriteTaskInit(void);
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__

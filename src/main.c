@@ -38,18 +38,16 @@
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_serial_write.h"
-
+#include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/serialization.h"
 
 // The item size and queue size for the LED message queue.
-#define LED_ITEM_SIZE           sizeof(uint8_t)
-#define LED_QUEUE_SIZE          5
-
-#define VELOCITY_ITEM_SIZE    sizeof(float)
-#define VELOCITY_QUEUE_SIZE   8
-
+#define LED_ITEM_SIZE       sizeof(uint8_t)
+#define LED_QUEUE_SIZE      5
+#define VELOCITY_ITEM_SIZE  2*sizeof(float)
+#define VELOCITY_QUEUE_SIZE 12
 
 // The mutex that protects concurrent access of UART from multiple tasks.
 xSemaphoreHandle g_pSerializationSemaphore;
@@ -59,18 +57,15 @@ xQueueHandle g_pLEDQueue;
 xQueueHandle g_pVelocityQueue;
 xQueueHandle g_pFBVelocityQueue;
 
-
+// Resource to stablish the serial communication
 SerialInterface bluetooth;
 Serialization protocol;
-
 
 // The error routine that is called if the driver library encounters an error.
 #ifdef DEBUG
 void
 __error__(char *pcFilename, uint32_t ui32Line){}
 #endif
-
-
 
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
     // This function can not return, so loop forever.  Interrupts are disabled
@@ -81,19 +76,12 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
 
 
 int main(void) {
-    // Set the clocking to run at 50 MHz from the PLL.
+    // Set the clocking to run at 80 MHz from the PLL.
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
     
     // Create communication object
-    // SerialInterface s;
     SerialInterfaceContruct(&bluetooth, 115200);
     SerializationConstruct(&protocol);
-
-
-    // Create motors objects
-    // MotorInterface motor_left, motor_right;
-    // MotorInterfaceConstruct(&motor_left, left);
-    // MotorInterfaceConstruct(&motor_right, right);
 
     // Create queues for exchange variables between tasks.
     g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -109,15 +97,19 @@ int main(void) {
     }
 
     // Create the SERIAL_READ task.
-    // if(SerialReadTaskInit((void *) &s) != 0) {
-    //     while(1) {}
-    // }
+    if(SerialReadTaskInit() != 0) {
+        while(1) {}
+    }
    
-    // Create the MOTOR CONTROLLER task.
-    // if(MotorControllerTaskInit(&motor_left) != 0) {
-    //     while(1) {}
-    // }
+    // Create the LEFT MOTOR CONTROLLER task.
+    if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
+        while(1) {}
+    }
 
+    // Create the RIGHT MOTOR CONTROLLER task.
+    if(MotorControllerTaskInit(0, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {
+        while(1) {}
+    }
      
     // Create the LED task.
     if(LEDTaskInit() != 0) {

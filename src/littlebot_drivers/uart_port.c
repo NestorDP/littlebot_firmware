@@ -12,8 +12,13 @@ void UartPortConfigure (uint32_t baud_rate) {
     UARTStdioConfig (1, baud, 16000000);
 }
 
-uint32_t UartPortGet (char *msg, uint32_t len) {
-  UARTgets (msg, len);
+uint32_t UartPortGet (char *msg) {
+  int num_character;
+  num_character = UARTPeek('\r');
+
+  if ( num_character != -1) {
+    UARTgets (msg, num_character);
+  }
 }
 
 uint32_t UartPortPut (char *msg) {

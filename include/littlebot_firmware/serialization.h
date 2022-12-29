@@ -58,8 +58,5 @@ void reverse(char* str, int len);
 
 
 // Variables
-static char var_float[sizeof(float)];
-
-static uint8_t i;
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIALIZATION_H__

@@ -9,14 +9,13 @@ void SerializationConstruct(Serialization *self) {
 
 void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel) {
   char serialized_msg[200];
-  char var_left[4];
-  char var_right[4];
+  char *split_msg;
 
-  strncpy (var_left, serialized_msg, 4);
-  strncpy (var_right, serialized_msg + 4, 4);
+  split_msg = strtok(msg, "#");
+  *left_vel = atof(split_msg);
 
-  left_vel = (float *)var_left;
-  right_vel = (float *)var_right;
+  split_msg = strtok(NULL, "#");
+  *right_vel = atof(split_msg);
 }
 
 
