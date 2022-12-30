@@ -29,6 +29,7 @@ static void SerialReadTask(void *pvParameters) {
         xSemaphoreGive(g_pSerializationSemaphore);
 
         protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
+        
         xQueueSend(g_pVelocityQueue, &velocity, 0);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);

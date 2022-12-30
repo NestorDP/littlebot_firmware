@@ -41,7 +41,7 @@ void EncoderTimerLeft(void);
 uint32_t EncoderGetRightValue(void);
 uint32_t EncoderGetLeftValue(void);
 
-void EncoderRightHandler();
+void EncoderRightHandler(void);
 void EncoderLeftHandler();
 
 static volatile uint32_t pulse_right;

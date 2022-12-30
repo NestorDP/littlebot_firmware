@@ -29,12 +29,13 @@ static void vTaskMotorController(void *pvParameters) {
 
     
     while(1) {
-        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
         feed_back_velocity[motor.GetSide(&motor)]; // chage for GetVelocity
+        
+        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
         xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, portMAX_DELAY);
-
-        // xQueueReceive(g_pVelocityQueue, &velocity, 0);
-        // motor.SetVelocit(&motor, velocity[motor.GetSide(&motor)]);
+        xQueueReceive(g_pVelocityQueue, &velocity, 0);
+        
+        motor.SetVelocity(&motor, velocity[motor.GetSide(&motor)]);
 
         xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
     }

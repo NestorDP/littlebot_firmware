@@ -16,9 +16,10 @@ uint32_t UartPortGet (char *msg) {
   int num_character;
   num_character = UARTPeek('\r');
 
-  if ( num_character != -1) {
+  if ( num_character > 0) {
     UARTgets (msg, num_character);
   }
+  return num_character;
 }
 
 uint32_t UartPortPut (char *msg) {

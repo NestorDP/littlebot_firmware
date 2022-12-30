@@ -27,7 +27,7 @@ void EncoderGpioRight(void){
 	// Configuração da interrupção para os encoders
 	GPIOIntEnable (GPIO_PORTA_BASE, GPIO_PIN_5);
 	GPIOIntTypeSet (GPIO_PORTA_BASE, GPIO_PIN_5, GPIO_RISING_EDGE);
-	GPIOIntRegister (GPIO_PORTA_BASE, EncoderRightHandler);
+	// GPIOIntRegister (GPIO_PORTA_BASE, EncoderRightHandler);
 }
 
 

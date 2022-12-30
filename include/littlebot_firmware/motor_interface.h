@@ -25,24 +25,27 @@
 #include <stdbool.h>
 
 #include "littlebot_drivers/motor.h"
+#include "littlebot_drivers/encoder.h"
 
 typedef struct MotorInterfaceClass MotorInterface;
 
-typedef void (*ptfConfigMotor)(void);
-typedef void (*ptfSetVelocit)(MotorInterface *self, uint16_t vel);
+typedef void (*ptfSetVelocity)(MotorInterface *self, uint16_t vel);
+typedef float (*ptfGetVelocity)(MotorInterface *self);
 typedef uint8_t (*ptfGetSide)(MotorInterface *self);
 
 //structure of function pointer
 struct MotorInterfaceClass{
     uint8_t motor_side_;
-    ptfConfigMotor ConfigMotor;
-    ptfSetVelocit SetVelocit;
+    ptfSetVelocity SetVelocity;
+    ptfGetVelocity GetVelocity;
     ptfGetSide GetSide;
 };
 
 void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
-void fcSetVelocit(MotorInterface *self, uint16_t vel);
+void fcSetVelocity(MotorInterface *self, uint16_t vel);
+
+float fcGetVelocity(MotorInterface *self);
 
 uint8_t fcGetSide(MotorInterface *self);
 

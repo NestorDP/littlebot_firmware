@@ -92,9 +92,9 @@ int main(void) {
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
     // Create the SERIAL_WRITE task.
-    if(SerialWriteTaskInit() != 0) {
-        while(1) {}
-    }
+    // if(SerialWriteTaskInit() != 0) {
+    //     while(1) {}
+    // }
 
     // Create the SERIAL_READ task.
     if(SerialReadTaskInit() != 0) {
