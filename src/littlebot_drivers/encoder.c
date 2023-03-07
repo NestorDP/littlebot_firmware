@@ -8,110 +8,54 @@
 #include "littlebot_drivers/encoder.h"
 
 
-void EncoderConfigure(void){
-	EncoderGpioRight();
-	EncoderGpioLeft();
-	EncoderTimerRight();
-	EncoderTimerLeft();
+void EncoderInit(void){
+	EncoderRightConfigure();
 }
 
 
-void EncoderGpioRight(void){
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);		
-	SysCtlDelay(3);
+void EncoderRightConfigure(void){
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
 
-	// Definindo direção das entradas dos encoders
-	GPIOPinTypeGPIOInput (GPIO_PORTA_BASE, GPIO_PIN_5);
-	GPIOPadConfigSet (GPIO_PORTA_BASE, GPIO_PIN_5, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+    GPIOPinTypeQEI(GPIO_PORTC_BASE, GPIO_PIN_5 | GPIO_PIN_6);
+    GPIOPinConfigure(GPIO_PC5_PHA1);
+    GPIOPinConfigure(GPIO_PC6_PHB1);
+
+    QEIConfigure(QEI1_BASE, QEI_CONFIG_CAPTURE_A | QEI_CONFIG_NO_RESET | QEI_CONFIG_CLOCK_DIR | QEI_CONFIG_NO_SWAP, PPR);
+    QEIVelocityConfigure(QEI1_BASE, QEI_VELDIV_1, SysCtlClockGet() / SAMPLE_PERIOD);
+    QEIVelocityEnable(QEI1_BASE);
+
+    void (*QEI1IntHandler_ptr)(void) = &EncoderRightHandler;
+    QEIIntRegister(QEI1_BASE, *QEI1IntHandler_ptr);
+    QEIIntEnable(QEI1_BASE, QEI_INTTIMER);
+	QEIEnable(QEI1_BASE);
 	
-	// Configuração da interrupção para os encoders
-	GPIOIntEnable (GPIO_PORTA_BASE, GPIO_PIN_5);
-	GPIOIntTypeSet (GPIO_PORTA_BASE, GPIO_PIN_5, GPIO_RISING_EDGE);
-	// GPIOIntRegister (GPIO_PORTA_BASE, EncoderRightHandler);
 }
 
 
-void EncoderGpioLeft(void){
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);		
-	SysCtlDelay(3);
+// void EncoderGpioLeft(void){
 	
-	// Definindo direção das entradas dos encoders
-	GPIOPinTypeGPIOInput (GPIO_PORTE_BASE, GPIO_PIN_3);
-	GPIOPadConfigSet (GPIO_PORTE_BASE, GPIO_PIN_3, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
-
-	// Configuração da interrupção para os encoders
-	GPIOIntEnable (GPIO_PORTE_BASE, GPIO_PIN_3);
-	GPIOIntTypeSet (GPIO_PORTE_BASE, GPIO_PIN_3, GPIO_RISING_EDGE);
-	GPIOIntRegister (GPIO_PORTE_BASE, EncoderLeftHandler);
-}
+// }
 
 
-void EncoderTimerRight(void){
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER2);
-	SysCtlDelay(3);
-
-	// Comfigura o timer para o periodic timer mode
-	TimerConfigure(WTIMER2_BASE, TIMER_CFG_PERIODIC_UP);
-	TimerEnable	  (WTIMER2_BASE, TIMER_A);
-}
-
-
-void EncoderTimerLeft(void){
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_WTIMER1);
-	SysCtlDelay(3);
-
-	// Comfigura o timer para o periodic timer mode
-	TimerConfigure(WTIMER1_BASE, TIMER_CFG_PERIODIC_UP);
-	TimerEnable	  (WTIMER1_BASE, TIMER_A);
-}
-
-
-uint32_t EncoderGetRightValue(void){
-	// resultado em microsegundos
-	pulse_right = pulse_right/80;
-	return pulse_right;
-}
-
-uint32_t EncoderGetLeftValue(void){
-	// resultado em microsegundos
-	pulse_left = pulse_left/80;
-	return pulse_left;
-}	
+// uint32_t EncoderGetLeftValue(void){
+	
+// }	
 
 
 void EncoderRightHandler(){
+	QEIIntClear(QEI1_BASE, QEIIntStatus(QEI1_BASE, true));
 
-	// clear interrupt flag
-	GPIOIntClear(GPIO_PORTA_BASE, GPIO_PIN_5);
+	flag = ~flag;
+    GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_3, flag & GPIO_PIN_3);
 
-	// stop timer		
-	TimerDisable(WTIMER2_BASE,TIMER_A); 
+    ui32EncoderVelRight = QEIVelocityGet(QEI1_BASE);
 
-	// record value								
-	pulse_right = TimerValueGet(WTIMER2_BASE,TIMER_A); 
-
-	// Loads value 0 into the timer.
-	HWREG(WTIMER2_BASE + TIMER_O_TAV) = 0;
-
-	// start timer to recor						
-	TimerEnable(WTIMER2_BASE,TIMER_A); 									
+    ui16RpmRight = ui32EncoderVelRight * SAMPLE_PERIOD * 60 / PPR;					
 }
 
 
-void EncoderLeftHandler(){
+// void EncoderLeftHandler(){
 
-	// clear interrupt flag
-	GPIOIntClear(GPIO_PORTE_BASE, GPIO_PIN_3);
-
-	// stop timer				
-	TimerDisable(WTIMER1_BASE,TIMER_A);
-
-	// record value
-	pulse_left = TimerValueGet(WTIMER1_BASE,TIMER_A);
-
-	// Loads value 0 into the timer.
-	HWREG(WTIMER1_BASE + TIMER_O_TAV) = 0;
-
-	// start timer to recor
-	TimerEnable(WTIMER1_BASE,TIMER_A);
-}
+	
+// }

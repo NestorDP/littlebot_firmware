@@ -18,33 +18,42 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/timer.h"
 #include "driverlib/interrupt.h"
+#include "driverlib/qei.h"
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "inc/hw_ints.h"
 #include "inc/hw_timer.h"
 #include "inc/hw_gpio.h"
-
-#define ENCODER_PERIPH_DIR 	SYSCTL_PERIPH_GPIOB
-#define ENCODER_GPIO_DIR	GPIO_PORTB_BASE
-#define ENCODER_PIN_DIR		GPIO_PIN_2
+#include "inc/hw_qei.h"
 
 
-void EncoderConfigure(void);
+#define SAMPLE_PERIOD  8
+#define PPR            40
 
-void EncoderGpioRight(void);
-void EncoderGpioLeft(void);
+
+void EncoderInit(void);
+
+void EncoderRightConfigure(void);
+// void EncoderGpioLeft(void);
 
 void EncoderTimerRight(void);
-void EncoderTimerLeft(void);
+// void EncoderTimerLeft(void);
 
 uint32_t EncoderGetRightValue(void);
-uint32_t EncoderGetLeftValue(void);
+// uint32_t EncoderGetLeftValue(void);
 
 void EncoderRightHandler(void);
-void EncoderLeftHandler();
+// void EncoderLeftHandler();
 
-static volatile uint32_t pulse_right;
-static volatile uint32_t pulse_left;
+static volatile uint32_t ui32EncoderVelRight;
+static volatile uint16_t ui16RpmRight;
+
+static volatile uint32_t flag = 0x0;
+
+// static volatile uint32_t ui32EncoderVelLeft;
+// static volatile int32_t i32DirectionLeft;
+// static volatile uint16_t ui16RpmLeft;
+
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_ENCODER_H__

@@ -7,7 +7,7 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
   self->GetVelocity = fcGetVelocity;
   self->GetSide = fcGetSide;
 
-  EncoderConfigure();
+  // EncoderConfigure();
   MotorConfigure();
 }
 

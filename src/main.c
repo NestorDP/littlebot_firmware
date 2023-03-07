@@ -43,6 +43,8 @@
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/serialization.h"
 
+#include "littlebot_drivers/encoder.h"
+
 // The item size and queue size for the LED message queue.
 #define LED_ITEM_SIZE       sizeof(uint8_t)
 #define LED_QUEUE_SIZE      5
@@ -78,6 +80,8 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
 int main(void) {
     // Set the clocking to run at 80 MHz from the PLL.
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+
+    IntMasterEnable();
     
     // Create communication object
     SerialInterfaceContruct(&bluetooth, 115200);
@@ -91,10 +95,17 @@ int main(void) {
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
-    // Create the SERIAL_WRITE task.
-    // if(SerialWriteTaskInit() != 0) {
-    //     while(1) {}
-    // }
+    
+    
+    // Configure LED green as output
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE)) {}
+    GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_3);
+
+
+    EncoderInit();
+
+
 
     // Create the SERIAL_READ task.
     if(SerialReadTaskInit() != 0) {
