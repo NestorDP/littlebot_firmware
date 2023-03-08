@@ -62,7 +62,7 @@ extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void vPortSVCHandler( void );
 extern void UARTStdioIntHandler( void );
-extern void EncoderRightHandler( void );
+
 //*****************************************************************************
 //
 // The vector table.  Note that the proper constructs must be placed on this to
@@ -90,7 +90,7 @@ void (* const g_pfnVectors[])(void) =
     0,                                      // Reserved
     xPortPendSVHandler,                     // The PendSV handler
     xPortSysTickHandler,                    // The SysTick handler
-    EncoderRightHandler,                    // GPIO Port A
+    IntDefaultHandler,                    // GPIO Port A
     IntDefaultHandler,                      // GPIO Port B
     IntDefaultHandler,                      // GPIO Port C
     IntDefaultHandler,                      // GPIO Port D
@@ -330,7 +330,7 @@ FaultISR(void)
     //
     // Enter an infinite loop.
     //
-    while(1)
+     while(1)
     {
     }
 }

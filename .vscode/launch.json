@@ -14,7 +14,7 @@
         "serverpath": "openocd",
         "configFiles": ["/usr/local/share/openocd/scripts/board/ti_ek-tm4c123gxl.cfg"],
         "gdbTarget": "localhost:3333",
-        "rtos": "FreeRTOS",
+        "rtos": "auto",
         // "device": "",
         // "interface": "",
         "showDevDebugOutput": "raw",

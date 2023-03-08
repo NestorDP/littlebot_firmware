@@ -49,9 +49,7 @@ void EncoderRightHandler(){
 	flag = ~flag;
     GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_3, flag & GPIO_PIN_3);
 
-    ui32EncoderVelRight = QEIVelocityGet(QEI1_BASE);
-
-    ui16RpmRight = ui32EncoderVelRight * SAMPLE_PERIOD * 60 / PPR;					
+    ui32EncoderVelRight = QEIVelocityGet(QEI1_BASE);			
 }
 
 

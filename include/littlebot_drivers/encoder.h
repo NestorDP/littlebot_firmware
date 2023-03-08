@@ -35,7 +35,7 @@
 void EncoderInit(void);
 
 void EncoderRightConfigure(void);
-// void EncoderGpioLeft(void);
+// void EncoderLeftConfigure(void);
 
 void EncoderTimerRight(void);
 // void EncoderTimerLeft(void);
@@ -47,13 +47,6 @@ void EncoderRightHandler(void);
 // void EncoderLeftHandler();
 
 static volatile uint32_t ui32EncoderVelRight;
-static volatile uint16_t ui16RpmRight;
-
 static volatile uint32_t flag = 0x0;
-
-// static volatile uint32_t ui32EncoderVelLeft;
-// static volatile int32_t i32DirectionLeft;
-// static volatile uint16_t ui16RpmLeft;
-
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_ENCODER_H__

@@ -12,5 +12,6 @@
     "serial.h": "c",
     "priorities.h": "c",
     "hw_gpio.h": "c"
-  }
+  },
+  "cortex-debug.variableUseNaturalFormat": false
 }
