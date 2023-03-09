@@ -101,6 +101,7 @@ int main(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE)) {}
     GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_3);
+    GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_2);
 
 
     EncoderInit();
