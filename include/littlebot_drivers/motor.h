@@ -35,16 +35,6 @@
 #define FORWARD   1
 #define BACKWARD  0
 
-// PWM configutations
-#define MOTOR_RIGHT_PWM_OUT    PWM_OUT_6
-#define MOTOR_RIGHT_PWM_CONFIG GPIO_PC5_M0PWM6
-#define MOTOR_RIGHT_PWM_PIN    GPIO_PIN_4
-
-#define MOTOR_LEFT_PWM_OUT     PWM_OUT_7
-#define MOTOR_LEFT_PWM_CONFIG  GPIO_PC5_M0PWM7
-#define MOTOR_LEFT_PWM_PIN     GPIO_PIN_5
-
-// GPIO pins configurations
 
 void MotorConfigure(void);
 
