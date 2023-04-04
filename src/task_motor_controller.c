@@ -34,7 +34,7 @@ static void vTaskMotorController(void *pvParameters) {
         xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, portMAX_DELAY);
         xQueueReceive(g_pVelocityQueue, &velocity, 0);
         
-        motor.SetVelocity(&motor, -20000);
+        motor.SetVelocity(&motor, 20000);
 
         xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
     }    

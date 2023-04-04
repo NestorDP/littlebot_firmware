@@ -16,7 +16,7 @@ void MotorConfigure(void){
 
   PWMGenConfigure(PWM0_BASE, PWM_GEN_1, PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
   PWMGenPeriodSet(PWM0_BASE, PWM_GEN_1, 25000);
-  PWMOutputState(PWM0_BASE, PWM_OUT_7_BIT | PWM_OUT_6_BIT, true);
+  PWMOutputState(PWM0_BASE, PWM_OUT_3_BIT | PWM_OUT_2_BIT, true);
   PWMGenEnable(PWM0_BASE, PWM_GEN_1);
 
   // Configure GPIO
