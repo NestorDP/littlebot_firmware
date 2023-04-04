@@ -95,18 +95,8 @@ int main(void) {
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
-    
-    
-    // Configure LED green as output
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOE)) {}
-    GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_3);
-    GPIOPinTypeGPIOOutput(GPIO_PORTE_BASE, GPIO_PIN_2);
-
-
-    EncoderInit();
-
-
+      
+    // EncoderInit();
 
     // Create the SERIAL_READ task.
     if(SerialReadTaskInit() != 0) {
@@ -114,9 +104,9 @@ int main(void) {
     }
    
     // Create the LEFT MOTOR CONTROLLER task.
-    if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
-        while(1) {}
-    }
+    // if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
+    //     while(1) {}
+    // }
 
     // Create the RIGHT MOTOR CONTROLLER task.
     if(MotorControllerTaskInit(0, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {

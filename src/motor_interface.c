@@ -12,9 +12,9 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
 }
 
 
-void fcSetVelocity(MotorInterface *self, uint16_t vel){
+void fcSetVelocity(MotorInterface *self, int16_t vel){
   if(vel < 0){
-    MotorVelocity(self->motor_side_, vel, 0);
+    MotorVelocity(self->motor_side_, -1 * vel, 0);
   } else{
     MotorVelocity(self->motor_side_, vel, 1);
   }
