@@ -8,7 +8,7 @@ void SerializationConstruct(Serialization *self) {
 
 
 void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel) {
-  char serialized_msg[200];
+  char serialized_msg[80];
   char *split_msg;
 
   split_msg = strtok(msg, "#");
