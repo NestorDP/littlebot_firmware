@@ -17,7 +17,7 @@ static void SerialReadTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32ReadDelay;
 
-    char protocol_msg[80];
+    char protocol_msg[80] = "\0";
     float velocity[2];
 
     ui32ReadDelay = SERIAL_READ_TASK_DELAY;

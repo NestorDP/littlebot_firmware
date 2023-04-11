@@ -104,9 +104,9 @@ int main(void) {
     }
    
     // Create the LEFT MOTOR CONTROLLER task.
-    // if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
-    //     while(1) {}
-    // }
+    if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {
+        while(1) {}
+    }
 
     // Create the RIGHT MOTOR CONTROLLER task.
     if(MotorControllerTaskInit(0, "Motor right", PRIORITY_RIGHT_MOTOR_TASK) != 0) {
