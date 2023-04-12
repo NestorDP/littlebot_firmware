@@ -28,7 +28,9 @@ static void SerialReadTask(void *pvParameters) {
         bluetooth.Read(&bluetooth, protocol_msg);
         xSemaphoreGive(g_pSerializationSemaphore);
 
-        protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
+        if (protocol_msg[0] != '\0'){
+            protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
+        }
         
         xQueueSend(g_pVelocityQueue, &velocity, 0);
 

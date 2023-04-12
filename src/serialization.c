@@ -11,9 +11,6 @@ void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel
   char serialized_msg[80];
   char *split_msg;
 
-  if (msg[0] == '\0')
-    return;
-
   split_msg = strtok(msg, "#");
   *left_vel = atof(split_msg);
 
