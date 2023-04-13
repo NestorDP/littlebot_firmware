@@ -9,7 +9,9 @@
 extern Serialization protocol;
 extern SerialInterface bluetooth;
 
-extern xQueueHandle g_pVelocityQueue;
+extern xQueueHandle g_pVelocityLeftQueue;
+extern xQueueHandle g_pVelocityRightQueue;
+
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 
@@ -32,7 +34,8 @@ static void SerialReadTask(void *pvParameters) {
             protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
         }
         
-        xQueueSend(g_pVelocityQueue, &velocity, 0);
+        xQueueSend(g_pVelocityRightQueue, &velocity[0], 0);
+        xQueueSend(g_pVelocityLeftQueue, &velocity[1], 0);
 
         xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
     }

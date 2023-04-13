@@ -56,7 +56,8 @@ xSemaphoreHandle g_pSerializationSemaphore;
 
 // The queue that holds variables to sharade between tasks.
 xQueueHandle g_pLEDQueue;
-xQueueHandle g_pVelocityQueue;
+xQueueHandle g_pVelocityLeftQueue;
+xQueueHandle g_pVelocityRightQueue;
 xQueueHandle g_pFBVelocityQueue;
 
 // Resource to stablish the serial communication
@@ -88,9 +89,10 @@ int main(void) {
     SerializationConstruct(&protocol);
 
     // Create queues for exchange variables between tasks.
-    g_pVelocityQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pLEDQueue        = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
+    g_pVelocityLeftQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pVelocityRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityQueue     = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pLEDQueue            = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();

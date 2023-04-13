@@ -6,7 +6,8 @@
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
 #define MOTOR_CONTROLLER_TASK_DELAY      100
 
-extern xQueueHandle g_pVelocityQueue;
+extern xQueueHandle g_pVelocityLeftQueue;
+extern xQueueHandle g_pVelocityRightQueue;
 extern xQueueHandle g_pFBVelocityQueue;
 
 uint8_t side_left = 1;
@@ -18,7 +19,7 @@ static void vTaskMotorController(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32MotorTaskDelay; 
 
-    float velocity[2] = {0, 0};
+    float velocity = 0;
     float feed_back_velocity[2] = {0, 0};  
 
     uint8_t *side_motor;
@@ -32,12 +33,15 @@ static void vTaskMotorController(void *pvParameters) {
     
     while(1) {
         feed_back_velocity[*side_motor]; // chage for GetVelocity
+        xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, 0);
         
-        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
-        xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, portMAX_DELAY);
-        xQueueReceive(g_pVelocityQueue, &velocity, 0);
-        
-        motor.SetVelocity(&motor, velocity[*side_motor]);
+        if(*side_motor == 1) {
+            xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
+        } else {
+            xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
+        }
+        motor.SetVelocity(&motor, velocity);
+
 
         xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
     }    
@@ -50,7 +54,7 @@ uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t pri
                         (const portCHAR *)name, 
                         MOTOR_CONTROLLER_TASK_STACK_SIZE, 
                         (void *) &side_left,
-                        tskIDLE_PRIORITY + priority, 
+                        tskIDLE_PRIORITY + PRIORITY_LEFT_MOTOR_TASK,
                         NULL) != pdTRUE) {
             return(1);
         }
@@ -59,7 +63,7 @@ uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t pri
                         (const portCHAR *)name, 
                         MOTOR_CONTROLLER_TASK_STACK_SIZE, 
                         (void *) &side_right,
-                        tskIDLE_PRIORITY + priority, 
+                        tskIDLE_PRIORITY + PRIORITY_RIGHT_MOTOR_TASK, 
                         NULL) != pdTRUE) {
             return(1);
         }
