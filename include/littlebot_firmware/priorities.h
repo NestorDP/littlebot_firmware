@@ -37,5 +37,12 @@
 #define PRIORITY_LEFT_MOTOR_TASK    6
 #define PRIORITY_RIGHT_MOTOR_TASK   5
 
+// The item size and queue size for the LED message queue.
+#define LED_ITEM_SIZE       sizeof(uint8_t)
+#define LED_QUEUE_SIZE      5
+#define VELOCITY_ITEM_SIZE  sizeof(float)
+#define VELOCITY_QUEUE_SIZE 5
+
+
 
 #endif // __PRIORITIES_H__

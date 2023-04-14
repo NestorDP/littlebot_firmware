@@ -42,14 +42,9 @@
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/serialization.h"
+#include "littlebot_firmware/priorities.h"
 
 #include "littlebot_drivers/encoder.h"
-
-// The item size and queue size for the LED message queue.
-#define LED_ITEM_SIZE       sizeof(uint8_t)
-#define LED_QUEUE_SIZE      5
-#define VELOCITY_ITEM_SIZE  2*sizeof(float)
-#define VELOCITY_QUEUE_SIZE 12
 
 // The mutex that protects concurrent access of UART from multiple tasks.
 xSemaphoreHandle g_pSerializationSemaphore;
@@ -58,7 +53,8 @@ xSemaphoreHandle g_pSerializationSemaphore;
 xQueueHandle g_pLEDQueue;
 xQueueHandle g_pVelocityLeftQueue;
 xQueueHandle g_pVelocityRightQueue;
-xQueueHandle g_pFBVelocityQueue;
+xQueueHandle g_pFBVelocityLeftQueue;
+xQueueHandle g_pFBVelocityRightQueue;
 
 // Resource to stablish the serial communication
 SerialInterface bluetooth;
@@ -91,17 +87,22 @@ int main(void) {
     // Create queues for exchange variables between tasks.
     g_pVelocityLeftQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pVelocityRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityQueue     = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityLeftQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityRightQueue= xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pLEDQueue            = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
-      
-    // EncoderInit();
+    EncoderInit();
 
-    // Create the SERIAL_READ task.
-    if(SerialReadTaskInit() != 0) {
+    // Create the SERIAL READ task.
+    // if(SerialReadTaskInit() != 0) {
+    //     while(1) {}
+    // }
+
+    // Create the SERIAL WRITE task.
+    if(SerialWriteTaskInit() != 0) {
         while(1) {}
     }
    

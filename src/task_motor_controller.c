@@ -8,7 +8,8 @@
 
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
-extern xQueueHandle g_pFBVelocityQueue;
+extern xQueueHandle g_pFBVelocityLeftQueue;
+extern xQueueHandle g_pFBVelocityRightQueue;
 
 uint8_t side_left = 1;
 uint8_t side_right = 0;
@@ -20,7 +21,7 @@ static void vTaskMotorController(void *pvParameters) {
     uint32_t ui32MotorTaskDelay; 
 
     float velocity = 0;
-    float feed_back_velocity[2] = {0, 0};  
+    float feed_back_velocity = 10;  
 
     uint8_t *side_motor;
     side_motor = (uint8_t*)pvParameters;
@@ -32,16 +33,16 @@ static void vTaskMotorController(void *pvParameters) {
     ui32WakeTime = xTaskGetTickCount();
     
     while(1) {
-        feed_back_velocity[*side_motor]; // chage for GetVelocity
-        xQueueSend(g_pFBVelocityQueue, &feed_back_velocity, 0);
+        feed_back_velocity = motor.GetVelocity(&motor);
         
         if(*side_motor == 1) {
             xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
+            xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
         } else {
             xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
+            xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
         }
         motor.SetVelocity(&motor, velocity);
-
 
         xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
     }    

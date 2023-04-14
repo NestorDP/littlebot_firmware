@@ -3,12 +3,13 @@
 #include "littlebot_firmware/task_serial_write.h"
 
 #define SERIAL_WRITE_TASK_STACK_SIZE 128 // Stack size in words
-#define SERIAL_WRITE_TASK_DELAY 100
+#define SERIAL_WRITE_TASK_DELAY 200
 
 extern Serialization protocol;
 extern SerialInterface bluetooth;
 
-extern xQueueHandle g_pFBVelocityQueue;
+extern xQueueHandle g_pFBVelocityLeftQueue;
+extern xQueueHandle g_pFBVelocityRightQueue;
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
@@ -27,7 +28,9 @@ static void SerialWriteTask(void *pvParameters) {
     val = atof(protocol_msg);
 
     while (1){
-        xQueueReceive(g_pFBVelocityQueue, &feed_back_velocity, 0);
+        xQueueReceive(g_pFBVelocityRightQueue, &feed_back_velocity[0], 0);
+        xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[0], 0);
+
         protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
