@@ -38,15 +38,13 @@ void EncoderRightConfigure(void);
 void EncoderLeftConfigure(void);
 
 
-// uint32_t EncoderGetRightValue(void);
-// uint32_t EncoderGetLeftValue(void);
+uint32_t EncoderRightValue(void);
+uint32_t EncoderLeftValue(void);
 
 void EncoderRightHandler(void);
 void EncoderLeftHandler(void);
 
 static volatile uint32_t ui32EncoderVelRight;
 static volatile uint32_t ui32EncoderVelLeft;
-static volatile uint32_t flag0 = 0x0;
-static volatile uint32_t flag1 = 0x0;
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_ENCODER_H__

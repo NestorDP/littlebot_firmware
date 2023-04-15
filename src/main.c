@@ -94,12 +94,10 @@ int main(void) {
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
-    EncoderInit();
-
     // Create the SERIAL READ task.
-    // if(SerialReadTaskInit() != 0) {
-    //     while(1) {}
-    // }
+    if(SerialReadTaskInit() != 0) {
+        while(1) {}
+    }
 
     // Create the SERIAL WRITE task.
     if(SerialWriteTaskInit() != 0) {

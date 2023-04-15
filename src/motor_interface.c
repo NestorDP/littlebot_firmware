@@ -7,7 +7,12 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
   self->GetVelocity = fcGetVelocity;
   self->GetSide = fcGetSide;
 
-  // EncoderConfigure();
+  if (self->motor_side_ == 1){
+    EncoderLeftConfigure();
+  } else {
+    EncoderRightConfigure();
+  }
+
   MotorConfigure();
 }
 
@@ -22,7 +27,12 @@ void fcSetVelocity(MotorInterface *self, int16_t vel){
 
 
 float fcGetVelocity(MotorInterface *self) {
-
+  if (self->motor_side_ == 1) {
+    return EncoderLeftValue();
+  } else {
+    return EncoderRightValue();
+  }
+  
 }
 
 uint8_t fcGetSide(MotorInterface *self){

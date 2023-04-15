@@ -12,6 +12,7 @@ void EncoderInit(void) {
     EncoderLeftConfigure();
 }
 
+
 void EncoderRightConfigure(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI1);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
@@ -29,6 +30,7 @@ void EncoderRightConfigure(void) {
     QEIIntEnable(QEI1_BASE, QEI_INTTIMER);
     QEIEnable(QEI1_BASE);
 }
+
 
 void EncoderLeftConfigure(void) {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI0);
@@ -48,12 +50,23 @@ void EncoderLeftConfigure(void) {
     QEIEnable(QEI0_BASE);
 }
 
+
 void EncoderRightHandler(void) {
     QEIIntClear(QEI1_BASE, QEIIntStatus(QEI1_BASE, true));
     ui32EncoderVelRight = QEIVelocityGet(QEI1_BASE);
 }
 
-void EncoderLeftHandler() {
+
+void EncoderLeftHandler(void) {
     QEIIntClear(QEI0_BASE, QEIIntStatus(QEI0_BASE, true));
     ui32EncoderVelLeft = QEIVelocityGet(QEI0_BASE);
+}
+
+
+uint32_t EncoderLeftValue (void) {
+    return ui32EncoderVelLeft;
+}
+
+uint32_t EncoderRightValue (void) {
+    return ui32EncoderVelRight;
 }
