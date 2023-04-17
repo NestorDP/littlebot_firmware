@@ -4,7 +4,7 @@
 #include "littlebot_firmware/task_motor_controller.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
-#define MOTOR_CONTROLLER_TASK_DELAY      100
+#define MOTOR_CONTROLLER_TASK_DELAY      10
 
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
