@@ -3,7 +3,7 @@
 #include "littlebot_firmware/task_serial_write.h"
 
 #define SERIAL_WRITE_TASK_STACK_SIZE 128 // Stack size in words
-#define SERIAL_WRITE_TASK_DELAY 10
+#define SERIAL_WRITE_TASK_DELAY 30
 
 extern Serialization protocol;
 extern SerialInterface bluetooth;
