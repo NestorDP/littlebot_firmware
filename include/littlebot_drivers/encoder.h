@@ -47,4 +47,7 @@ void EncoderLeftHandler(void);
 static volatile uint32_t ui32EncoderVelRight;
 static volatile uint32_t ui32EncoderVelLeft;
 
+static volatile uint32_t ui32EncoderPosRight;
+static volatile uint32_t ui32EncoderPosLeft;
+
 #endif // INCLUDE_LITTLEBOT_DRIVER_ENCODER_H__

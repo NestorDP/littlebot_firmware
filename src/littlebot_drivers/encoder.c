@@ -29,6 +29,8 @@ void EncoderRightConfigure(void) {
     QEIIntRegister(QEI1_BASE, *QEI1IntHandler_ptr);
     QEIIntEnable(QEI1_BASE, QEI_INTTIMER);
     QEIEnable(QEI1_BASE);
+
+    QEIPositionSet(QEI1_BASE, 0);
 }
 
 
@@ -48,18 +50,22 @@ void EncoderLeftConfigure(void) {
     QEIIntRegister(QEI0_BASE, *QEI0IntHandler_ptr);
     QEIIntEnable(QEI0_BASE, QEI_INTTIMER);
     QEIEnable(QEI0_BASE);
+
+    QEIPositionSet(QEI0_BASE, 0);
 }
 
 
 void EncoderRightHandler(void) {
     QEIIntClear(QEI1_BASE, QEIIntStatus(QEI1_BASE, true));
     ui32EncoderVelRight = QEIVelocityGet(QEI1_BASE);
+    ui32EncoderPosRight = QEIPositionGet(QEI1_BASE);
 }
 
 
 void EncoderLeftHandler(void) {
     QEIIntClear(QEI0_BASE, QEIIntStatus(QEI0_BASE, true));
     ui32EncoderVelLeft = QEIVelocityGet(QEI0_BASE);
+    ui32EncoderPosLeft = QEIPositionGet(QEI0_BASE);
 }
 
 
