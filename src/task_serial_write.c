@@ -10,6 +10,9 @@ extern SerialInterface bluetooth;
 
 extern xQueueHandle g_pFBVelocityLeftQueue;
 extern xQueueHandle g_pFBVelocityRightQueue;
+extern xQueueHandle g_pFBPositionLeftQueue;
+extern xQueueHandle g_pFBPositionRightQueue;
+
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {

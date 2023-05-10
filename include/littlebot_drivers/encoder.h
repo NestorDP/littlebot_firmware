@@ -38,8 +38,11 @@ void EncoderRightConfigure(void);
 void EncoderLeftConfigure(void);
 
 
-uint32_t EncoderRightValue(void);
-uint32_t EncoderLeftValue(void);
+uint32_t EncoderVelocityRightValue(void);
+uint32_t EncoderVelocityLeftValue(void);
+
+uint32_t EncoderPositionRightValue(void);
+uint32_t EncoderPositionLeftValue(void);
 
 void EncoderRightHandler(void);
 void EncoderLeftHandler(void);

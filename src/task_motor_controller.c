@@ -10,6 +10,8 @@ extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
 extern xQueueHandle g_pFBVelocityLeftQueue;
 extern xQueueHandle g_pFBVelocityRightQueue;
+extern xQueueHandle g_pFBPositionLeftQueue;
+extern xQueueHandle g_pFBPositionRightQueue;
 
 uint8_t side_left = 1;
 uint8_t side_right = 0;

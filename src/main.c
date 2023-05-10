@@ -55,6 +55,8 @@ xQueueHandle g_pVelocityLeftQueue;
 xQueueHandle g_pVelocityRightQueue;
 xQueueHandle g_pFBVelocityLeftQueue;
 xQueueHandle g_pFBVelocityRightQueue;
+xQueueHandle g_pFBPositionRightQueue;
+xQueueHandle g_pFBPositionLeftQueue;
 
 // Resource to stablish the serial communication
 SerialInterface bluetooth;
@@ -89,6 +91,8 @@ int main(void) {
     g_pVelocityRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFBVelocityLeftQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFBVelocityRightQueue= xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBPositionLeftQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBPositionRightQueue= xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pLEDQueue            = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
     // Create semaphore to protect the serial port.

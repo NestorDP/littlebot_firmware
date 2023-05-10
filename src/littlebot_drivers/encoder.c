@@ -69,10 +69,18 @@ void EncoderLeftHandler(void) {
 }
 
 
-uint32_t EncoderLeftValue (void) {
+uint32_t EncoderVelocityLeftValue (void) {
     return ui32EncoderVelLeft;
 }
 
-uint32_t EncoderRightValue (void) {
+uint32_t EncoderVelocityRightValue (void) {
     return ui32EncoderVelRight;
+}
+
+uint32_t EncoderPositionLeftValue (void) {
+    return ui32EncoderPosLeft;
+}
+
+uint32_t EncoderPositionRightValue (void) {
+    return ui32EncoderPosRight;
 }
