@@ -26,6 +26,6 @@ uint32_t UartPortGet (char *msg) {
 }
 
 uint32_t UartPortPut (char *msg) {
-  UARTprintf ("<%s\n", msg);
+  UARTprintf ("%s\n", msg);
   // return 2;
 }
