@@ -13,5 +13,6 @@
     "priorities.h": "c",
     "hw_gpio.h": "c"
   },
-  "cortex-debug.variableUseNaturalFormat": true
+  "cortex-debug.variableUseNaturalFormat": true,
+  "ros.distro": "foxy",
 }
