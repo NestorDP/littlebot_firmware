@@ -25,17 +25,16 @@ void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel
   char str_left[20];
   char str_right[20];
 
-  msg[0] = '<';
-  msg[1] = '\0';
+  msg[0] = '\0';
 
   FloaToStr(*left_vel, str_left, 2);
   FloaToStr(*right_vel, str_right, 2);
 
+  strcpy(msg, "<");
   strcat(msg, str_left);
   strcat(msg, "#");
   strcat(msg, str_right);
-  strcat(msg, "#");
-  strcat(msg, ">");
+  strcat(msg, "#>");
 }
 
 
