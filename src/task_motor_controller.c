@@ -23,7 +23,8 @@ static void vTaskMotorController(void *pvParameters) {
     uint32_t ui32MotorTaskDelay; 
 
     float velocity = 0;
-    uint32_t feed_back_velocity = 10;  
+    uint32_t feed_back_velocity = 10;
+    uint32_t feed_back_position = 20;
 
     uint8_t *side_motor;
     side_motor = (uint8_t*)pvParameters;
@@ -36,13 +37,16 @@ static void vTaskMotorController(void *pvParameters) {
     
     while(1) {
         feed_back_velocity = motor.GetVelocity(&motor);
+        feed_back_position = motor.GetPosition(&motor);
         
         if(*side_motor == 1) {
             xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
             xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
+            xQueueSend(g_pFBPositionLeftQueue, &feed_back_position, 0);
         } else {
             xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
             xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
+            xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
         }
         motor.SetVelocity(&motor, velocity);
 

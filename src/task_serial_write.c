@@ -21,6 +21,7 @@ static void SerialWriteTask(void *pvParameters) {
 
     char protocol_msg[80];
     uint32_t feed_back_velocity[2];
+    uint32_t feed_back_position[2];
 
     ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
     ui32WakeTime = xTaskGetTickCount();
@@ -34,7 +35,12 @@ static void SerialWriteTask(void *pvParameters) {
         xQueueReceive(g_pFBVelocityRightQueue, &feed_back_velocity[0], 0);
         xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[1], 0);
 
-        protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
+        xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[0], 0);
+        xQueueReceive(g_pFBPositionLeftQueue, &feed_back_position[1], 0);
+
+        protocol.Encode(&protocol, protocol_msg, 
+                        &feed_back_velocity[0], &feed_back_velocity[1],
+                        &feed_back_position[0], &feed_back_position[1]);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
         bluetooth.Write(&bluetooth, protocol_msg);
