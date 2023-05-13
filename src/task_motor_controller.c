@@ -23,7 +23,7 @@ static void vTaskMotorController(void *pvParameters) {
     uint32_t ui32MotorTaskDelay; 
 
     float velocity = 0;
-    float feed_back_velocity = 10;  
+    uint32_t feed_back_velocity = 10;  
 
     uint8_t *side_motor;
     side_motor = (uint8_t*)pvParameters;

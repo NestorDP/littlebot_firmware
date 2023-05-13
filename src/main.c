@@ -87,13 +87,13 @@ int main(void) {
     SerializationConstruct(&protocol);
 
     // Create queues for exchange variables between tasks.
-    g_pVelocityLeftQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pVelocityRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityLeftQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityRightQueue= xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBPositionLeftQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBPositionRightQueue= xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pLEDQueue            = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
+    g_pVelocityLeftQueue    = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pVelocityRightQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBVelocityRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBPositionLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pFBPositionRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pLEDQueue             = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
     // Create semaphore to protect the serial port.
     g_pSerializationSemaphore = xSemaphoreCreateMutex();

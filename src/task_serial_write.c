@@ -20,7 +20,7 @@ static void SerialWriteTask(void *pvParameters) {
     uint32_t ui32WriteDelay;
 
     char protocol_msg[80];
-    float feed_back_velocity[2];
+    uint32_t feed_back_velocity[2];
 
     ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
     ui32WakeTime = xTaskGetTickCount();
