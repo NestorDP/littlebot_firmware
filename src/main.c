@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Nestor D. Pereira Neto
+// Copyright (c) 2022-2023 Nestor D. Pereira Neto
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -31,20 +31,20 @@
 #include "driverlib/sysctl.h"
 
 #include "FreeRTOS.h"
-#include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "task.h"
 
 #include "littlebot_firmware/led_task.h"
-#include "littlebot_firmware/switch_task.h"
-#include "littlebot_firmware/task_serial_write.h"
-#include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial.h"
 #include "littlebot_firmware/serialization.h"
-#include "littlebot_firmware/priorities.h"
+#include "littlebot_firmware/switch_task.h"
+#include "littlebot_firmware/task_motor_controller.h"
+#include "littlebot_firmware/task_serial_read.h"
+#include "littlebot_firmware/task_serial_write.h"
 
-#include "littlebot_drivers/encoder.h"
+#include "littlebot_firmware/priorities.h"
 
 // The mutex that protects concurrent access of UART from multiple tasks.
 xSemaphoreHandle g_pSerializationSemaphore;

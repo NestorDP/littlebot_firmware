@@ -42,7 +42,7 @@ static void SerialReadTask(void *pvParameters) {
 }
 
 
-uint32_t SerialReadTaskInit(void *param) {
+uint32_t SerialReadTaskInit(void) {
     if( xTaskCreate(SerialReadTask,
                     (const portCHAR *)"Serial read",
                     SERIAL_READ_TASK_STACK_SIZE,

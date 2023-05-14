@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Nestor D. Pereira Neto
+// Copyright (c) 2022-2023 Nestor D. Pereira Neto
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,14 @@
 #ifndef INCLUDE_LITTLEBOT_DRIVER_MOTOR_H__
 #define INCLUDE_LITTLEBOT_DRIVER_MOTOR_H__
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-#include "inc/hw_memmap.h"
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/pwm.h"
 #include "driverlib/sysctl.h"
+#include "inc/hw_memmap.h"
 
 #define LEFT      1
 #define RIGHT     0

@@ -56,8 +56,7 @@ uint32_t SerialWriteTaskInit(void) {
                     SERIAL_WRITE_TASK_STACK_SIZE,
                     NULL,
                     tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
-                    NULL) != pdTRUE)
-    {
+                    NULL) != pdTRUE) {
         return (1);
     }
 
