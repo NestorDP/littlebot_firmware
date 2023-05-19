@@ -5,6 +5,7 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
   self->motor_side_ = side;
   self->SetVelocity = fcSetVelocity;
   self->GetVelocity = fcGetVelocity;
+  self->GetPosition = fcGetPosition;
   self->GetSide = fcGetSide;
 
   if (self->motor_side_ == 1){
@@ -26,14 +27,24 @@ void fcSetVelocity(MotorInterface *self, int16_t vel){
 }
 
 
-float fcGetVelocity(MotorInterface *self) {
+uint32_t fcGetVelocity(MotorInterface *self) {
   if (self->motor_side_ == 1) {
-    return EncoderLeftValue();
+    return EncoderVelocityRightValue();
   } else {
-    return EncoderRightValue();
+    return EncoderVelocityLeftValue();
+  }
+}
+
+
+uint32_t fcGetPosition(MotorInterface *self) {
+  if (self->motor_side_ == 1) {
+    return EncoderPositionRightValue();
+  } else {
+    return EncoderPositionLeftValue();
   }
   
 }
+
 
 uint8_t fcGetSide(MotorInterface *self){
   return self->motor_side_;

@@ -14,7 +14,6 @@ extern xQueueHandle g_pVelocityRightQueue;
 
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
-
 static void SerialReadTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32ReadDelay;
@@ -42,7 +41,7 @@ static void SerialReadTask(void *pvParameters) {
 }
 
 
-uint32_t SerialReadTaskInit(void *param) {
+uint32_t SerialReadTaskInit(void) {
     if( xTaskCreate(SerialReadTask,
                     (const portCHAR *)"Serial read",
                     SERIAL_READ_TASK_STACK_SIZE,

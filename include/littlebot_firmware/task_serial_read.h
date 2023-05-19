@@ -1,7 +1,7 @@
 
 
-#ifndef INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__
-#define INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__
+#ifndef INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_READ_H__
+#define INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_READ_H__
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -22,6 +22,6 @@
 #include "littlebot_firmware/priorities.h"
 
 
-uint32_t SerialReadTaskInit(void *param);
+uint32_t SerialReadTaskInit(void);
 
-#endif // INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_WRITE_H__
+#endif // INCLUDE_LITTLEBOT_FIRMWARE_TASK_SERIAL_READ_H__

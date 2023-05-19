@@ -34,8 +34,9 @@
 typedef struct SerializationClass Serialization;
 
 typedef void (*ptfDecode)(Serialization *self, char *msg, float *left_vel, float *right_vel);
-typedef void (*ptfEncode)(Serialization *self, char *msg, float *left_vel, float *right_vel);
-
+typedef void (*ptfEncode)(Serialization *self, char *msg, 
+                          uint32_t *left_vel, uint32_t *right_vel,
+                          uint32_t *left_pos, uint32_t *right_pos);
 
 //structure of function pointer
 struct SerializationClass{
@@ -48,7 +49,9 @@ void SerializationConstruct (Serialization *self);
 
 void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel);
 
-void fcEncode (Serialization *self, char *msg, float *left_vel, float *right_vel);
+void fcEncode (Serialization *self, char *msg, 
+               uint32_t *left_vel, uint32_t *right_vel,
+               uint32_t *left_pos, uint32_t *right_pos);
 
 void FloaToStr(float num, char *str, int afterpoint);
 

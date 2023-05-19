@@ -10,6 +10,9 @@ extern SerialInterface bluetooth;
 
 extern xQueueHandle g_pFBVelocityLeftQueue;
 extern xQueueHandle g_pFBVelocityRightQueue;
+extern xQueueHandle g_pFBPositionLeftQueue;
+extern xQueueHandle g_pFBPositionRightQueue;
+
 extern xSemaphoreHandle g_pSerializationSemaphore;
 
 static void SerialWriteTask(void *pvParameters) {
@@ -17,7 +20,8 @@ static void SerialWriteTask(void *pvParameters) {
     uint32_t ui32WriteDelay;
 
     char protocol_msg[80];
-    float feed_back_velocity[2];
+    uint32_t feed_back_velocity[2];
+    uint32_t feed_back_position[2];
 
     ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
     ui32WakeTime = xTaskGetTickCount();
@@ -31,7 +35,12 @@ static void SerialWriteTask(void *pvParameters) {
         xQueueReceive(g_pFBVelocityRightQueue, &feed_back_velocity[0], 0);
         xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[1], 0);
 
-        protocol.Encode(&protocol, protocol_msg, &feed_back_velocity[0], &feed_back_velocity[1]);
+        xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[0], 0);
+        xQueueReceive(g_pFBPositionLeftQueue, &feed_back_position[1], 0);
+
+        protocol.Encode(&protocol, protocol_msg, 
+                        &feed_back_velocity[0], &feed_back_velocity[1],
+                        &feed_back_position[0], &feed_back_position[1]);
 
         xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
         bluetooth.Write(&bluetooth, protocol_msg);
@@ -47,8 +56,7 @@ uint32_t SerialWriteTaskInit(void) {
                     SERIAL_WRITE_TASK_STACK_SIZE,
                     NULL,
                     tskIDLE_PRIORITY + PRIORITY_SERIAL_WRITE_TASK,
-                    NULL) != pdTRUE)
-    {
+                    NULL) != pdTRUE) {
         return (1);
     }
 
