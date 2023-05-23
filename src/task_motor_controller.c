@@ -30,8 +30,11 @@ static void vTaskMotorController(void *pvParameters) {
     side_motor = (uint8_t*)pvParameters;
 
     MotorInterface motor;
+    PidController controller;
     
     MotorInterfaceConstruct(&motor, *side_motor);
+    PidControllerContruct(&controller, 2.5, 0.0, 0.0, 1);
+
     ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
     ui32WakeTime = xTaskGetTickCount();
     
@@ -48,6 +51,7 @@ static void vTaskMotorController(void *pvParameters) {
             xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
             xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
         }
+
         motor.SetVelocity(&motor, velocity);
 
         xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);

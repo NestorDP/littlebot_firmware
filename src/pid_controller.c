@@ -21,19 +21,18 @@
 #include "littlebot_firmware/pid_controller.h"
 
 void PidControllerConstruct(PidController *self, float kp, float kd, float ki, float t) {
-    self->gain.p = kp;
-    self->gain.d = kd;
-    self->gain.i = ki;
+  self->gain.p = kp;
+  self->gain.d = kd;
+  self->gain.i = ki;
 
-    self->time_sample = t;
+  self->time_sample = t;
 
-    self->PidController = fcPidController;
+  self->PidController = fcPidController;
 }
 
 
 float fcPidController(PidController *self, float set_point, float feed_back) {
 
-  // float output;        //Variável de controle, velocidade
   float erro;             //Erro do sistema 
   float p_action = 0.0;   //Valor da ação de controle proporcional
   float d_action = 0.0;   //Valor da ação de controle derivativa
