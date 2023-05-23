@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Nestor D. Pereira Neto
+// Copyright (c) 2023 Nestor D. Pereira Neto
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,27 +26,28 @@
 #include <stdio.h>
 
 typedef struct PidControllerClass PidController;
-typedef struct Gain pid_gain;
+typedef struct Gain PidGain;
 
-typedef float (*ptfPid)(PidController *self, floas set_point);
-
-//structure of function pointer
-struct PidControllerClass{
-  pidgain gain;
-  ptfPid PidController;
-  ptfWrite Write;
-  float t;
-};
+typedef float (*ptfPid)(PidController *self, float set_point, float feed_back);
 
 struct Gain{
     float p;
     float d;
     float i;
-}
+};
 
-void PidControllerContruct(PidController *self, float kp, float, kd, float ki);
+//structure of function pointer
+struct PidControllerClass{
+  PidGain gain;
+  ptfPid PidController;
+  float time_sample;
+};
 
-float fcPidController(PidController *self, floas set_point)
+
+
+void PidControllerContruct(PidController *self, float kp, float kd, float ki, float t);
+
+float fcPidController(PidController *self, float set_point, float feed_back);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_PID_CONTROLER_H__
