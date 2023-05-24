@@ -27,20 +27,27 @@ void PidControllerConstruct(PidController *self, float kp, float kd, float ki, f
 
   self->time_sample = t;
 
-  self->PidController = fcPidController;
+  self->sp_nomalized = 0.0;
+  self->fb_nomalized = 0.0;
+
+  self->PidController = fcController;
+  self->SetSetpointRange = fcSetSetpointRange;
+  self->SetFeedbackRange = fcSetFeedbackRange;
 }
 
 
-float fcPidController(PidController *self, float set_point, float feed_back) {
+float fcController(PidController *self, float set_point, float feed_back) {
 
   float erro;             //Erro do sistema 
   float p_action = 0.0;   //Valor da ação de controle proporcional
   float d_action = 0.0;   //Valor da ação de controle derivativa
   float i_action = 0.0;   //Valor da ação de controle integral 
   float last_erro = 0.0;  //Erro anterior 
+
+  normalizer(self, set_point, feed_back);
   
   // Calcula o valor do erro
-  erro = set_point - feed_back;
+  erro = self->sp_nomalized - self->fb_nomalized;
       
   // Calcula cada ação de controle do PID
   p_action  = self->gain.p * erro;
@@ -52,4 +59,22 @@ float fcPidController(PidController *self, float set_point, float feed_back) {
 
   // Calculo do PID  
   return p_action + i_action + d_action;
+}
+
+
+void fcSetSetpointRange(PidController *self, float max, float min) {
+  self->sp_range.max = max;
+  self->sp_range.min = min;
+}
+
+
+void fcSetFeedbackRange(PidController *self, float max, float min) {
+  self->fb_range.max = max;
+  self->fb_range.min = min;
+}
+
+
+void normalizer (PidController *self, float set_point, float feed_back) {
+  self->sp_nomalized = 10;
+  self->fb_nomalized = 11;
 }

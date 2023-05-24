@@ -26,9 +26,12 @@
 #include <stdio.h>
 
 typedef struct PidControllerClass PidController;
-typedef struct Gain PidGain;
+typedef struct Gain pidGain;
+typedef struct Range range;
 
-typedef float (*ptfPid)(PidController *self, float set_point, float feed_back);
+typedef float (*ptfController)(PidController *self, float set_point, float feed_back);
+typedef void (*ptfSetSetpointRange)(PidController *self, float max, float min);
+typedef void (*ptfSetFeedbackRange)(PidController *self, float max, float min);
 
 struct Gain{
     float p;
@@ -36,18 +39,32 @@ struct Gain{
     float i;
 };
 
+struct Range{
+    float max;
+    float min;
+};
+
 //structure of function pointer
 struct PidControllerClass{
-  PidGain gain;
-  ptfPid PidController;
+  pidGain gain;
+  range sp_range;
+  range fb_range;
   float time_sample;
+  float sp_nomalized;
+  float fb_nomalized;
+  ptfController PidController;
+  ptfSetSetpointRange SetSetpointRange;
+  ptfSetFeedbackRange SetFeedbackRange;
 };
 
 
+void PidControllerConstruct(PidController *self, float kp, float kd, float ki, float t);
 
-void PidControllerContruct(PidController *self, float kp, float kd, float ki, float t);
+float fcController(PidController *self, float set_point, float feed_back);
 
-float fcPidController(PidController *self, float set_point, float feed_back);
+void fcSetSetpointRange(PidController *self, float max, float min);
+
+void fcSetFeedbackRange(PidController *self, float max, float min);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_PID_CONTROLER_H__
