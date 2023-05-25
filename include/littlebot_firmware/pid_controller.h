@@ -46,10 +46,13 @@ struct Range{
 
 //structure of function pointer
 struct PidControllerClass{
-  pidGain gain;
-  range output_range;
-  float max_speed;
-  float time_sample;
+  // Variables
+  pidGain gain_;
+  range output_range_;
+  float max_speed_;
+  float time_sample_;
+
+  // Function
   ptfController PidController;
   ptfSetMaxSpeed SetMaxSpeed;
   ptfSetOutputRange SetOutputRange;

@@ -42,12 +42,12 @@ float fcController(PidController *self, float set_point, float feed_back) {
   float last_erro = 0.0;  //Erro anterior 
   
   // Calcula o valor do erro normalizado
-  erro = (set_point - feed_back)/self->max_speed;
+  erro = (set_point - feed_back)/self->max_speed_;
       
   // Calcula cada ação de controle do PID
-  p_action  = self->gain.p * erro;
-  i_action += self->gain.i * (self->time_sample * ((erro + last_erro)/ 2.0));   
-  d_action  = self->gain.d * ((erro - last_erro)/self->time_sample);
+  p_action  = self->gain_.p * erro;
+  i_action += self->gain_.i * (self->time_sample_ * ((erro + last_erro)/ 2.0));   
+  d_action  = self->gain_.d * ((erro - last_erro)/self->time_sample_);
 
   // Salva o erro atual e a ação integral atual para próximos calculos
   last_erro = erro;
@@ -58,11 +58,11 @@ float fcController(PidController *self, float set_point, float feed_back) {
 
 
 void fcSetMaxSpeed(PidController *self, float speed) {
-  self->max_speed = speed;
+  self->max_speed_ = speed;
 }
 
 
 void fcSetOutputRange(PidController *self, float max, float min) {
-  self->output_range.max = max;
-  self->output_range.min = min;
+  self->output_range_.max = max;
+  self->output_range_.min = min;
 }
