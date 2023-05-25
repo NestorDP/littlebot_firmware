@@ -38,6 +38,6 @@
 
 void MotorConfigure(void);
 
-uint8_t MotorVelocity(uint8_t side, uint16_t vel, uint8_t dir); 
+uint8_t MotorVelocity(uint8_t side, uint16_t velocity, uint8_t direction); 
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_MOTOR_H__

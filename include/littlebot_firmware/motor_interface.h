@@ -36,7 +36,11 @@ typedef uint8_t (*ptfGetSide)(MotorInterface *self);
 
 //structure of function pointer
 struct MotorInterfaceClass{
+    // Variables
     uint8_t motor_side_;
+    uint8_t motor_direction_;
+
+    // Function
     ptfSetVelocity SetVelocity;
     ptfGetVelocity GetVelocity;
     ptfGetPosition GetPosition;
@@ -45,7 +49,7 @@ struct MotorInterfaceClass{
 
 void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
-void fcSetVelocity(MotorInterface *self, int16_t vel);
+void fcSetVelocity(MotorInterface *self, int16_t velocity);
 
 uint32_t fcGetVelocity(MotorInterface *self);
 

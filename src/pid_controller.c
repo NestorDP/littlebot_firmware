@@ -21,11 +21,11 @@
 #include "littlebot_firmware/pid_controller.h"
 
 void PidControllerConstruct(PidController *self, float kp, float kd, float ki, float t) {
-  self->gain.p = kp;
-  self->gain.d = kd;
-  self->gain.i = ki;
+  self->gain_.p = kp;
+  self->gain_.d = kd;
+  self->gain_.i = ki;
 
-  self->time_sample = t;
+  self->time_sample_ = t;
 
   self->PidController = fcController;
   self->SetMaxSpeed = fcSetMaxSpeed;
