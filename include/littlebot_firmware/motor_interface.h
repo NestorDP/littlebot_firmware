@@ -30,7 +30,7 @@
 typedef struct MotorInterfaceClass MotorInterface;
 
 typedef void (*ptfSetVelocity)(MotorInterface *self, int16_t vel);
-typedef uint32_t (*ptfGetVelocity)(MotorInterface *self);
+typedef float (*ptfGetVelocity)(MotorInterface *self);
 typedef uint32_t (*ptfGetPosition)(MotorInterface *self);
 typedef uint8_t (*ptfGetSide)(MotorInterface *self);
 
@@ -51,7 +51,7 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
 
 void fcSetVelocity(MotorInterface *self, int16_t velocity);
 
-uint32_t fcGetVelocity(MotorInterface *self);
+float fcGetVelocity(MotorInterface *self);
 
 uint32_t fcGetPosition(MotorInterface *self);
 

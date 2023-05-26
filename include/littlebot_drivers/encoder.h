@@ -39,8 +39,9 @@
 #include "inc/hw_timer.h"
 #include "inc/hw_types.h"
 
-#define SAMPLE_PERIOD  8
-#define PPR            40
+#define PERIODS_PER_SECOND    8
+#define PULSES_PER_REVOLUTION 40
+#define _2PI 6.28319  
 
 void EncoderInit(void);
 
@@ -48,8 +49,8 @@ void EncoderRightConfigure(void);
 void EncoderLeftConfigure(void);
 
 
-uint32_t EncoderVelocityRightValue(void);
-uint32_t EncoderVelocityLeftValue(void);
+float EncoderVelocityRightValue(void);
+float EncoderVelocityLeftValue(void);
 
 uint32_t EncoderPositionRightValue(void);
 uint32_t EncoderPositionLeftValue(void);

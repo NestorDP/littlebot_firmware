@@ -29,7 +29,7 @@ void fcSetVelocity(MotorInterface *self, int16_t velocity){
 }
 
 
-uint32_t fcGetVelocity(MotorInterface *self) {
+float fcGetVelocity(MotorInterface *self) {
   if (self->motor_side_ == 1) {
     return EncoderVelocityRightValue();
   } else {
