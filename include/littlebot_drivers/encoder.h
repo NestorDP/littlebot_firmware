@@ -48,7 +48,6 @@ void EncoderInit(void);
 void EncoderRightConfigure(void);
 void EncoderLeftConfigure(void);
 
-
 float EncoderVelocityRightValue(void);
 float EncoderVelocityLeftValue(void);
 
@@ -57,6 +56,8 @@ uint32_t EncoderPositionLeftValue(void);
 
 void EncoderRightHandler(void);
 void EncoderLeftHandler(void);
+
+void EncoderSetPositionDirection(uint8_t side, uint8_t direction);
 
 static volatile uint32_t ui32EncoderVelRight;
 static volatile uint32_t ui32EncoderVelLeft;

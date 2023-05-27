@@ -35,7 +35,7 @@ void EncoderRightConfigure(void) {
   GPIOPinConfigure(GPIO_PC6_PHB1);
 
   QEIConfigure(QEI1_BASE,
-               QEI_CONFIG_CAPTURE_A | QEI_CONFIG_NO_RESET | QEI_CONFIG_CLOCK_DIR | QEI_CONFIG_NO_SWAP,
+               (QEI_CONFIG_CAPTURE_A | QEI_CONFIG_NO_RESET | QEI_CONFIG_CLOCK_DIR | QEI_CONFIG_NO_SWAP),
                PULSES_PER_REVOLUTION);
   QEIVelocityConfigure(QEI1_BASE, QEI_VELDIV_1, SysCtlClockGet() / PERIODS_PER_SECOND );
   QEIVelocityEnable(QEI1_BASE);
@@ -53,12 +53,17 @@ void EncoderLeftConfigure(void) {
   SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI0);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
 
+  // Unlock GPIOD7 its used for NMI
+	HWREG(GPIO_PORTD_BASE + GPIO_O_LOCK) = GPIO_LOCK_KEY;
+	HWREG(GPIO_PORTD_BASE + GPIO_O_CR) |= 0x80;
+	HWREG(GPIO_PORTD_BASE + GPIO_O_LOCK) = 0;
+
   GPIOPinTypeQEI(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7);
   GPIOPinConfigure(GPIO_PD6_PHA0);
   GPIOPinConfigure(GPIO_PD7_PHB0);
-
+  
   QEIConfigure(QEI0_BASE, 
-               QEI_CONFIG_CAPTURE_A | QEI_CONFIG_NO_RESET | QEI_CONFIG_CLOCK_DIR | QEI_CONFIG_NO_SWAP,
+               (QEI_CONFIG_CAPTURE_A | QEI_CONFIG_NO_RESET | QEI_CONFIG_CLOCK_DIR | QEI_CONFIG_NO_SWAP),
                PULSES_PER_REVOLUTION);
   QEIVelocityConfigure(QEI0_BASE, QEI_VELDIV_1, SysCtlClockGet() / PERIODS_PER_SECOND);
   QEIVelocityEnable(QEI0_BASE);
@@ -100,4 +105,23 @@ uint32_t EncoderPositionLeftValue (void) {
 
 uint32_t EncoderPositionRightValue (void) {
   return ui32EncoderPosRight;
+}
+
+
+void EncoderSetPositionDirection(uint8_t side, uint8_t direction) {
+  if(side == 1){ 
+    if(direction == 1){
+      GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
+    }
+    else {
+      GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 0);
+    }
+  } else {
+    if(direction == 1){
+      GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
+    }
+    else {
+      GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, 0);
+    }
+  }
 }
