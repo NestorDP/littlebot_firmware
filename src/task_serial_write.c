@@ -19,9 +19,9 @@ static void SerialWriteTask(void *pvParameters) {
     portTickType ui32WakeTime;
     uint32_t ui32WriteDelay;
 
-    char protocol_msg[80];
-    uint32_t feed_back_velocity[2];
-    uint32_t feed_back_position[2];
+    char protocol_msg[100];
+    float feed_back_velocity[2];
+    float feed_back_position[2];
 
     ui32WriteDelay = SERIAL_WRITE_TASK_DELAY;
     ui32WakeTime = xTaskGetTickCount();

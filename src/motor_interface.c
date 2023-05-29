@@ -40,7 +40,7 @@ float fcGetVelocity(MotorInterface *self) {
 }
 
 
-uint32_t fcGetPosition(MotorInterface *self) {
+float fcGetPosition(MotorInterface *self) {
   if (self->motor_side_ == 1) {
     return EncoderPositionRightValue();
   } else {

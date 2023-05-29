@@ -51,8 +51,8 @@ void EncoderLeftConfigure(void);
 float EncoderVelocityRightValue(void);
 float EncoderVelocityLeftValue(void);
 
-uint32_t EncoderPositionRightValue(void);
-uint32_t EncoderPositionLeftValue(void);
+float EncoderPositionRightValue(void);
+float EncoderPositionLeftValue(void);
 
 void EncoderRightHandler(void);
 void EncoderLeftHandler(void);

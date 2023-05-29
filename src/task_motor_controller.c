@@ -4,7 +4,7 @@
 #include "littlebot_firmware/task_motor_controller.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
-#define MOTOR_CONTROLLER_TASK_DELAY      200
+#define MOTOR_CONTROLLER_TASK_DELAY      10
 
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
@@ -23,8 +23,8 @@ static void vTaskMotorController(void *pvParameters) {
   uint32_t ui32MotorTaskDelay; 
 
   float velocity = 0;
-  uint32_t feed_back_velocity = 10;
-  uint32_t feed_back_position = 20;
+  float feed_back_velocity = 10;
+  float feed_back_position = 20;
 
   uint8_t *side_motor;
   side_motor = (uint8_t*)pvParameters;

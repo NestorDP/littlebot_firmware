@@ -22,8 +22,8 @@ void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel
 
 
 void fcEncode (Serialization *self, char *msg, 
-               uint32_t *left_vel, uint32_t *right_vel,
-               uint32_t *left_pos, uint32_t *right_pos) {
+               float *left_vel, float *right_vel,
+               float *left_pos, float *right_pos) {
   char str_vel_left[20];
   char str_vel_right[20];
   char str_pos_left[20];
@@ -31,10 +31,10 @@ void fcEncode (Serialization *self, char *msg,
 
   msg[0] = '\0';
 
-  intToStr(*left_vel, str_vel_left, 1);
-  intToStr(*right_vel, str_vel_right, 1);
-  intToStr(*left_pos, str_pos_left, 1);
-  intToStr(*right_pos, str_pos_right, 1);
+  FloatToStr(*left_vel, str_vel_left, 2);
+  FloatToStr(*right_vel, str_vel_right, 2);
+  FloatToStr(*left_pos, str_pos_left, 2);
+  FloatToStr(*right_pos, str_pos_right, 2);
 
   strcpy(msg, "<");
   strcat(msg, str_vel_left);
@@ -48,7 +48,7 @@ void fcEncode (Serialization *self, char *msg,
 }
 
 
-void FloaToStr(float num, char *str, int afterpoint) {
+void FloatToStr(float num, char *str, int afterpoint) {
       // Extract integer part
     int ipart = (int)num;
  
