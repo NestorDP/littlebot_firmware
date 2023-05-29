@@ -46,6 +46,11 @@ void EncoderRightConfigure(void) {
   QEIEnable(QEI1_BASE);
 
   QEIPositionSet(QEI1_BASE, 0);
+
+  // 
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOF)){}
+  GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_4);
 }
 
 
@@ -74,6 +79,11 @@ void EncoderLeftConfigure(void) {
   QEIEnable(QEI0_BASE);
 
   QEIPositionSet(QEI0_BASE, 0);
+
+  // 
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOC)){}
+  GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, GPIO_PIN_7);
 }
 
 
