@@ -27,7 +27,7 @@ void PidControllerConstruct(PidController *self, float kp, float kd, float ki, f
 
   self->time_sample_ = t;
 
-  self->PidController = fcController;
+  self->Controller = fcController;
   self->SetMaxSpeed = fcSetMaxSpeed;
   self->SetOutputRange = fcSetOutputRange;
 }

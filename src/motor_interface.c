@@ -18,7 +18,7 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
 }
 
 
-void fcSetVelocity(MotorInterface *self, int16_t velocity){
+void fcSetVelocity(MotorInterface *self, float velocity){
   if(velocity < 0){
     MotorVelocity(self->motor_side_, -1 * velocity, 1);
     EncoderSetPositionDirection(self->motor_side_, 1);

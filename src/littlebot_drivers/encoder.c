@@ -109,11 +109,11 @@ float EncoderVelocityRightValue (void) {
   return ((ui32EncoderVelRight * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
 }
 
-uint32_t EncoderPositionLeftValue (void) {
+float EncoderPositionLeftValue (void) {
   return ui32EncoderPosLeft;
 }
 
-uint32_t EncoderPositionRightValue (void) {
+float EncoderPositionRightValue (void) {
   return ui32EncoderPosRight;
 }
 

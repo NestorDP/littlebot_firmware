@@ -53,7 +53,7 @@ struct PidControllerClass{
   float time_sample_;
 
   // Function
-  ptfController PidController;
+  ptfController Controller;
   ptfSetMaxSpeed SetMaxSpeed;
   ptfSetOutputRange SetOutputRange;
 };

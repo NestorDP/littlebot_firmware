@@ -4,7 +4,7 @@
 #include "littlebot_firmware/task_motor_controller.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
-#define MOTOR_CONTROLLER_TASK_DELAY      10
+#define MOTOR_CONTROLLER_TASK_DELAY      200
 
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
@@ -19,67 +19,67 @@ uint8_t side_right = 0;
 uint8_t side_m;
 
 static void vTaskMotorController(void *pvParameters) {
-    portTickType ui32WakeTime;
-    uint32_t ui32MotorTaskDelay; 
+  portTickType ui32WakeTime;
+  uint32_t ui32MotorTaskDelay; 
 
-    float velocity = 0;
-    uint32_t feed_back_velocity = 10;
-    uint32_t feed_back_position = 20;
+  float velocity = 0;
+  uint32_t feed_back_velocity = 10;
+  uint32_t feed_back_position = 20;
 
-    uint8_t *side_motor;
-    side_motor = (uint8_t*)pvParameters;
+  uint8_t *side_motor;
+  side_motor = (uint8_t*)pvParameters;
 
-    MotorInterface motor;
-    PidController controller;
+  MotorInterface motor;
+  PidController pid;
+  
+  MotorInterfaceConstruct(&motor, *side_motor);
+  PidControllerConstruct(&pid, 2.5, 0.0, 0.0, 1);
+
+  ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
+  ui32WakeTime = xTaskGetTickCount();
+  
+  while(1) {
+    feed_back_velocity = motor.GetVelocity(&motor);
+    feed_back_position = motor.GetPosition(&motor);
     
-    MotorInterfaceConstruct(&motor, *side_motor);
-    PidControllerConstruct(&controller, 2.5, 0.0, 0.0, 1);
+    if(*side_motor == 1) {
+      xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
+      xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
+      xQueueSend(g_pFBPositionLeftQueue, &feed_back_position, 0);
+    } else {
+      xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
+      xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
+      xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
+    }
 
-    ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
-    ui32WakeTime = xTaskGetTickCount();
-    
-    while(1) {
-        feed_back_velocity = motor.GetVelocity(&motor);
-        feed_back_position = motor.GetPosition(&motor);
-        
-        if(*side_motor == 1) {
-            xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
-            xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
-            xQueueSend(g_pFBPositionLeftQueue, &feed_back_position, 0);
-        } else {
-            xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
-            xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
-            xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
-        }
+    motor.SetVelocity(&motor, pid.Controller(&pid, velocity, feed_back_velocity));
 
-        motor.SetVelocity(&motor, velocity);
-
-        xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
-    }    
+    xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
+  }    
 }
 
 
 uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t priority) {
-    if (side){
-        if( xTaskCreate(vTaskMotorController, 
-                        (const portCHAR *)name, 
-                        MOTOR_CONTROLLER_TASK_STACK_SIZE, 
-                        (void *) &side_left,
-                        tskIDLE_PRIORITY + PRIORITY_LEFT_MOTOR_TASK,
-                        NULL) != pdTRUE) {
-            return(1);
-        }
-    } else {
-        if( xTaskCreate(vTaskMotorController, 
-                        (const portCHAR *)name, 
-                        MOTOR_CONTROLLER_TASK_STACK_SIZE, 
-                        (void *) &side_right,
-                        tskIDLE_PRIORITY + PRIORITY_RIGHT_MOTOR_TASK, 
-                        NULL) != pdTRUE) {
-            return(1);
-        }
+  if (side){
+    if( xTaskCreate(vTaskMotorController, 
+                    (const portCHAR *)name, 
+                    MOTOR_CONTROLLER_TASK_STACK_SIZE, 
+                    (void *) &side_left,
+                    tskIDLE_PRIORITY + PRIORITY_LEFT_MOTOR_TASK,
+                    NULL) != pdTRUE) {
+      return(1);
     }
+  } else {
+    if( xTaskCreate(vTaskMotorController, 
+                    (const portCHAR *)name, 
+                    MOTOR_CONTROLLER_TASK_STACK_SIZE, 
+                    (void *) &side_right,
+                    tskIDLE_PRIORITY + PRIORITY_RIGHT_MOTOR_TASK, 
+                    NULL) != pdTRUE) {
+      return(1);
+    }
+  }
 
-    // Success.
-    return(0);
+  // Success.
+  return(0);
 }
