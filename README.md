@@ -15,5 +15,9 @@ littlebot firmware's Source code
 
 ## A little PID controller
 <p align="center">
-<img src="https://user-images.githubusercontent.com/37759765/241722547-de68db86-cd84-4a90-99e4-fbd900335422.png" alt="drawing" width="600"/>
+<img src="https://user-images.githubusercontent.com/37759765/242135832-d878f5c8-e922-4c68-b292-558bf2040ff1.png" alt="drawing" width="600"/>
 </p>
+
+
+
+
