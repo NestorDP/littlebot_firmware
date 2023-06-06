@@ -38,7 +38,7 @@ uint32_t UartPortGet (char *msg) {
   num = UARTPeek('\r');
   num_character = num;
   if ( num > 0) {
-    UARTgets (msg, num_character);
+    UARTgets (msg, num_character + 1);
     num = 0;
   }
   

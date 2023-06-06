@@ -104,9 +104,9 @@ int main(void) {
     }
 
     // Create the SERIAL WRITE task.
-    if(SerialWriteTaskInit() != 0) {
-        while(1) {}
-    }
+    // if(SerialWriteTaskInit() != 0) {
+    //     while(1) {}
+    // }
    
     // Create the LEFT MOTOR CONTROLLER task.
     if(MotorControllerTaskInit(1, "Motor left", PRIORITY_LEFT_MOTOR_TASK) != 0) {

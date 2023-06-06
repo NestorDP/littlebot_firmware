@@ -16,8 +16,6 @@ void fcDecode (Serialization *self, char *msg, float *left_vel, float *right_vel
 
   split_msg = strtok(NULL, "#");
   *right_vel = atof(split_msg);
-
-  msg[0] = '\0';
 }
 
 
@@ -36,7 +34,7 @@ void fcEncode (Serialization *self, char *msg,
   FloatToStr(*left_pos, str_pos_left, 2);
   FloatToStr(*right_pos, str_pos_right, 2);
 
-  strcpy(msg, "<");
+  strcpy(msg, "R");
   strcat(msg, str_vel_left);
   strcat(msg, "#");
   strcat(msg, str_vel_right);
@@ -44,7 +42,7 @@ void fcEncode (Serialization *self, char *msg,
   strcat(msg, str_pos_left);
   strcat(msg, "#");
   strcat(msg, str_pos_right);
-  strcat(msg, "#>");
+  strcat(msg, "#");
 }
 
 

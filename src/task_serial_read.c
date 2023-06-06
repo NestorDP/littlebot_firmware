@@ -9,35 +9,67 @@
 extern Serialization protocol;
 extern SerialInterface bluetooth;
 
+// Command
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
 
-extern xSemaphoreHandle g_pSerializationSemaphore;
+// Status
+extern xQueueHandle g_pFBVelocityLeftQueue;
+extern xQueueHandle g_pFBVelocityRightQueue;
+extern xQueueHandle g_pFBPositionLeftQueue;
+extern xQueueHandle g_pFBPositionRightQueue;
+
 
 static void SerialReadTask(void *pvParameters) {
-    portTickType ui32WakeTime;
-    uint32_t ui32ReadDelay;
+  portTickType ui32WakeTime;
+  uint32_t ui32ReadDelay;
 
-    char protocol_msg[80] = "\0";
-    float velocity[2];
+  char rx_msg[80] = "\0";
+  char tx_msg[80] = "\0";
+  float velocity[2];
+  float feed_back_velocity[2];
+  float feed_back_position[2];
 
-    ui32ReadDelay = SERIAL_READ_TASK_DELAY;
-    ui32WakeTime = xTaskGetTickCount();
+  ui32ReadDelay = SERIAL_READ_TASK_DELAY;
+  ui32WakeTime = xTaskGetTickCount();
 
-    while(1) {
-        xSemaphoreTake(g_pSerializationSemaphore, portMAX_DELAY);
-        bluetooth.Read(&bluetooth, protocol_msg);
-        xSemaphoreGive(g_pSerializationSemaphore);
+  uint32_t num = 0;
 
-        if (protocol_msg[0] != '\0'){
-            protocol.Decode(&protocol, protocol_msg, &velocity[0], &velocity[1]);
-        }
-        
-        xQueueSend(g_pVelocityRightQueue, &velocity[0], 0);
-        xQueueSend(g_pVelocityLeftQueue, &velocity[1], 0);
+  while(1) {
+    // Read velocity status queue 
+    xQueueReceive(g_pFBVelocityRightQueue, &feed_back_velocity[0], 0);
+    xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[1], 0);
 
-        xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
+    // Read velocity status queue 
+    xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[0], 0);
+    xQueueReceive(g_pFBPositionLeftQueue, &feed_back_position[1], 0);
+
+    // Receive message from serial
+    num = bluetooth.Read(&bluetooth, rx_msg);
+
+    switch (rx_msg[0]) {
+      case 'W':
+        protocol.Decode(&protocol, &rx_msg[1], &velocity[0], &velocity[1]);
+        bluetooth.Write(&bluetooth, "1");
+        rx_msg[0] = '\0';
+      break;
+      case 'R':
+        protocol.Encode(&protocol, tx_msg, 
+                &feed_back_velocity[0], &feed_back_velocity[1],
+                &feed_back_position[0], &feed_back_position[1]);
+        bluetooth.Write(&bluetooth, tx_msg);
+        rx_msg[0] = '\0'; 
+      break;
+      default:
+        velocity[0] = 0.0;
+        velocity[1] = 0.0;
     }
+
+    xQueueSend(g_pVelocityRightQueue, &velocity[0], 0);
+    xQueueSend(g_pVelocityLeftQueue, &velocity[1], 0);
+
+    xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
+  }
 }
 
 
