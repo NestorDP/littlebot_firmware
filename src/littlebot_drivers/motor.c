@@ -53,6 +53,12 @@ void MotorConfigure(void){
 
 uint8_t MotorVelocity(uint8_t side, float normalized_vel, uint8_t direction){
   uint16_t pwm_vel;
+
+  pwm_vel = (normalized_vel*10000) + 14000;
+  if (pwm_vel == 14000) {
+    pwm_vel = 0;
+  }
+
   if(side == LEFT){
     if(direction == FORWARD){
       GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, 0);
@@ -62,7 +68,6 @@ uint8_t MotorVelocity(uint8_t side, float normalized_vel, uint8_t direction){
       GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
       GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_3, 0);
     }
-    pwm_vel = (normalized_vel*10000) + 15000;
     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, pwm_vel);
   }
   else{
@@ -74,7 +79,6 @@ uint8_t MotorVelocity(uint8_t side, float normalized_vel, uint8_t direction){
       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_2, GPIO_PIN_2);
       GPIOPinWrite(GPIO_PORTE_BASE, GPIO_PIN_3, 0);
     }
-    pwm_vel = (normalized_vel*10000) + 15000;
     PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, pwm_vel);
   }
 

@@ -61,8 +61,8 @@ static void SerialReadTask(void *pvParameters) {
         rx_msg[0] = '\0'; 
       break;
       default:
-        velocity[0] = 0.0;
-        velocity[1] = 0.0;
+        // velocity[0] = 0.0;
+        // velocity[1] = 0.0;
     }
 
     xQueueSend(g_pVelocityRightQueue, &velocity[0], 0);

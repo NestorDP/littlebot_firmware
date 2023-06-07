@@ -29,10 +29,10 @@ void fcEncode (Serialization *self, char *msg,
 
   msg[0] = '\0';
 
-  FloatToStr(*left_vel, str_vel_left, 2);
-  FloatToStr(*right_vel, str_vel_right, 2);
-  FloatToStr(*left_pos, str_pos_left, 2);
-  FloatToStr(*right_pos, str_pos_right, 2);
+  FloatToStr(*left_vel, str_vel_left, 5);
+  FloatToStr(*right_vel, str_vel_right, 5);
+  FloatToStr(*left_pos, str_pos_left, 5);
+  FloatToStr(*right_pos, str_pos_right, 5);
 
   strcpy(msg, "R");
   strcat(msg, str_vel_left);
