@@ -29,7 +29,6 @@ void PidControllerConstruct(PidController *self, float kp, float kd, float ki, f
 
   self->Controller = fcController;
   self->SetMaxSpeed = fcSetMaxSpeed;
-  self->SetOutputRange = fcSetOutputRange;
 }
 
 
@@ -39,30 +38,32 @@ float fcController(PidController *self, float set_point, float feed_back) {
   float p_action = 0.0;   //Valor da ação de controle proporcional
   float d_action = 0.0;   //Valor da ação de controle derivativa
   float i_action = 0.0;   //Valor da ação de controle integral 
-  float last_erro = 0.0;  //Erro anterior 
+  float last_erro = 0.0;  //Erro anterior
+  float pid = 0.0;
   
   // Calcula o valor do erro normalizado
   erro = (set_point - feed_back)/self->max_speed_;
-      
+
   // Calcula cada ação de controle do PID
   p_action  = self->gain_.p * erro;
   i_action += self->gain_.i * (self->time_sample_ * ((erro + last_erro)/ 2.0));   
   d_action  = self->gain_.d * ((erro - last_erro)/self->time_sample_);
 
-  // Salva o erro atual e a ação integral atual para próximos calculos
+  // Salva o erro atual para próximos calculos
   last_erro = erro;
 
-  // Calculo do PID  
-  return p_action + i_action + d_action;
+  // Calculo do PID
+  pid = p_action + i_action + d_action;
+  if ( pid > 1) {
+    pid = 1;
+  } else if( pid < 0) {
+    pid = 0;
+  }
+  
+  return pid;
 }
 
 
 void fcSetMaxSpeed(PidController *self, float speed) {
   self->max_speed_ = speed;
-}
-
-
-void fcSetOutputRange(PidController *self, float max, float min) {
-  self->output_range_.max = max;
-  self->output_range_.min = min;
 }

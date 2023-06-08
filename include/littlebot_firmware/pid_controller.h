@@ -27,11 +27,9 @@
 
 typedef struct PidControllerClass PidController;
 typedef struct Gain pidGain;
-typedef struct Range range;
 
 typedef float (*ptfController)(PidController *self, float set_point, float feed_back);
-typedef void (*ptfSetMaxSpeed)(PidController *self, float max, float min);
-typedef void (*ptfSetOutputRange)(PidController *self, float speed);
+typedef void (*ptfSetMaxSpeed)(PidController *self, float max);
 
 struct Gain{
     float p;
@@ -39,23 +37,16 @@ struct Gain{
     float i;
 };
 
-struct Range{
-    float max;
-    float min;
-};
-
 //structure of function pointer
 struct PidControllerClass{
   // Variables
   pidGain gain_;
-  range output_range_;
   float max_speed_;
   float time_sample_;
 
   // Function
   ptfController Controller;
   ptfSetMaxSpeed SetMaxSpeed;
-  ptfSetOutputRange SetOutputRange;
 };
 
 
@@ -64,8 +55,6 @@ void PidControllerConstruct(PidController *self, float kp, float kd, float ki, f
 float fcController(PidController *self, float set_point, float feed_back);
 
 void fcSetMaxSpeed(PidController *self, float speed);
-
-void fcSetOutputRange(PidController *self, float max, float min);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_PID_CONTROLER_H__

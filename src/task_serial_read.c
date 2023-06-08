@@ -26,7 +26,7 @@ static void SerialReadTask(void *pvParameters) {
 
   char rx_msg[80] = "\0";
   char tx_msg[80] = "\0";
-  float velocity[2];
+  float velocity[2] = {0, 0};
   float feed_back_velocity[2];
   float feed_back_position[2];
 

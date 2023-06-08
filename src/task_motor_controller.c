@@ -20,11 +20,13 @@ uint8_t side_m;
 
 static void vTaskMotorController(void *pvParameters) {
   portTickType ui32WakeTime;
-  uint32_t ui32MotorTaskDelay; 
+  // uint32_t ui32MotorTaskDelay; 
 
   float velocity = 0;
   float feed_back_velocity = 10;
   float feed_back_position = 20;
+
+  float controled_velocity = 0.0;
 
   uint8_t *side_motor;
   side_motor = (uint8_t*)pvParameters;
@@ -33,9 +35,10 @@ static void vTaskMotorController(void *pvParameters) {
   PidController pid;
   
   MotorInterfaceConstruct(&motor, *side_motor);
-  PidControllerConstruct(&pid, 2.5, 0.0, 0.0, MOTOR_CONTROLLER_TASK_DELAY/1000);
+  PidControllerConstruct(&pid, 1, 0, 0, MOTOR_CONTROLLER_TASK_DELAY);
+  pid.SetMaxSpeed(&pid, 15.0);
 
-  ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
+  // ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
   ui32WakeTime = xTaskGetTickCount();
   
   while(1) {
@@ -52,14 +55,15 @@ static void vTaskMotorController(void *pvParameters) {
       xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
     }
 
-    motor.SetVelocity(&motor, velocity);
+    controled_velocity = pid.Controller(&pid, velocity, feed_back_velocity);
+    motor.SetVelocity(&motor, controled_velocity);
 
-    xTaskDelayUntil(&ui32WakeTime, ui32MotorTaskDelay / portTICK_RATE_MS);
+    xTaskDelayUntil(&ui32WakeTime,  pdMS_TO_TICKS(MOTOR_CONTROLLER_TASK_DELAY));
   }    
 }
 
 
-uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t priority) {
+uint32_t MotorControllerTaskInit(uint8_t side, const char *name) {
   if (side){
     if( xTaskCreate(vTaskMotorController, 
                     (const portCHAR *)name, 

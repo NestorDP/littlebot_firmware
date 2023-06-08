@@ -41,6 +41,6 @@
 
 extern uint8_t side_m;
 
-extern uint32_t MotorControllerTaskInit(uint8_t side, const char *name, UBaseType_t priority);
+extern uint32_t MotorControllerTaskInit(uint8_t side, const char *name);
 
 #endif // TASK_MOTOR_CONTROLLER_R_H__
