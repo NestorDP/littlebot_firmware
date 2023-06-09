@@ -110,11 +110,11 @@ float EncoderVelocityRightValue (void) {
 }
 
 float EncoderPositionLeftValue (void) {
-  return ui32EncoderPosLeft * 0.157079633;
+  return (float)ui32EncoderPosLeft * ANGLE_STEP;
 }
 
 float EncoderPositionRightValue (void) {
-  return ui32EncoderPosRight * 0.157079633;
+  return (float)ui32EncoderPosRight * ANGLE_STEP;
 }
 
 

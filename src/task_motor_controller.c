@@ -4,7 +4,7 @@
 #include "littlebot_firmware/task_motor_controller.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
-#define MOTOR_CONTROLLER_TASK_DELAY      10
+#define MOTOR_CONTROLLER_TASK_DELAY      100
 
 extern xQueueHandle g_pVelocityLeftQueue;
 extern xQueueHandle g_pVelocityRightQueue;
@@ -25,7 +25,6 @@ static void vTaskMotorController(void *pvParameters) {
   float velocity = 0;
   float feed_back_velocity = 10;
   float feed_back_position = 20;
-
   float controled_velocity = 0.0;
 
   uint8_t *side_motor;
@@ -35,7 +34,7 @@ static void vTaskMotorController(void *pvParameters) {
   PidController pid;
   
   MotorInterfaceConstruct(&motor, *side_motor);
-  PidControllerConstruct(&pid, 1, 0, 0, MOTOR_CONTROLLER_TASK_DELAY);
+  PidControllerConstruct(&pid, 0.03, 0.02, 0.005, MOTOR_CONTROLLER_TASK_DELAY);
   pid.SetMaxSpeed(&pid, 15.0);
 
   // ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
@@ -46,11 +45,11 @@ static void vTaskMotorController(void *pvParameters) {
     feed_back_position = motor.GetPosition(&motor);
     
     if(*side_motor == 1) {
-      xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 10);
+      xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 0);
       xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
       xQueueSend(g_pFBPositionLeftQueue, &feed_back_position, 0);
     } else {
-      xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 10);
+      xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 0);
       xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
       xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
     }

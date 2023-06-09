@@ -41,7 +41,7 @@ float fcGetVelocity(MotorInterface *self) {
 
 
 float fcGetPosition(MotorInterface *self) {
-  if (self->motor_side_ == 1) {
+  if (self->motor_side_ == 0) {
     return EncoderPositionRightValue();
   } else {
     return EncoderPositionLeftValue();

@@ -41,7 +41,8 @@
 
 #define PERIODS_PER_SECOND    2
 #define PULSES_PER_REVOLUTION 40
-#define _2PI 6.28319  
+#define _2PI                  6.28319
+#define ANGLE_STEP            _2PI / PULSES_PER_REVOLUTION
 
 void EncoderInit(void);
 
