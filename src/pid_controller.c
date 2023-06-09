@@ -38,16 +38,22 @@ float fcController(PidController *self, float set_point, float feed_back) {
   float p_action = 0.0;   //Valor da ação de controle proporcional
   float d_action = 0.0;   //Valor da ação de controle derivativa
   float i_action = 0.0;   //Valor da ação de controle integral 
+  float i = 0.0;
+  float d = 0.0;
   float last_erro = 0.0;  //Erro anterior
   float pid = 0.0;
   
   // Calcula o valor do erro normalizado
   erro = (set_point - feed_back)/self->max_speed_;
 
-  // Calcula cada ação de controle do PID
+  // Calculate the I and D
+  i += (self->time_sample_ * ((erro + last_erro)/ 2.0));
+  d = ((erro - last_erro)/self->time_sample_);
+
+  // Calculate PID actions
   p_action  = self->gain_.p * erro;
-  i_action += self->gain_.i * (self->time_sample_ * ((erro + last_erro)/ 2.0));   
-  d_action  = self->gain_.d * ((erro - last_erro)/self->time_sample_);
+  i_action += self->gain_.i * i;
+  d_action  = self->gain_.d * d;
 
   // Salva o erro atual para próximos calculos
   last_erro = erro;

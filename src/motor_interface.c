@@ -32,7 +32,7 @@ void fcSetVelocity(MotorInterface *self, float velocity){
 
 
 float fcGetVelocity(MotorInterface *self) {
-  if (self->motor_side_ == 1) {
+  if (self->motor_side_ == 0) {
     return EncoderVelocityRightValue();
   } else {
     return EncoderVelocityLeftValue();

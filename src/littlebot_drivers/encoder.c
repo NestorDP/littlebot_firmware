@@ -102,11 +102,11 @@ void EncoderLeftHandler(void) {
 
 
 float EncoderVelocityLeftValue (void) {
-  return ((ui32EncoderVelLeft * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
+  return (((float)ui32EncoderVelLeft * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
 }
 
 float EncoderVelocityRightValue (void) {
-  return ((ui32EncoderVelRight * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
+  return (((float)ui32EncoderVelRight * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
 }
 
 float EncoderPositionLeftValue (void) {
