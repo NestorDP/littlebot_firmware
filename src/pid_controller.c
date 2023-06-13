@@ -48,12 +48,12 @@ float fcController(PidController *self, float set_point, float feed_back) {
 
   // Calculate the I and D
   i += (self->time_sample_ * ((erro + last_erro)/ 2.0));
-  d = ((erro - last_erro)/self->time_sample_);
+  d  = ((erro - last_erro)/self->time_sample_);
 
   // Calculate PID actions
-  p_action  = self->gain_.p * erro;
-  i_action += self->gain_.i * i;
-  d_action  = self->gain_.d * d;
+  p_action = self->gain_.p * erro;
+  i_action = self->gain_.i * i;
+  d_action = self->gain_.d * d;
 
   // Salva o erro atual para próximos calculos
   last_erro = erro;

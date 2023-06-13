@@ -34,8 +34,8 @@ static void vTaskMotorController(void *pvParameters) {
   PidController pid;
   
   MotorInterfaceConstruct(&motor, *side_motor);
-  PidControllerConstruct(&pid, 0.03, 0.02, 0.005, MOTOR_CONTROLLER_TASK_DELAY);
-  pid.SetMaxSpeed(&pid, 15.0);
+  PidControllerConstruct(&pid, 11.0, 0.0, 0.0, MOTOR_CONTROLLER_TASK_DELAY/1000);
+  pid.SetMaxSpeed(&pid, 22.0);
 
   // ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
   ui32WakeTime = xTaskGetTickCount();
