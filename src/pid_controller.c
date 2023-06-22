@@ -47,8 +47,8 @@ float fcController(PidController *self, float set_point, float feed_back) {
   erro = (set_point - feed_back)/self->max_speed_;
 
   // Calculate the I and D
-  i += (self->time_sample_ * ((erro + last_erro)/ 2.0));
-  d  = ((erro - last_erro)/self->time_sample_);
+  i += (((erro + last_erro)/ 2.0) * self->time_sample_);
+  d  = ((erro - last_erro) / self->time_sample_);
 
   // Calculate PID actions
   p_action = self->gain_.p * erro;

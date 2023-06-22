@@ -55,7 +55,7 @@ static void vTaskMotorController(void *pvParameters) {
     }
 
     controled_velocity = pid.Controller(&pid, velocity, feed_back_velocity);
-    motor.SetVelocity(&motor, controled_velocity);
+    motor.SetVelocity(&motor, velocity);
 
     xTaskDelayUntil(&ui32WakeTime,  pdMS_TO_TICKS(MOTOR_CONTROLLER_TASK_DELAY));
   }    
