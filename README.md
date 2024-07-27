@@ -1,5 +1,5 @@
 # littlebot_firmware
-littlebot firmware's Source code *sing TivaWare 2.2.0.295
+littlebot firmware's Source code *using TivaWare 2.2.0.295
 
 
 ## Littlebot firmware's achitecture 
