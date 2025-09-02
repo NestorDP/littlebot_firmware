@@ -32,8 +32,21 @@ SIZE      = $(TOOLCHAIN)size
 #--------------------
 CPUFLAG  = -mthumb -mcpu=cortex-m4 -mlittle-endian
 FPUFLAG  = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+
 WFLAG    = -Wall 
 WFLAG   += -Wextra
+WFLAG   += -Wpedantic
+WFLAG   += -Wconversion
+WFLAG   += -Wsign-conversion
+WFLAG   += -Wduplicated-cond
+WFLAG   += -Wduplicated-branches
+WFLAG   += -Wlogical-op
+WFLAG   += -Wnull-dereference
+WFLAG   += -Wjump-misses-init
+WFLAG   += -Wdouble-promotion
+WFLAG   += -Wshadow
+WFLAG   += -Wformat=2
+
 
 CFLAGS   = $(CPUFLAG) 
 CFLAGS  += $(WFLAG) 
