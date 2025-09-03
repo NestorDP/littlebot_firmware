@@ -54,7 +54,7 @@ void MotorConfigure(void){
 uint8_t MotorVelocity(uint8_t side, float normalized_vel, uint8_t direction){
   uint16_t pwm_vel;
 
-  pwm_vel = (normalized_vel*10000) + 14000;
+  pwm_vel = (uint16_t)((normalized_vel*10000.0f) + 14000.0f);
   if (pwm_vel == 14000) {
     pwm_vel = 0;
   }

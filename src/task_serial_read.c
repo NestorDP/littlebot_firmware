@@ -33,8 +33,7 @@ static void SerialReadTask(void *pvParameters) {
   ui32ReadDelay = SERIAL_READ_TASK_DELAY;
   ui32WakeTime = xTaskGetTickCount();
 
-  uint32_t num = 0;
-
+ 
   while(1) {
     // Read velocity status queue
     xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[0], 0);
@@ -45,7 +44,7 @@ static void SerialReadTask(void *pvParameters) {
     xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[1], 0);
 
     // Receive message from serial
-    num = bluetooth.Read(&bluetooth, rx_msg);
+    bluetooth.Read(&bluetooth, rx_msg);
 
     switch (rx_msg[0]) {
       case 'W':
@@ -61,8 +60,8 @@ static void SerialReadTask(void *pvParameters) {
         rx_msg[0] = '\0'; 
       break;
       default:
-        // velocity[0] = 0.0;
-        // velocity[1] = 0.0;
+        velocity[0] = 0.0;
+        velocity[1] = 0.0;
     }
 
     xQueueSend(g_pVelocityLeftQueue, &velocity[0], 0);

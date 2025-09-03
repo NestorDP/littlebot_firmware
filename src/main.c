@@ -74,6 +74,8 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
      * on entry to this function, so no processor interrupts will interrupt
      * this loop.
      */
+    (void)pxTask;
+    (void)pcTaskName;
     while(1) {}
 }
 

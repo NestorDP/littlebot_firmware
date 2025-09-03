@@ -33,10 +33,10 @@ void UartPortConfigure (uint32_t baud_rate) {
 }
 
 uint32_t UartPortGet (char *msg) {
-  int num_character;
+  uint32_t num_character;
   int num;
   num = UARTPeek('\r');
-  num_character = num;
+  num_character = (uint32_t)num;
   if ( num > 0) {
     UARTgets (msg, num_character + 1);
     num = 0;
@@ -47,5 +47,5 @@ uint32_t UartPortGet (char *msg) {
 
 uint32_t UartPortPut (char *msg) {
   UARTprintf ("%s\n", msg);
-  // return 2;
+  return 0;
 }
