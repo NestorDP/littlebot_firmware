@@ -122,16 +122,6 @@ int main(void) {
     if(MotorControllerTaskInit(0, "Motor right") != 0) {
         while(1) {}
     }
-     
-    /* Create the LED task. */
-    if(LEDTaskInit() != 0) {
-        while(1) {}
-    }
-
-    /* Create the SWITCH task. */
-    if(SwitchTaskInit() != 0) {
-        while(1) {}
-    }
 
     /* Start the scheduler.  This should not return. */
     vTaskStartScheduler();
