@@ -118,8 +118,8 @@ LIBNOSYS := ${shell ${CC} ${CFLAGS} -print-file-name=libnosys.a}
 
 # Linker flags.
 #---------------------
-# LDFLAGS  = 
-# LDFLAGS  = 
+# LDFLAGS  = -specs=nosys.specs
+# LDFLAGS += -specs=nano.specs
 
 # Include paths to be passed to $(CC) where necessary
 #---------------------
@@ -154,7 +154,8 @@ $(OBJ_DIR) :
 
 # Linker
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
-	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) --gc-sections -o $@ -ldriver '$(LIBC)' '$(LIBGCC)' '$(LIBM)' '$(LIBNOSYS)'
+	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) \
+    --gc-sections -o $@ -ldriver '$(LIBC)' '$(LIBGCC)' '$(LIBM)' '$(LIBNOSYS)'
 
 debug : _debug_flags all
 
