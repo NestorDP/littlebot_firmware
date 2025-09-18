@@ -199,11 +199,7 @@ $(OBJ_DIR)%.o : $(NANO_DIR)%.c
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
-
-PROTO_SRCS = $(SRC_DIR)littlebot_msg.proto
-PB_C_FILES = $(patsubst %.proto, %.pb.c, $(PROTO_SRCS))
-PB_H_FILES = $(patsubst %.proto, %.pb.h, $(PROTO_SRCS))
-
+# Protobuf generation
 $(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h : $(SRC_DIR)littlebot_msg.proto
 	$(PROTOC) --nanopb_out=. $<
 
