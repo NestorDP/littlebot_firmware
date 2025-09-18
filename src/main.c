@@ -41,12 +41,10 @@
 
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/motor_interface.h"
-#include "littlebot_firmware/serial.h"
-#include "littlebot_firmware/serialization.h"
+#include "littlebot_firmware/serial_interface.h"
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/task_serial_read.h"
-#include "littlebot_firmware/task_serial_write.h"
 
 #include "littlebot_firmware/priorities.h"
 
@@ -64,7 +62,6 @@ xQueueHandle g_pFBPositionLeftQueue;
 
 /* Resource to stablish the serial communication */
 SerialInterface bluetooth;
-Serialization protocol;
 
 /* The error routine that is called if the driver library encounters an error. */
 #ifdef DEBUG
@@ -91,7 +88,6 @@ int main(void) {
     
     /* Create communication object */
     SerialInterfaceContruct(&bluetooth, 115200);
-    SerializationConstruct(&protocol);
 
     /* Create queues for exchange variables between tasks. */
     g_pVelocityLeftQueue    = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -109,12 +105,6 @@ int main(void) {
     if(SerialReadTaskInit() != 0) {
         while(1) {}
     }
-
-    /* Create the SERIAL WRITE task. */
-    //  if(SerialWriteTaskInit() != 0) {
-    //      while(1) {}
-    //  }
-     
    
     /* Create the LEFT MOTOR CONTROLLER task. */
     if(MotorControllerTaskInit(1, "Motor left") != 0) {

@@ -6,7 +6,6 @@
 #define SERIAL_READ_TASK_DELAY      100
 
 
-extern Serialization protocol;
 extern SerialInterface bluetooth;
 
 // Command
@@ -48,14 +47,10 @@ static void SerialReadTask(void *pvParameters) {
 
     switch (rx_msg[0]) {
       case 'W':
-        protocol.Decode(&protocol, &rx_msg[1], &velocity[0], &velocity[1]);
         bluetooth.Write(&bluetooth, "1");
         rx_msg[0] = '\0';
       break;
       case 'R':
-        protocol.Encode(&protocol, tx_msg, 
-                &feed_back_velocity[0], &feed_back_velocity[1],
-                &feed_back_position[0], &feed_back_position[1]);
         bluetooth.Write(&bluetooth, tx_msg);
         rx_msg[0] = '\0'; 
       break;
