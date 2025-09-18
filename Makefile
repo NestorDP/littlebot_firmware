@@ -193,7 +193,7 @@ $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
 
 # nanopb core
 $(OBJ_DIR)%.o : $(NANO_DIR)%.c
-	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $
+	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
 # Main Code
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
