@@ -5,6 +5,8 @@
 ### C ###
 # Prerequisites
 *.d
+*.pb.h
+*.pb.c
 
 # Object files
 *.o

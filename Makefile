@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# Include the nanopb provided Makefile rules
+include nanopb/extra/nanopb.mk
 
 TOOLCHAIN = arm-none-eabi-
 CC        = $(TOOLCHAIN)gcc
@@ -69,6 +71,7 @@ PORT_TARGET = GCC/ARM_CM4F/
 OBJ_DIR     = obj/
 SRC_DIR     = src/
 DRIVERS_DIR = $(SRC_DIR)littlebot_drivers/
+NANO_DIR   	= $(NANOPB_DIR)/
 # API_DIR	    = $(SRC_DIR)littlebot_api/
 
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
@@ -97,10 +100,13 @@ DRIVERLIB_UTILS_OBJS = uartstdio.o
 FREERTOS_PORT_SOURCE = $(shell ls $(FREERTOS_PORT_DIR)*.c)
 DRIVERS_SOURCES      = $(shell ls $(DRIVERS_DIR)*.c)
 SRC_SOURCES          = $(shell ls $(SRC_DIR)*.c)
+NANO_SOURCES         = $(NANOPB_CORE)
 
 FREERTOS_PORT_OBJS   = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
 DRIVERS_OBJS         = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
 SRC_OBJS             = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
+NANO_OBJS            = $(patsubst $(NANO_DIR)%,$(OBJ_DIR)%,$(NANO_SOURCES:.c=.o))
+
 
 OBJS   = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
 OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
@@ -126,7 +132,8 @@ LIBNOSYS := ${shell ${CC} ${CFLAGS} -print-file-name=libnosys.a}
 INC_DIR       = include/
 INC_FREERTOS  = $(FREERTOS_SRC_DIR)include/
 INC_TIVAWARE  = $(TIVAWARE_DIR)/
-INC_FLAGS     = -I $(INC_FREERTOS) -I $(SRC_DIR) -I $(FREERTOS_PORT_DIR) -I $(INC_DIR) -I $(INC_TIVAWARE)
+INC_FLAGS     = -I $(INC_FREERTOS) -I $(SRC_DIR) -I $(FREERTOS_PORT_DIR) -I $(INC_DIR) \
+			    -I $(INC_TIVAWARE) -I $(NANOPB_DIR) -I .
 
 # Dependency on HW specific settings
 #---------------------
@@ -142,7 +149,7 @@ TARGET_IMAGE  = image.bin
 #---------------------
 print-%  : ; @echo $* = $($*)
 
-all : $(TARGET_IMAGE) size
+all : $(TARGET_IMAGE) size $(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h
 
 rebuild : clean all
 
@@ -184,9 +191,21 @@ $(OBJ_DIR)%.o : $(DRIVERLIB_UTILS_DIR)%.c
 $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
+# nanopb core
+$(OBJ_DIR)%.o : $(NANO_DIR)%.c
+	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $
+
 # Main Code
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
+
+
+PROTO_SRCS = $(SRC_DIR)littlebot_msg.proto
+PB_C_FILES = $(patsubst %.proto, %.pb.c, $(PROTO_SRCS))
+PB_H_FILES = $(patsubst %.proto, %.pb.h, $(PROTO_SRCS))
+
+$(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h : $(SRC_DIR)littlebot_msg.proto
+	$(PROTOC) --nanopb_out=. $<
 
 # Size code:
 #---------------------
@@ -219,6 +238,9 @@ help :
 	@echo - clean_intermediate: deletes all intermediate binaries, only keeps the target image \'$(TARGET_IMAGE)\'.
 	@echo - clean: deletes all intermediate binaries, incl. the target image \'$(TARGET_IMAGE)\'.
 	@echo - help: displays these help instructions.
+	@echo - $(PROTOC)
+	@echo - $(PROTOC_OPTS)
+	@echo - NANOPB_GENERATOR: $(NANOPB_GENERATOR)
 	@echo
 
 

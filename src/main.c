@@ -24,6 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <pb_encode.h>
+#include <pb_decode.h>
+
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/gpio.h"
