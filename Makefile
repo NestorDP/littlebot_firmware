@@ -114,6 +114,7 @@ OBJS  += $(addprefix $(OBJ_DIR), $(DRIVERLIB_UTILS_OBJS))
 OBJS  += $(FREERTOS_PORT_OBJS) 
 OBJS  += $(DRIVERS_OBJS)
 OBJS  += $(SRC_OBJS)
+OBJS  += $(NANO_OBJS)
 
 # Get the location of libgcc.a, libc.a and libm.a from the GCC front-end.
 #---------------------
@@ -149,7 +150,7 @@ TARGET_IMAGE  = image.bin
 #---------------------
 print-%  : ; @echo $* = $($*)
 
-all : $(TARGET_IMAGE) size $(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h
+all :$(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h $(TARGET_IMAGE) size
 
 rebuild : clean all
 

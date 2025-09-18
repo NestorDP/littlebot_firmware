@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <pb_encode.h>
-#include <pb_decode.h>
+#include "pb_encode.h"
+#include "pb_decode.h"
 
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -47,6 +47,7 @@
 #include "littlebot_firmware/task_serial_read.h"
 
 #include "littlebot_firmware/priorities.h"
+#include "littlebot_msg.pb.h"
 
 /* The mutex that protects concurrent access of UART from multiple tasks. */
 xSemaphoreHandle g_pSerializationSemaphore;
@@ -81,6 +82,27 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
 
 
 int main(void) {
+    uint8_t buffer[128];
+    size_t message_length;
+    bool status;
+
+    my_package_Whells wh = my_package_WheelData_init_zero;
+
+    // Fill first element
+    wh.items_count = 2;
+    wh.items[0].command_velocity = 1.0f;
+    wh.items[0].status_velocity = 0.9f;
+    wh.items[0].status_position = 10.0f;
+    // Fill second element
+    wh.items[1].command_velocity = 2.0f;
+    wh.items[1].status_velocity = 1.8f;
+    wh.items[1].status_position = 20.0f;
+
+    // Encode into buffer
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+    status = pb_encode(&stream, my_package_Whells_fields, &wh);
+    message_length = stream.bytes_written;
+
     /* Set the clocking to run at 80 MHz from the PLL. */
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 

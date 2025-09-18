@@ -1,5 +1,13 @@
 syntax = "proto2";
 
-message SimpleMessage {
-    required int32 lucky_number = 1;
+package my_package;
+
+message WheelData {
+  required float command_velocity = 1;
+  required float status_velocity = 2;
+  required float status_position = 3;
+}
+
+message Whells {
+  repeated WheelData items = 1;
 }
