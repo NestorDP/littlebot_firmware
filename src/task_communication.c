@@ -1,6 +1,6 @@
 // Copyright (c) 2022
 
-#include "littlebot_firmware/task_serial_read.h"
+#include "littlebot_firmware/task_communication.h"
 
 #define SERIAL_READ_TASK_STACK_SIZE 128         // Stack size in words
 #define SERIAL_READ_TASK_DELAY      100
@@ -19,7 +19,7 @@ extern xQueueHandle g_pFBPositionLeftQueue;
 extern xQueueHandle g_pFBPositionRightQueue;
 
 
-static void SerialReadTask(void *pvParameters) {
+static void CommunicationTask(void *pvParameters) {
   portTickType ui32WakeTime;
   uint32_t ui32ReadDelay;
 
@@ -67,8 +67,8 @@ static void SerialReadTask(void *pvParameters) {
 }
 
 
-uint32_t SerialReadTaskInit(void) {
-    if( xTaskCreate(SerialReadTask,
+uint32_t CommunicationTaskInit(void) {
+    if( xTaskCreate(CommunicationTask,
                     (const portCHAR *)"Serial read",
                     SERIAL_READ_TASK_STACK_SIZE,
                     NULL,

@@ -12,7 +12,8 @@
     "serial.h": "c",
     "priorities.h": "c",
     "hw_gpio.h": "c",
-    "pin_map.h": "c"
+    "pin_map.h": "c",
+    "littlebot_msg.pb.h": "c"
   },
   "cortex-debug.variableUseNaturalFormat": true,
   "ros.distro": "foxy",

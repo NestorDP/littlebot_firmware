@@ -44,7 +44,7 @@
 #include "littlebot_firmware/serial_interface.h"
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_motor_controller.h"
-#include "littlebot_firmware/task_serial_read.h"
+#include "littlebot_firmware/task_communication.h"
 
 #include "littlebot_firmware/priorities.h"
 #include "littlebot_msg.pb.h"
@@ -123,8 +123,8 @@ int main(void) {
     /* Create semaphore to protect the serial port. */
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
-    /* Create the SERIAL READ task. */
-    if(SerialReadTaskInit() != 0) {
+    /* Create the COMMUNICATION task. */
+    if(CommunicationTaskInit() != 0) {
         while(1) {}
     }
    

@@ -36,8 +36,6 @@
 #include "inc/hw_types.h"
 #include "utils/uartstdio.h"
 
-void UARTStdioIntHandler (void);
-
 void UartPortConfigure (uint32_t baud_rate);
 
 uint32_t UartPortGet (char *msg);
