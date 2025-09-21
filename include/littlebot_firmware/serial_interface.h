@@ -38,7 +38,7 @@ struct SerialInterfaceClass{
   ptfWrite Write;
 };
 
-void SerialInterfaceContruct(SerialInterface *self, uint32_t baud_rate);
+void SerialInterfaceConstructor(SerialInterface *self, uint32_t baud_rate);
 
 uint32_t fcRead(SerialInterface *self, char *msg);
 
