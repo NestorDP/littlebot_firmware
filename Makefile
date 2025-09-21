@@ -67,20 +67,28 @@ DEBFLAG  = -g -DDEBUG
 
 # Directories variables 
 #---------------------
-PORT_TARGET = GCC/ARM_CM4F/
-OBJ_DIR     = obj/
-SRC_DIR     = src/
-DRIVERS_DIR = $(SRC_DIR)littlebot_drivers/
-NANO_DIR   	= $(NANOPB_DIR)/
-# API_DIR	    = $(SRC_DIR)littlebot_api/
-
+PORT_TARGET 		 = GCC/ARM_CM4F/
+OBJ_DIR     		 = obj/
+SRC_DIR     		 = src/
+DRIVERS_DIR 		 = $(SRC_DIR)littlebot_drivers/
+NANO_DIR   			 = $(NANOPB_DIR)/
 FREERTOS_SRC_DIR     = FreeRTOS/Source/
 FREERTOS_MEMMANG_DIR = $(FREERTOS_SRC_DIR)portable/MemMang/
 FREERTOS_PORT_DIR    = $(FREERTOS_SRC_DIR)portable/$(PORT_TARGET)
-
 DRIVERLIB_UTILS_DIR  = $(TIVAWARE_DIR)/utils/
 
-# Object files
+# Generator and options for protobuf message
+#---------------------
+$(shell ./nanopb/generator/protoc --nanopb_out=. $(SRC_DIR)*.proto)
+
+# Source files variables
+#---------------------
+FREERTOS_PORT_SOURCE = $(shell ls $(FREERTOS_PORT_DIR)*.c)
+DRIVERS_SOURCES      = $(shell ls $(DRIVERS_DIR)*.c)
+SRC_SOURCES          = $(shell ls $(SRC_DIR)*.c)
+NANO_SOURCES         = $(NANOPB_CORE)
+
+# Object files variables: Include all .o utils files that you have using in project
 #---------------------
 FREERTOS_OBJS  = queue.o list.o tasks.o
 FREERTOS_OBJS += timers.o
@@ -94,19 +102,12 @@ FREERTOS_MEMMANG_OBJS = heap_2.o
 #FREERTOS_MEMMANG_OBJS = heap_4.o
 #FREERTOS_MEMMANG_OBJS = heap_5.o
 
-# Include all .o utils files that you have using in project
 DRIVERLIB_UTILS_OBJS = uartstdio.o
 
-FREERTOS_PORT_SOURCE = $(shell ls $(FREERTOS_PORT_DIR)*.c)
-DRIVERS_SOURCES      = $(shell ls $(DRIVERS_DIR)*.c)
-SRC_SOURCES          = $(shell ls $(SRC_DIR)*.c)
-NANO_SOURCES         = $(NANOPB_CORE)
-
-FREERTOS_PORT_OBJS   = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
-DRIVERS_OBJS         = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
-SRC_OBJS             = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
-NANO_OBJS            = $(patsubst $(NANO_DIR)%,$(OBJ_DIR)%,$(NANO_SOURCES:.c=.o))
-
+FREERTOS_PORT_OBJS = $(patsubst $(FREERTOS_PORT_DIR)%,$(OBJ_DIR)%,$(FREERTOS_PORT_SOURCE:.c=.o))
+DRIVERS_OBJS       = $(patsubst $(DRIVERS_DIR)%,$(OBJ_DIR)%,$(DRIVERS_SOURCES:.c=.o))
+SRC_OBJS           = $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRC_SOURCES:.c=.o))
+NANO_OBJS          = $(patsubst $(NANO_DIR)%,$(OBJ_DIR)%,$(NANO_SOURCES:.c=.o))
 
 OBJS   = $(addprefix $(OBJ_DIR), $(FREERTOS_OBJS))    
 OBJS  += $(addprefix $(OBJ_DIR), $(FREERTOS_MEMMANG_OBJS))
@@ -150,7 +151,7 @@ TARGET_IMAGE  = image.bin
 #---------------------
 print-%  : ; @echo $* = $($*)
 
-all :$(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h $(TARGET_IMAGE) size
+all : $(TARGET_IMAGE) size
 
 rebuild : clean all
 
@@ -161,6 +162,7 @@ $(OBJ_DIR) :
 	mkdir -p $@
 
 # Linker
+#---------------------
 $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
 	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) \
     --gc-sections -o $@ -ldriver '$(LIBC)' '$(LIBGCC)' '$(LIBM)' '$(LIBNOSYS)'
@@ -172,6 +174,8 @@ debug_rebuild : _debug_flags rebuild
 _debug_flags :
 	$(eval CFLAGS += $(DEBFLAG))
 
+# Rules for all object files
+#---------------------
 # FreeRTOS core
 $(OBJ_DIR)%.o:  $(FREERTOS_SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
@@ -200,10 +204,6 @@ $(OBJ_DIR)%.o : $(NANO_DIR)%.c
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
 
-# Protobuf generation
-$(SRC_DIR)littlebot_msg.pb.c $(SRC_DIR)littlebot_msg.pb.h : $(SRC_DIR)littlebot_msg.proto
-	$(PROTOC) --nanopb_out=. $<
-
 # Size code:
 #---------------------
 size : 
@@ -218,6 +218,8 @@ clean_obj :
 clean_intermediate : clean_obj
 	$(RM) *.elf
 	$(RM) *.img
+	$(RM) ${SRC_DIR}*.pb.c
+	$(RM) ${SRC_DIR}*.pb.h
 	
 clean : clean_intermediate
 	$(RM) *.bin
