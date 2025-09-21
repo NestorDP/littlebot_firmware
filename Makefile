@@ -32,38 +32,38 @@ SIZE      = $(TOOLCHAIN)size
 
 # GCC flags
 #--------------------
-CPUFLAG  = -mthumb -mcpu=cortex-m4 -mlittle-endian
-FPUFLAG  = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
+CPUFLAG = -mthumb -mcpu=cortex-m4 -mlittle-endian
+FPUFLAG = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
-WFLAG    = -Wall 
-WFLAG   += -Wextra
-WFLAG   += -Wpedantic
-WFLAG   += -Wconversion
-WFLAG   += -Wsign-conversion
-WFLAG   += -Wduplicated-cond
-WFLAG   += -Wduplicated-branches
-WFLAG   += -Wlogical-op
-WFLAG   += -Wnull-dereference
-WFLAG   += -Wjump-misses-init
-WFLAG   += -Wdouble-promotion
-WFLAG   += -Wshadow
-WFLAG   += -Wformat=2
+WFLAG  = -Wall 
+WFLAG += -Wextra
+WFLAG += -Wpedantic
+WFLAG += -Wconversion
+WFLAG += -Wsign-conversion
+WFLAG += -Wduplicated-cond
+WFLAG += -Wduplicated-branches
+WFLAG += -Wlogical-op
+WFLAG += -Wnull-dereference
+WFLAG += -Wjump-misses-init
+WFLAG += -Wdouble-promotion
+WFLAG += -Wshadow
+WFLAG += -Wformat=2
 
+CFLAGS  = $(CPUFLAG) 
+CFLAGS += $(WFLAG) 
+CFLAGS += $(FPUFLAG)
+CFLAGS += -std=c99 
+CFLAGS += -MD
+CFLAGS += -pedantic
+CFLAGS += -nostdlib
+CFLAGS += -ffunction-sections 
+CFLAGS += -fdata-sections 
+CFLAGS += -specs=nosys.specs
+CFLAGS += -DPART_TM4C123GH6PM
+CFLAGS += -DUART_BUFFERED
 
-CFLAGS   = $(CPUFLAG) 
-CFLAGS  += $(WFLAG) 
-CFLAGS  += $(FPUFLAG)
-CFLAGS  += -std=c99 
-CFLAGS  += -MD
-CFLAGS  += -pedantic
-CFLAGS  += -nostdlib
-CFLAGS  += -ffunction-sections 
-CFLAGS  += -fdata-sections 
-CFLAGS  += -specs=nosys.specs
-CFLAGS  += -DPART_TM4C123GH6PM
-CFLAGS  += -DUART_BUFFERED
-
-DEBFLAG  = -g -DDEBUG
+DEBFLAG  = -g
+DEBFLAG += -DDEBUG
 
 # Directories variables 
 #---------------------
