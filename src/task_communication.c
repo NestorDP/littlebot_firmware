@@ -43,15 +43,15 @@ static void CommunicationTask(void *pvParameters) {
     xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[1], 0);
 
     // Receive message from serial
-    bluetooth.Read(&bluetooth, rx_msg);
+    // bluetooth.Read(&bluetooth, rx_msg);
 
     switch (rx_msg[0]) {
       case 'W':
-        bluetooth.Write(&bluetooth, "1");
+        // bluetooth.Write(&bluetooth, "1");
         rx_msg[0] = '\0';
       break;
       case 'R':
-        bluetooth.Write(&bluetooth, tx_msg);
+        // bluetooth.Write(&bluetooth, tx_msg);
         rx_msg[0] = '\0'; 
       break;
       default:
@@ -72,7 +72,7 @@ uint32_t CommunicationTaskInit(void) {
                     (const portCHAR *)"Serial read",
                     SERIAL_READ_TASK_STACK_SIZE,
                     NULL,
-                    tskIDLE_PRIORITY + PRIORITY_SERIAL_READ_TASK,
+                    tskIDLE_PRIORITY + PRIORITY_SERIAL_COMMUNICATION,
                     NULL) != pdTRUE) {
         return(1);
     }
