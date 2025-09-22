@@ -17,7 +17,7 @@
 #include "queue.h"
 #include "semphr.h"
 
-#include "littlebot_firmware/serial_interface.h"
+#include "littlebot_firmware/serial_wrapper.h"
 #include "littlebot_firmware/priorities.h"
 
 

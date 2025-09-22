@@ -6,7 +6,7 @@
 #define SERIAL_READ_TASK_DELAY      100
 
 
-extern SerialInterface bluetooth;
+extern SerialWrapper bluetooth;
 
 // Command
 extern xQueueHandle g_pVelocityLeftQueue;

@@ -41,7 +41,7 @@
 
 #include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/motor_interface.h"
-#include "littlebot_firmware/serial_interface.h"
+#include "littlebot_firmware/serial_wrapper.h"
 #include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/task_communication.h"
@@ -62,7 +62,7 @@ xQueueHandle g_pFBPositionRightQueue;
 xQueueHandle g_pFBPositionLeftQueue;
 
 /* Resource to stablish the serial communication */
-SerialInterface bluetooth;
+SerialWrapper bluetooth;
 
 /* The error routine that is called if the driver library encounters an error. */
 #ifdef DEBUG
@@ -99,7 +99,7 @@ int main(void) {
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
     /* Create communication object */
-    SerialInterfaceConstructor(&bluetooth, 115200);
+    SerialWrapperConstructor(&bluetooth, 115200);
 
     bluetooth.Write(&bluetooth, "LittleBot Firmware");
 

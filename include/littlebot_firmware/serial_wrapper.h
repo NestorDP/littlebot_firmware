@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_H__
-#define INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_H__
+#ifndef INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_WRAPPER_H__
+#define INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_WRAPPER_H__
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -27,22 +27,22 @@
 
 #include "littlebot_drivers/uart_port.h"
 
-typedef struct SerialInterfaceClass SerialInterface;
+typedef struct SerialWrapperClass SerialWrapper;
 
-typedef uint32_t (*ptfRead)(SerialInterface *self, char *msg);
-typedef void (*ptfWrite)(SerialInterface *self, char *msg);
+typedef uint32_t (*ptfRead)(SerialWrapper *self, char *msg);
+typedef void (*ptfWrite)(SerialWrapper *self, char *msg);
 
 //structure of function pointer
-struct SerialInterfaceClass{
+struct SerialWrapperClass{
   ptfRead Read;
   ptfWrite Write;
 };
 
-void SerialInterfaceConstructor(SerialInterface *self, uint32_t baud_rate);
+void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate);
 
-uint32_t fcRead(SerialInterface *self, char *msg);
+uint32_t fcRead(SerialWrapper *self, char *msg);
 
-void fcWrite(SerialInterface *self, char *msg);
+void fcWrite(SerialWrapper *self, char *msg);
 
 
-#endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_H__
+#endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_WRAPPER_H__
