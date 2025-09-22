@@ -7,9 +7,9 @@ void SerialInterfaceConstructor(SerialInterface *self, uint32_t baud_rate) {
 }
 
 uint32_t fcRead(SerialInterface *self, char *msg) {
-  return UartPortGet(msg);
+  return UartPortRead(msg);
 }
 
 void fcWrite(SerialInterface *self, char *msg) {
-  UartPortPut(msg);
+  UartPortWrite(msg, strlen(msg));
 }

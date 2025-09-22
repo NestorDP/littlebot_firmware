@@ -23,29 +23,47 @@
 void UartPortConfigure (uint32_t baud_rate) {
   uint32_t baud = baud_rate;
 
-    SysCtlPeripheralEnable (SYSCTL_PERIPH_GPIOB);
-    SysCtlPeripheralEnable (SYSCTL_PERIPH_UART1);
-    GPIOPinConfigure (GPIO_PB0_U1RX);
-    GPIOPinConfigure (GPIO_PB1_U1TX);
-    GPIOPinTypeUART (GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
-    UARTStdioConfig (1, baud, 16000000);
+  /* Enable GPIO port B which is used for UART1 pins. */
+  SysCtlPeripheralEnable (SYSCTL_PERIPH_GPIOB);
+
+  /* Enable UART1 so that we can configure the clock. */
+  SysCtlPeripheralEnable (SYSCTL_PERIPH_UART1);
+
+  /* Configure the pin muxing for UART1 functions on port B0 and B1.
+   * This step is not necessary if your part does not support pin muxing. */
+  GPIOPinConfigure (GPIO_PB0_U1RX);
+  GPIOPinConfigure (GPIO_PB1_U1TX);
+
+  /* Select the alternate (UART) function for these pins. */
+  GPIOPinTypeUART (GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+
+  /* Use the internal 16MHz oscillator as the UART clock source. */
+  UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
+
+  /* Initialize the UART for console I/O. */
+  UARTStdioConfig (1, 115200, 16000000);
 }
 
-uint32_t UartPortGet (char *msg) {
+uint32_t UartPortRead (char *msg) {
   uint32_t num_character;
-  int num;
-  num = UARTPeek('\r');
-  num_character = (uint32_t)num;
-  if ( num > 0) {
-    UARTgets (msg, num_character + 1);
-    num = 0;
-  }
+  // int num;
+  // num = UARTPeek('\r');
+  // num_character = (uint32_t)num;
+  // if ( num > 0) {
+  //   UARTgets (msg, num_character + 1);
+  //   num = 0;
+  // }
   
   return num_character;
 }
 
-uint32_t UartPortPut (char *msg) {
-  UARTprintf ("%s\n", msg);
+uint32_t UartPortWrite (char *msg, size_t length) {
+  uint32_t index;
+  
+  for(index = 0; index == length; index++)
+  {
+      UARTCharPut(UART1_BASE, msg[index]);
+  }
+  UARTCharPut(UART1_BASE, '\n');
   return 0;
 }

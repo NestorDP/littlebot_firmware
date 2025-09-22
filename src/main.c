@@ -82,34 +82,10 @@ void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
 
 
 int main(void) {
-    uint8_t buffer[128];
-    size_t message_length;
-    bool status;
-
-    my_package_Whells wh = my_package_WheelData_init_zero;
-
-    // Fill first element
-    wh.items_count = 2;
-    wh.items[0].command_velocity = 1.0f;
-    wh.items[0].status_velocity = 0.9f;
-    wh.items[0].status_position = 10.0f;
-    // Fill second element
-    wh.items[1].command_velocity = 2.0f;
-    wh.items[1].status_velocity = 1.8f;
-    wh.items[1].status_position = 20.0f;
-
-    // Encode into buffer
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-    status = pb_encode(&stream, my_package_Whells_fields, &wh);
-    message_length = stream.bytes_written;
-
     /* Set the clocking to run at 80 MHz from the PLL. */
     SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
     IntMasterEnable();
-    
-    /* Create communication object */
-    SerialInterfaceContruct(&bluetooth, 115200);
 
     /* Create queues for exchange variables between tasks. */
     g_pVelocityLeftQueue    = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
@@ -118,25 +94,29 @@ int main(void) {
     g_pFBVelocityRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFBPositionLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pFBPositionRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pLEDQueue             = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);
 
     /* Create semaphore to protect the serial port. */
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
 
+    /* Create communication object */
+    SerialInterfaceConstructor(&bluetooth, 115200);
+
+    bluetooth.Write(&bluetooth, "LittleBot Firmware");
+
     /* Create the COMMUNICATION task. */
-    if(CommunicationTaskInit() != 0) {
-        while(1) {}
-    }
+    // if(CommunicationTaskInit() != 0) {
+    //     while(1) {}
+    // }
    
     /* Create the LEFT MOTOR CONTROLLER task. */
-    if(MotorControllerTaskInit(1, "Motor left") != 0) {
-        while(1) {}
-    }
+    // if(MotorControllerTaskInit(1, "Motor left") != 0) {
+    //     while(1) {}
+    // }
 
     /* Create the RIGHT MOTOR CONTROLLER task. */
-    if(MotorControllerTaskInit(0, "Motor right") != 0) {
-        while(1) {}
-    }
+    // if(MotorControllerTaskInit(0, "Motor right") != 0) {
+    //     while(1) {}
+    // }
 
     /* Start the scheduler.  This should not return. */
     vTaskStartScheduler();

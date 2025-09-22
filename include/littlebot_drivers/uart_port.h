@@ -38,8 +38,8 @@
 
 void UartPortConfigure (uint32_t baud_rate);
 
-uint32_t UartPortGet (char *msg);
+uint32_t UartPortRead (char *msg);
 
-uint32_t UartPortPut (char *msg);
+uint32_t UartPortWrite (char *msg, size_t length);
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__
