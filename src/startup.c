@@ -61,7 +61,6 @@ static uint32_t pui32Stack[128];
 extern void xPortPendSVHandler( void );
 extern void xPortSysTickHandler( void );
 extern void vPortSVCHandler( void );
-extern void UARTStdioIntHandler( void );
 
 //*****************************************************************************
 //
@@ -96,7 +95,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // GPIO Port D
     IntDefaultHandler,                      // GPIO Port E
     IntDefaultHandler,                      // UART0 Rx and Tx
-    UARTStdioIntHandler,                    // UART1 Rx and Tx
+    IntDefaultHandler,                      // UART1 Rx and Tx
     IntDefaultHandler,                      // SSI0 Rx and Tx
     IntDefaultHandler,                      // I2C0 Master and Slave
     IntDefaultHandler,                      // PWM Fault
@@ -327,6 +326,24 @@ NmiSR(void)
 static void
 FaultISR(void)
 {
+    //
+    // Read fault status registers for debugging
+    //
+    volatile uint32_t cfsr = HWREG(0xE000ED28);  // Configurable Fault Status Register
+    volatile uint32_t bfsr = HWREG(0xE000ED29);  // Bus Fault Status Register
+    volatile uint32_t ufsr = HWREG(0xE000ED2A);  // Usage Fault Status Register
+    volatile uint32_t hfsr = HWREG(0xE000ED2C);  // Hard Fault Status Register  
+    volatile uint32_t dfsr = HWREG(0xE000ED30);  // Debug Fault Status Register
+    volatile uint32_t afsr = HWREG(0xE000ED3C);  // Auxiliary Fault Status Register
+    volatile uint32_t bfar = HWREG(0xE000ED38);  // Bus Fault Address Register
+    volatile uint32_t mmfar = HWREG(0xE000ED34); // Memory Management Fault Address Register
+    volatile uint32_t abfsr = HWREG(0xE000EFA8); // Auxiliary Bus Fault Status Register
+    
+    //
+    // Prevent compiler optimization of these variables
+    //
+    (void)cfsr; (void)hfsr; (void)dfsr; (void)afsr; (void)bfar; (void)mmfar;
+    
     //
     // Enter an infinite loop.
     //
