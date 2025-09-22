@@ -60,7 +60,6 @@ CFLAGS += -ffunction-sections
 CFLAGS += -fdata-sections 
 CFLAGS += -specs=nosys.specs
 CFLAGS += -DPART_TM4C123GH6PM
-# CFLAGS += -DUART_BUFFERED
 
 DEBFLAG  = -g
 DEBFLAG += -DDEBUG
