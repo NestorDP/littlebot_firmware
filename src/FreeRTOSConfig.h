@@ -95,7 +95,7 @@ your application. */
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE               ( ( size_t ) ( 15000 ) )
+#define configTOTAL_HEAP_SIZE                   ( ( size_t ) ( 20240 ) )
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -123,7 +123,7 @@ your application. */
 /* Be ENORMOUSLY careful if you want to modify these two values and make sure
  * you read http://www.freertos.org/a00110.html#kernel_priority first!
  */
-#define configKERNEL_INTERRUPT_PRIORITY         ( 7 << 5 )    /* Priority 7, or 0xE0 as only the top three bits are implemented.  This is the lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY         ( 7 << 5 )  /* Priority 7, or 0xE0 as only the top three bits are implemented.  This is the lowest priority. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    ( 5 << 5 )  /* Priority 5, or 0xA0 as only the top three bits are implemented. */
 /* #define configMAX_API_CALL_INTERRUPT_PRIORITY   [dependent on processor and application] */
 
