@@ -5,7 +5,7 @@ littlebot firmware's Source code *using TivaWare 2.2.0.295
 ## Littlebot firmware's achitecture 
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/37759765/238156057-77fe88db-c27f-4094-89e2-b088cefc8e36.png" alt="drawing" width="700"/>
+<img src="doc/images/arquitetura_tivac.png" alt="drawing" width="700"/>
 </p>
 
 ## A little commnication protocol
