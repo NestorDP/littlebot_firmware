@@ -36,10 +36,8 @@
 #include "semphr.h"
 #include "task.h"
 
-#include "littlebot_firmware/led_task.h"
 #include "littlebot_firmware/motor_interface.h"
 #include "littlebot_firmware/serial_wrapper.h"
-#include "littlebot_firmware/switch_task.h"
 #include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/task_communication.h"
 
