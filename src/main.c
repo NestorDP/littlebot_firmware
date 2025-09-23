@@ -70,12 +70,12 @@ void
 __error__(char *pcFilename, uint32_t ui32Line){}
 #endif
 
-void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName) {
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
     /* This function can not return, so loop forever.  Interrupts are disabled
      * on entry to this function, so no processor interrupts will interrupt
      * this loop.
      */
-    (void)pxTask;
+    (void)xTask;
     (void)pcTaskName;
     while(1) {}
 }
@@ -101,22 +101,55 @@ int main(void) {
     /* Create communication object */
     SerialWrapperConstructor(&bluetooth, 115200);
 
+    // Test nanopb 
+    //========================================================================
     bluetooth.Write(&bluetooth, "LittleBot Firmware");
 
+    static my_package_Whells wheels_msg = my_package_Whells_init_zero;
+    
+    wheels_msg.items_count = 2;
+    wheels_msg.items[0].command_velocity = 1.0f;
+    wheels_msg.items[0].status_velocity = 0.9f;
+    wheels_msg.items[0].status_position = 5.0f;
+    
+    wheels_msg.items[1].command_velocity = 2.0f;
+    wheels_msg.items[1].status_velocity = 1.8f;
+    wheels_msg.items[1].status_position = 15.0f;
+
+    static uint8_t buffer[128];
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    bool status;
+    status = pb_encode(&stream, my_package_Whells_fields, &wheels_msg);
+
+    if (status) {
+        bluetooth.Write(&bluetooth, "Multi-wheel encode successful");
+    } else {
+        bluetooth.Write(&bluetooth, "Multi-wheel encode failed");
+    }
+
+    // Convert binary buffer to hex string representation
+    static char hex_buffer[256];  // 2 chars per byte + null terminator
+    for(int i = 0; i < stream.bytes_written; i++) {
+        sprintf(&hex_buffer[i*2], "%02X", buffer[i]);
+    }
+    bluetooth.Write(&bluetooth, hex_buffer);
+    //========================================================================
+
     /* Create the COMMUNICATION task. */
-    // if(CommunicationTaskInit() != 0) {
-    //     while(1) {}
-    // }
+    if(CommunicationTaskInit() != 0) {
+        while(1) {}
+    }
    
     /* Create the LEFT MOTOR CONTROLLER task. */
-    // if(MotorControllerTaskInit(1, "Motor left") != 0) {
-    //     while(1) {}
-    // }
+    if(MotorControllerTaskInit(1, "Motor left") != 0) {
+        while(1) {}
+    }
 
     /* Create the RIGHT MOTOR CONTROLLER task. */
-    // if(MotorControllerTaskInit(0, "Motor right") != 0) {
-    //     while(1) {}
-    // }
+    if(MotorControllerTaskInit(0, "Motor right") != 0) {
+        while(1) {}
+    }
 
     /* Start the scheduler.  This should not return. */
     vTaskStartScheduler();
