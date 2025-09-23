@@ -71,7 +71,7 @@ uint32_t UartPortRead(char *buffer) {
 uint32_t UartPortWrite (char *msg, size_t length) {
   uint32_t index;
   
-  for(index = 0; index <= length; index++)
+  for(index = 0; index < length; index++)
   {
       UARTCharPut(UART1_BASE, msg[index]);
   }
