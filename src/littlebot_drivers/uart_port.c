@@ -44,18 +44,17 @@ void UartPortConfigure (uint32_t baud_rate) {
   UARTStdioConfig (1, 115200, 16000000);
 }
 
+
 uint32_t UartPortRead(char *buffer) {
     uint32_t index = 0;
     size_t max_buffer_length = 128;
 
     while (index < max_buffer_length && UARTCharsAvail(UART1_BASE)) {
-        buffer[index] = UARTCharGet(UART1_BASE);
-        
+        buffer[index] = UARTCharGet(UART1_BASE);  
         if (buffer[index] == '\n') {
             index++;
             break;
         }
-        
         index++;
     }
 
