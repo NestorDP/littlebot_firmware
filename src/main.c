@@ -24,9 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pb_encode.h"
-#include "pb_decode.h"
-
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/gpio.h"
@@ -47,22 +44,17 @@
 #include "littlebot_firmware/task_communication.h"
 
 #include "littlebot_firmware/priorities.h"
-#include "littlebot_msg.pb.h"
 
 /* The mutex that protects concurrent access of UART from multiple tasks. */
 xSemaphoreHandle g_pSerializationSemaphore;
 
 /* The queue that holds variables to sharade between tasks. */
-xQueueHandle g_pLEDQueue;
 xQueueHandle g_pVelocityLeftQueue;
 xQueueHandle g_pVelocityRightQueue;
 xQueueHandle g_pFBVelocityLeftQueue;
 xQueueHandle g_pFBVelocityRightQueue;
 xQueueHandle g_pFBPositionRightQueue;
 xQueueHandle g_pFBPositionLeftQueue;
-
-/* Resource to stablish the serial communication */
-SerialWrapper bluetooth;
 
 /* The error routine that is called if the driver library encounters an error. */
 #ifdef DEBUG
@@ -97,44 +89,6 @@ int main(void) {
 
     /* Create semaphore to protect the serial port. */
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
-
-    /* Create communication object */
-    SerialWrapperConstructor(&bluetooth, 115200);
-
-    // Test nanopb 
-    //========================================================================
-    bluetooth.Write(&bluetooth, "LittleBot Firmware");
-
-    static my_package_Whells wheels_msg = my_package_Whells_init_zero;
-    
-    wheels_msg.items_count = 2;
-    wheels_msg.items[0].command_velocity = 1.0f;
-    wheels_msg.items[0].status_velocity = 0.9f;
-    wheels_msg.items[0].status_position = 5.0f;
-    
-    wheels_msg.items[1].command_velocity = 2.0f;
-    wheels_msg.items[1].status_velocity = 1.8f;
-    wheels_msg.items[1].status_position = 15.0f;
-
-    static uint8_t buffer[128];
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-
-    bool status;
-    status = pb_encode(&stream, my_package_Whells_fields, &wheels_msg);
-
-    if (status) {
-        bluetooth.Write(&bluetooth, "Multi-wheel encode successful");
-    } else {
-        bluetooth.Write(&bluetooth, "Multi-wheel encode failed");
-    }
-
-    // Convert binary buffer to hex string representation
-    static char hex_buffer[256];  // 2 chars per byte + null terminator
-    for(int i = 0; i < stream.bytes_written; i++) {
-        sprintf(&hex_buffer[i*2], "%02X", buffer[i]);
-    }
-    bluetooth.Write(&bluetooth, hex_buffer);
-    //========================================================================
 
     /* Create the COMMUNICATION task. */
     if(CommunicationTaskInit() != 0) {
