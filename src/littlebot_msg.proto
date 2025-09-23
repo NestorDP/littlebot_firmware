@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package my_package;
+package littlebot;
 
 message WheelData {
   required float command_velocity = 1;
@@ -8,6 +8,6 @@ message WheelData {
   required float status_position = 3;
 }
 
-message Whells {
-  repeated WheelData items = 1;
+message Wheels {
+  repeated WheelData side = 1;
 }
