@@ -23,8 +23,8 @@
 
 #define SERIAL_READ_TASK_STACK_SIZE 128
 #define SERIAL_READ_TASK_DELAY      100
-#define RIGHT                       1
 #define LEFT                        0
+#define RIGHT                       1
 
 extern xQueueHandle g_pCommandVelLeftQueue;
 extern xQueueHandle g_pStatusVelLeftQueue;
@@ -37,7 +37,7 @@ extern xQueueHandle g_pStatusPosRightQueue;
 
 static void CommunicationTask(void *pvParameters) {
   (void)pvParameters; /* Unused parameter */
-  
+
   portTickType ui32WakeTime;
   uint32_t ui32ReadDelay;
 
@@ -60,12 +60,12 @@ static void CommunicationTask(void *pvParameters) {
 
   littlebot_Wheels wheels = littlebot_Wheels_init_zero;
   wheels.side_count = 2;
-  wheels.side[RIGHT].command_velocity = 1.0;
-  wheels.side[RIGHT].status_velocity = 2.0;
-  wheels.side[RIGHT].status_position = 2.0;
   wheels.side[LEFT].command_velocity = 3.0;
   wheels.side[LEFT].status_velocity = 4.0;
   wheels.side[LEFT].status_position = 4.0;
+  wheels.side[RIGHT].command_velocity = 1.0;
+  wheels.side[RIGHT].status_velocity = 2.0;
+  wheels.side[RIGHT].status_position = 2.0;
 
   pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
   if (!pb_encode(&stream, littlebot_Wheels_fields, &wheels)) {
