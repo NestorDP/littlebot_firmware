@@ -22,8 +22,6 @@
 #include "littlebot_drivers/uart_port.h"
 
 void UartPortConfigure (uint32_t baud_rate) {
-  uint32_t baud = baud_rate;
-
   /* Enable GPIO port B which is used for UART1 pins. */
   SysCtlPeripheralEnable (SYSCTL_PERIPH_GPIOB);
 
@@ -42,7 +40,7 @@ void UartPortConfigure (uint32_t baud_rate) {
   UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
 
   /* Initialize the UART for console I/O. */
-  UARTStdioConfig (1, 115200, 16000000);
+  UARTStdioConfig (1, baud_rate, 16000000);
 }
 
 
@@ -51,7 +49,14 @@ uint32_t UartPortRead(char *buffer) {
     size_t max_buffer_length = 128;
 
     while (index < max_buffer_length && UARTCharsAvail(UART1_BASE)) {
-        buffer[index] = UARTCharGet(UART1_BASE);  
+        int32_t received_char = UARTCharGet(UART1_BASE);
+        
+        // Check for error (UARTCharGet returns -1 on error)
+        if (received_char < 0) {
+            return -1;  // Error occurred, stop reading
+        }
+        
+        buffer[index] = (char)(received_char & 0xFF);  // Safe conversion  
         if (buffer[index] == '\n') {
             index++;
             break;
