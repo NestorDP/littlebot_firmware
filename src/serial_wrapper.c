@@ -27,7 +27,7 @@ void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate) {
   self->Write = fcWrite;
 }
 
-uint32_t fcRead(char *msg) {
+int32_t fcRead(char *msg) {
   return UartPortRead(msg);
 }
 

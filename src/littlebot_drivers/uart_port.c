@@ -45,8 +45,8 @@ void UartPortConfigure (uint32_t baud_rate) {
 
 
 int32_t UartPortRead(char *buffer) {
-    uint32_t index = 0;
-    size_t max_buffer_length = 128;
+    int32_t index = 0;
+    int32_t max_buffer_length = 128;
 
     while (index < max_buffer_length && UARTCharsAvail(UART1_BASE)) {
         int32_t received_char = UARTCharGet(UART1_BASE);
