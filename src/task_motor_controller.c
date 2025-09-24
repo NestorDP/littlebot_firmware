@@ -6,17 +6,19 @@
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128         // Stack size in words
 #define MOTOR_CONTROLLER_TASK_DELAY      100
 
-extern xQueueHandle g_pVelocityLeftQueue;
-extern xQueueHandle g_pVelocityRightQueue;
-extern xQueueHandle g_pFBVelocityLeftQueue;
-extern xQueueHandle g_pFBVelocityRightQueue;
-extern xQueueHandle g_pFBPositionLeftQueue;
-extern xQueueHandle g_pFBPositionRightQueue;
+extern xQueueHandle g_pCommandVelLeftQueue;
+extern xQueueHandle g_pStatusVelLeftQueue;
+extern xQueueHandle g_pStatusPosLeftQueue;
+
+extern xQueueHandle g_pCommandVelRightQueue;
+extern xQueueHandle g_pStatusVelRightQueue;
+extern xQueueHandle g_pStatusPosRightQueue;
 
 uint8_t side_left = 1;
 uint8_t side_right = 0;
 
 uint8_t side_m;
+
 
 static void vTaskMotorController(void *pvParameters) {
   portTickType ui32WakeTime;
@@ -45,13 +47,13 @@ static void vTaskMotorController(void *pvParameters) {
     feed_back_position = motor.GetPosition(&motor);
     
     if(*side_motor == 1) {
-      xQueueReceive(g_pVelocityLeftQueue, &velocity, ( TickType_t ) 0);
-      xQueueSend(g_pFBVelocityLeftQueue, &feed_back_velocity, 0);
-      xQueueSend(g_pFBPositionLeftQueue, &feed_back_position, 0);
+      xQueueReceive(g_pCommandVelLeftQueue, &velocity, ( TickType_t ) 0);
+      xQueueSend(g_pStatusVelLeftQueue, &feed_back_velocity, 0);
+      xQueueSend(g_pStatusPosLeftQueue, &feed_back_position, 0);
     } else {
-      xQueueReceive(g_pVelocityRightQueue, &velocity, ( TickType_t ) 0);
-      xQueueSend(g_pFBVelocityRightQueue, &feed_back_velocity, 0);
-      xQueueSend(g_pFBPositionRightQueue, &feed_back_position, 0);
+      xQueueReceive(g_pCommandVelRightQueue, &velocity, ( TickType_t ) 0);
+      xQueueSend(g_pStatusVelRightQueue, &feed_back_velocity, 0);
+      xQueueSend(g_pStatusPosRightQueue, &feed_back_position, 0);
     }
 
     controled_velocity = pid.Controller(&pid, velocity, feed_back_velocity);

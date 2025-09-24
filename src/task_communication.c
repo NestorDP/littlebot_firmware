@@ -21,20 +21,18 @@
 
 #include "littlebot_firmware/task_communication.h"
 
-#define SERIAL_READ_TASK_STACK_SIZE 128         // Stack size in words
+#define SERIAL_READ_TASK_STACK_SIZE 128
 #define SERIAL_READ_TASK_DELAY      100
 #define RIGHT                       1
 #define LEFT                        0
 
-// Command
-extern xQueueHandle g_pVelocityLeftQueue;
-extern xQueueHandle g_pVelocityRightQueue;
+extern xQueueHandle g_pCommandVelLeftQueue;
+extern xQueueHandle g_pStatusVelLeftQueue;
+extern xQueueHandle g_pStatusPosLeftQueue;
 
-// Status
-extern xQueueHandle g_pFBVelocityLeftQueue;
-extern xQueueHandle g_pFBVelocityRightQueue;
-extern xQueueHandle g_pFBPositionLeftQueue;
-extern xQueueHandle g_pFBPositionRightQueue;
+extern xQueueHandle g_pCommandVelRightQueue;
+extern xQueueHandle g_pStatusVelRightQueue;
+extern xQueueHandle g_pStatusPosRightQueue;
 
 
 static void CommunicationTask(void *pvParameters) {
@@ -84,12 +82,12 @@ static void CommunicationTask(void *pvParameters) {
  
   while(1) {
     /* Read velocity status queue */
-    xQueueReceive(g_pFBVelocityLeftQueue, &feed_back_velocity[0], 0);
-    xQueueReceive(g_pFBVelocityRightQueue, &feed_back_velocity[1], 0);
+    xQueueReceive(g_pStatusVelLeftQueue, &feed_back_velocity[0], 0);
+    xQueueReceive(g_pStatusVelRightQueue, &feed_back_velocity[1], 0);
 
     /* Read position status queue */
-    xQueueReceive(g_pFBPositionLeftQueue, &feed_back_position[0], 0);
-    xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[1], 0);
+    xQueueReceive(g_pStatusPosLeftQueue, &feed_back_position[0], 0);
+    xQueueReceive(g_pStatusPosRightQueue, &feed_back_position[1], 0);
 
     /* Receive message from serial */
     bluetooth.Read(rx_msg);
@@ -108,8 +106,8 @@ static void CommunicationTask(void *pvParameters) {
         velocity[1] = 0.0;
     }
 
-    xQueueSend(g_pVelocityLeftQueue, &velocity[0], 0);
-    xQueueSend(g_pVelocityRightQueue, &velocity[1], 0);
+    xQueueSend(g_pCommandVelLeftQueue, &velocity[0], 0);
+    xQueueSend(g_pCommandVelRightQueue, &velocity[1], 0);
 
     xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
   }

@@ -47,12 +47,12 @@
 xSemaphoreHandle g_pSerializationSemaphore;
 
 /* The queue that holds variables to sharade between tasks. */
-xQueueHandle g_pVelocityLeftQueue;
-xQueueHandle g_pVelocityRightQueue;
-xQueueHandle g_pFBVelocityLeftQueue;
-xQueueHandle g_pFBVelocityRightQueue;
-xQueueHandle g_pFBPositionRightQueue;
-xQueueHandle g_pFBPositionLeftQueue;
+xQueueHandle g_pCommandVelLeftQueue;
+xQueueHandle g_pCommandVelRightQueue;
+xQueueHandle g_pStatusVelLeftQueue;
+xQueueHandle g_pStatusVelRightQueue;
+xQueueHandle g_pStatusPosRightQueue;
+xQueueHandle g_pStatusPosLeftQueue;
 
 /* The error routine that is called if the driver library encounters an error. */
 #ifdef DEBUG
@@ -78,12 +78,13 @@ int main(void) {
     IntMasterEnable();
 
     /* Create queues for exchange variables between tasks. */
-    g_pVelocityLeftQueue    = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pVelocityRightQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBVelocityRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBPositionLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
-    g_pFBPositionRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pCommandVelLeftQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pStatusVelLeftQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pStatusPosLeftQueue   = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+
+    g_pCommandVelRightQueue = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pStatusVelRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
+    g_pStatusPosRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
 
     /* Create semaphore to protect the serial port. */
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
