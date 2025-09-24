@@ -35,24 +35,23 @@ SIZE      = $(TOOLCHAIN)size
 CPUFLAG = -mthumb -mcpu=cortex-m4 -mlittle-endian
 FPUFLAG = -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
-WFLAG  = -Wall 
-WFLAG += -Wextra
-WFLAG += -Wpedantic
-WFLAG += -Wconversion
-WFLAG += -Wsign-conversion
-WFLAG += -Wduplicated-cond
-WFLAG += -Wduplicated-branches
-WFLAG += -Wlogical-op
-WFLAG += -Wnull-dereference
-WFLAG += -Wjump-misses-init
-WFLAG += -Wdouble-promotion
-WFLAG += -Wshadow
-WFLAG += -Wformat=2
+WFLAGS  = -Wall 
+WFLAGS += -Wextra
+WFLAGS += -Wpedantic
+WFLAGS += -Wconversion
+WFLAGS += -Wsign-conversion
+WFLAGS += -Wduplicated-cond
+WFLAGS += -Wduplicated-branches
+WFLAGS += -Wlogical-op
+WFLAGS += -Wnull-dereference
+WFLAGS += -Wjump-misses-init
+WFLAGS += -Wdouble-promotion
+WFLAGS += -Wshadow
+WFLAGS += -Wformat=2
 
 CFLAGS  = $(CPUFLAG) 
-CFLAGS += $(WFLAG) 
 CFLAGS += $(FPUFLAG)
-CFLAGS += -std=c99 
+CFLAGS += -std=c11 
 CFLAGS += -MD
 CFLAGS += -pedantic
 CFLAGS += -nostdlib
@@ -193,7 +192,7 @@ $(OBJ_DIR)%.o : $(DRIVERLIB_UTILS_DIR)%.c
 
 # littlebot drivers
 $(OBJ_DIR)%.o : $(DRIVERS_DIR)%.c
-	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(WFLAGS) $(INC_FLAGS) $< -o $@
 
 # nanopb core
 $(OBJ_DIR)%.o : $(NANO_DIR)%.c
@@ -201,7 +200,7 @@ $(OBJ_DIR)%.o : $(NANO_DIR)%.c
 
 # Main Code
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
-	$(CC) -c $(CFLAGS) $(INC_FLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(WFLAGS) $(INC_FLAGS) $< -o $@
 
 # Size code:
 #---------------------
