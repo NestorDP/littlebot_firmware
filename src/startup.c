@@ -255,7 +255,7 @@ ResetISR(void)
       
        Note that this does not use DriverLib since it might not be included in
        this project. */
-    HWREG(0xE000ED88) = ((HWREG(0xE000ED88) & ~0x00F00000) | 0x00F00000);
+    HWREG(0xE000ED88) = ((HWREG(0xE000ED88) & ~0x00F00000U) | 0x00F00000U);
     
     /* Call the application's entry point. */
     main();
@@ -282,14 +282,11 @@ FaultISR(void)
 {
     /* Read fault status registers for debugging */
     volatile uint32_t cfsr  = HWREG(0xE000ED28); /* Configurable Fault Status Register*/
-    volatile uint32_t bfsr  = HWREG(0xE000ED29); /* Bus Fault Status Register*/
-    volatile uint32_t ufsr  = HWREG(0xE000ED2A); /* Usage Fault Status Register*/
     volatile uint32_t hfsr  = HWREG(0xE000ED2C); /* Hard Fault Status Register  */
     volatile uint32_t dfsr  = HWREG(0xE000ED30); /* Debug Fault Status Register*/
     volatile uint32_t afsr  = HWREG(0xE000ED3C); /* Auxiliary Fault Status Register*/
     volatile uint32_t bfar  = HWREG(0xE000ED38); /* Bus Fault Address Register*/
     volatile uint32_t mmfar = HWREG(0xE000ED34); /* Memory Management Fault Address Register*/
-    volatile uint32_t abfsr = HWREG(0xE000EFA8); /* Auxiliary Bus Fault Status Register*/
     
     /* Prevent compiler optimization of these variables */
     (void)cfsr; (void)hfsr; (void)dfsr; (void)afsr; (void)bfar; (void)mmfar;
