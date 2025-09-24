@@ -56,7 +56,7 @@ static void CommunicationTask(void *pvParameters) {
 
   // Test nanopb
   //========================================================================
-  bluetooth.Write(&bluetooth, "LittleBot Firmware");
+  bluetooth.Write("LittleBot Firmware");
 
   littlebot_Wheels wheels = littlebot_Wheels_init_zero;
   wheels.side_count = 2;
@@ -69,16 +69,16 @@ static void CommunicationTask(void *pvParameters) {
 
   pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
   if (!pb_encode(&stream, littlebot_Wheels_fields, &wheels)) {
-      bluetooth.Write(&bluetooth, "Encoding failed");
+      bluetooth.Write("Encoding failed");
   } else {
     static char hex_buffer[256];  // 2 chars per byte + null terminator
-    for(int i = 0; i < stream.bytes_written; i++) {
+    for(size_t i = 0; i < stream.bytes_written; i++) {
         sprintf(&hex_buffer[i*2], "%02X", tx_msg[i]);
     }
-    bluetooth.Write(&bluetooth, hex_buffer);
+    bluetooth.Write(hex_buffer);
   }
 
-  bluetooth.Write(&bluetooth, "ooooooooooooooooooooo");
+  bluetooth.Write("ooooooooooooooooooooo");
   //========================================================================
 
  
@@ -92,15 +92,15 @@ static void CommunicationTask(void *pvParameters) {
     xQueueReceive(g_pFBPositionRightQueue, &feed_back_position[1], 0);
 
     /* Receive message from serial */
-    bluetooth.Read(&bluetooth, rx_msg);
+    bluetooth.Read(rx_msg);
 
     switch (rx_msg[0]) {
       case 'W':
-        bluetooth.Write(&bluetooth, "1");
+        bluetooth.Write("1");
         rx_msg[0] = '\0';
       break;
       case 'R':
-        bluetooth.Write(&bluetooth, tx_msg);
+        bluetooth.Write(tx_msg);
         rx_msg[0] = '\0'; 
       break;
       default:
