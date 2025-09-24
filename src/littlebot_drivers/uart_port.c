@@ -44,7 +44,7 @@ void UartPortConfigure (uint32_t baud_rate) {
 }
 
 
-uint32_t UartPortRead(char *buffer) {
+int32_t UartPortRead(char *buffer) {
     uint32_t index = 0;
     size_t max_buffer_length = 128;
 
@@ -74,7 +74,7 @@ uint32_t UartPortRead(char *buffer) {
 }
 
 
-uint32_t UartPortWrite (char *msg, size_t length) {
+int32_t UartPortWrite (char *msg, size_t length) {
   uint32_t index;
   
   for(index = 0; index < length; index++)
