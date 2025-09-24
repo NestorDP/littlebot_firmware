@@ -36,6 +36,8 @@ extern xQueueHandle g_pStatusPosRightQueue;
 
 
 static void CommunicationTask(void *pvParameters) {
+  (void)pvParameters; /* Unused parameter */
+  
   portTickType ui32WakeTime;
   uint32_t ui32ReadDelay;
 
