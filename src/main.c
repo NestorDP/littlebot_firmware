@@ -46,7 +46,7 @@
 #include "littlebot_firmware/priorities.h"
 
 /* The mutex that protects concurrent access of UART from multiple tasks. */
-xSemaphoreHandle g_pSerializationSemaphore;
+xSemaphoreHandle g_pUartLoggerSemaphore;
 
 /* The queue that holds variables to sharade between tasks. */
 xQueueHandle g_pCommandVelLeftQueue;
@@ -88,13 +88,12 @@ int main(void) {
     g_pStatusVelRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
     g_pStatusPosRightQueue  = xQueueCreate(VELOCITY_QUEUE_SIZE, VELOCITY_ITEM_SIZE);
 
-    /* Create semaphore to protect the serial port. */
-    g_pSerializationSemaphore = xSemaphoreCreateMutex();
-
+    /* Create semaphore to protect the serial port used in logging. */
+    g_pUartLoggerSemaphore = xSemaphoreCreateMutex();
 
     SerialWrapper debug_console;
     SerialWrapperConstructor(&debug_console, 115200, DEBUG_CONSOLE);
-    debug_console.Printf("LittleBot firmware starting...\n");
+    debug_console.Printf("LittleBot starting...\n");
 
 
     /* Create the COMMUNICATION task. */
