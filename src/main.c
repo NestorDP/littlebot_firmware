@@ -101,12 +101,12 @@ int main(void) {
     }
    
     /* Create the LEFT MOTOR CONTROLLER task. */
-    if(MotorControllerTaskInit(1, "Motor left") != 0) {
+    if(MotorControllerTaskInit(LEFT, "Motor left") != 0) {
         while(1) {}
     }
 
     /* Create the RIGHT MOTOR CONTROLLER task. */
-    if(MotorControllerTaskInit(0, "Motor right") != 0) {
+    if(MotorControllerTaskInit(RIGHT, "Motor right") != 0) {
         while(1) {}
     }
 
