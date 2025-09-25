@@ -21,10 +21,11 @@
 
 #include "littlebot_firmware/serial_wrapper.h"
 
-void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate) {
-  UartPortConfigure(baud_rate);
+void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate, uint8_t type) {
+  UartPortConfigure(baud_rate, type);
   self->Read = fcRead;
   self->Write = fcWrite;
+  self->Printf = fcPrintf;
 }
 
 int32_t fcRead(char *msg) {
@@ -33,4 +34,8 @@ int32_t fcRead(char *msg) {
 
 void fcWrite(char *msg, size_t length) {
   UartPortWrite(msg, length);
+}
+
+void fcPrintf(char *msg) {
+  UartPortPrintf(msg);
 }

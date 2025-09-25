@@ -37,10 +37,15 @@
 #include "inc/hw_types.h"
 #include "utils/uartstdio.h"
 
-void UartPortConfigure (uint32_t baud_rate);
+#define DEBUG_CONSOLE 0
+#define DATA_STREAM 1
+
+void UartPortConfigure (uint32_t baud_rate, uint8_t uart);
 
 int32_t UartPortRead (char *msg);
 
 int32_t UartPortWrite (char *msg, size_t length);
+
+int32_t UartPortPrintf (char *msg);
 
 #endif // INCLUDE_LITTLEBOT_DRIVER_UART_PORT_H__

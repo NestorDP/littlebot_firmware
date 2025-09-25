@@ -52,7 +52,7 @@ static void CommunicationTask(void *pvParameters) {
 
   /* Resource to stablish the serial communication */
   SerialWrapper bluetooth;
-  SerialWrapperConstructor(&bluetooth, 115200);
+  SerialWrapperConstructor(&bluetooth, 115200, DATA_STREAM);
 
   littlebot_Wheels wheels = littlebot_Wheels_init_zero;
   wheels.side_count = 2;
@@ -81,7 +81,7 @@ static void CommunicationTask(void *pvParameters) {
     xQueueReceive(g_pStatusPosRightQueue, &feed_back_position[1], 0);
 
     /* Receive message from serial */
-    bluetooth.Read(rx_msg);
+    // bluetooth.Read(rx_msg);
 
     switch (rx_msg[0]) {
       case 'W':

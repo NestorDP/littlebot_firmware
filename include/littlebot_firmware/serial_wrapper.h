@@ -32,18 +32,22 @@ typedef struct SerialWrapperClass SerialWrapper;
 
 typedef int32_t (*ptfRead)(char *msg);
 typedef void (*ptfWrite)(char *msg, size_t length);
+typedef void (*ptfPrintf)(char *msg);
 
 //structure of function pointer
 struct SerialWrapperClass{
   ptfRead Read;
   ptfWrite Write;
+  ptfPrintf Printf;
 };
 
-void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate);
+void SerialWrapperConstructor(SerialWrapper *self, uint32_t baud_rate, uint8_t type);
 
 int32_t fcRead(char *msg);
 
 void fcWrite(char *msg, size_t length);
+
+void fcPrintf(char *msg);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_SERIAL_WRAPPER_H__

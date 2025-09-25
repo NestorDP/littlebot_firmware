@@ -21,26 +21,36 @@
 
 #include "littlebot_drivers/uart_port.h"
 
-void UartPortConfigure (uint32_t baud_rate) {
-  /* Enable GPIO port B which is used for UART1 pins. */
-  SysCtlPeripheralEnable (SYSCTL_PERIPH_GPIOB);
+void UartPortConfigure (uint32_t baud_rate, uint8_t type) {
+    switch (type) {
+    case DATA_STREAM:
+        /* Enable GPIO port B which is used for UART1 pins. */
+        SysCtlPeripheralEnable (SYSCTL_PERIPH_GPIOB);
 
-  /* Enable UART1 so that we can configure the clock. */
-  SysCtlPeripheralEnable (SYSCTL_PERIPH_UART1);
+        /* Enable UART1 so that we can configure the clock. */
+        SysCtlPeripheralEnable (SYSCTL_PERIPH_UART1);
 
-  /* Configure the pin muxing for UART1 functions on port B0 and B1.
-   * This step is not necessary if your part does not support pin muxing. */
-  GPIOPinConfigure (GPIO_PB0_U1RX);
-  GPIOPinConfigure (GPIO_PB1_U1TX);
+        /* Configure the pin muxing for UART1 functions on port B0 and B1.
+        * This step is not necessary if your part does not support pin muxing. */
+        GPIOPinConfigure (GPIO_PB0_U1RX);
+        GPIOPinConfigure (GPIO_PB1_U1TX);
 
-  /* Select the alternate (UART) function for these pins. */
-  GPIOPinTypeUART (GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+        /* Select the alternate (UART) function for these pins. */
+        GPIOPinTypeUART (GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
-  /* Use the internal 16MHz oscillator as the UART clock source. */
-  UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
+        /* Use the internal 16MHz oscillator as the UART clock source. */
+        UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
 
-  /* Initialize the UART for console I/O. */
-  UARTStdioConfig (1, baud_rate, 16000000);
+        /* Initialize the UART for console I/O. */
+        UARTStdioConfig (1, baud_rate, 16000000);
+        break;
+    
+    case DEBUG_CONSOLE:
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+        GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+        UARTStdioConfig(0, baud_rate, 80000000);
+        break;
+    }
 }
 
 
@@ -83,4 +93,10 @@ int32_t UartPortWrite (char *msg, size_t length) {
   }
   UARTCharPut(UART1_BASE, '\n');
   return 0;
+}
+
+
+int32_t UartPortPrintf (char *msg) {
+    UARTprintf(msg);
+    return 0;
 }

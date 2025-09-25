@@ -30,6 +30,8 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/rom.h"
 #include "driverlib/sysctl.h"
+#include "driverlib/uart.h"
+#include "utils/uartstdio.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -88,6 +90,12 @@ int main(void) {
 
     /* Create semaphore to protect the serial port. */
     g_pSerializationSemaphore = xSemaphoreCreateMutex();
+
+
+    SerialWrapper debug_console;
+    SerialWrapperConstructor(&debug_console, 115200, DEBUG_CONSOLE);
+    debug_console.Printf("LittleBot firmware starting...\n");
+
 
     /* Create the COMMUNICATION task. */
     if(CommunicationTaskInit() != 0) {
