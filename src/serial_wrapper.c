@@ -31,6 +31,6 @@ int32_t fcRead(char *msg) {
   return UartPortRead(msg);
 }
 
-void fcWrite(char *msg) {
-  UartPortWrite(msg, strlen(msg));
+void fcWrite(char *msg, size_t length) {
+  UartPortWrite(msg, length);
 }

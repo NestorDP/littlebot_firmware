@@ -20,7 +20,7 @@
  */
 
 #include "littlebot_firmware/task_communication.h"
-
+ 
 #define SERIAL_READ_TASK_STACK_SIZE 128
 #define SERIAL_READ_TASK_DELAY      100
 #define LEFT                        0
@@ -54,32 +54,21 @@ static void CommunicationTask(void *pvParameters) {
   SerialWrapper bluetooth;
   SerialWrapperConstructor(&bluetooth, 115200);
 
-  // Test nanopb
-  //========================================================================
-  bluetooth.Write("LittleBot Firmware");
-
   littlebot_Wheels wheels = littlebot_Wheels_init_zero;
   wheels.side_count = 2;
-  wheels.side[LEFT].command_velocity = 3.0;
-  wheels.side[LEFT].status_velocity = 4.0;
-  wheels.side[LEFT].status_position = 4.0;
-  wheels.side[RIGHT].command_velocity = 1.0;
-  wheels.side[RIGHT].status_velocity = 2.0;
-  wheels.side[RIGHT].status_position = 2.0;
+  wheels.side[LEFT].command_velocity = 1.5f;
+  wheels.side[LEFT].status_velocity = 1.45f;
+  wheels.side[LEFT].status_position = 45.2f;
+  wheels.side[RIGHT].command_velocity = 1.5f;
+  wheels.side[RIGHT].status_velocity = 1.48f;
+  wheels.side[RIGHT].status_position = 46.8f;
 
   pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
   if (!pb_encode(&stream, littlebot_Wheels_fields, &wheels)) {
-      bluetooth.Write("Encoding failed");
+      // bluetooth.Write("Encoding failed");
   } else {
-    static char hex_buffer[256];  // 2 chars per byte + null terminator
-    for(size_t i = 0; i < stream.bytes_written; i++) {
-        sprintf(&hex_buffer[i*2], "%02X", tx_msg[i]);
-    }
-    bluetooth.Write(hex_buffer);
+    bluetooth.Write(tx_msg, stream.bytes_written);
   }
-
-  bluetooth.Write("ooooooooooooooooooooo");
-  //========================================================================
 
  
   while(1) {
@@ -96,11 +85,11 @@ static void CommunicationTask(void *pvParameters) {
 
     switch (rx_msg[0]) {
       case 'W':
-        bluetooth.Write("1");
+        // bluetooth.Write("1");
         rx_msg[0] = '\0';
       break;
       case 'R':
-        bluetooth.Write(tx_msg);
+        // bluetooth.Write(tx_msg);
         rx_msg[0] = '\0'; 
       break;
       default:
