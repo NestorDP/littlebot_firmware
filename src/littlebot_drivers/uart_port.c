@@ -41,14 +41,18 @@ void UartPortConfigure (uint32_t baud_rate, uint8_t type) {
         /* Use the internal 16MHz oscillator as the UART clock source. */
         UARTClockSourceSet (UART1_BASE, UART_CLOCK_PIOSC);
 
-        /* Initialize the UART for console I/O. */
-        UARTStdioConfig (1, baud_rate, 16000000);
+        /* Configure UART1 parameters manually */
+        UARTConfigSetExpClk(UART1_BASE, 16000000, baud_rate, 
+                           (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
+        
+        /* Enable the UART */
+        UARTEnable(UART1_BASE);
         break;
     
     case DEBUG_CONSOLE:
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
         GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-        UARTStdioConfig(0, baud_rate, 80000000);
+        UARTStdioConfig(0, baud_rate, SysCtlClockGet());
         break;
     }
 }

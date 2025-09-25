@@ -32,6 +32,9 @@ extern xQueueHandle g_pCommandVelRightQueue;
 extern xQueueHandle g_pStatusVelRightQueue;
 extern xQueueHandle g_pStatusPosRightQueue;
 
+extern xSemaphoreHandle g_pUartLoggerSemaphore;
+
+extern SerialWrapper console;
 
 static void CommunicationTask(void *pvParameters) {
   (void)pvParameters; /* Unused parameter */
@@ -41,9 +44,9 @@ static void CommunicationTask(void *pvParameters) {
 
   static char rx_msg[100] = "\0";
   static char tx_msg[100] = "\0";
-  float velocity[2] = {0.0, 0.0};
-  float feed_back_velocity[2] = {0.0, 0.0};
-  float feed_back_position[2] = {0.0, 0.0};
+  float command_velocity[2] = {0.0f, 0.0f};
+  float status_velocity[2] = {0.0f, 0.0f};
+  float status_position[2] = {0.0f, 0.0f};
 
   ui32ReadDelay = SERIAL_READ_TASK_DELAY;
   ui32WakeTime = xTaskGetTickCount();
@@ -61,22 +64,26 @@ static void CommunicationTask(void *pvParameters) {
   wheels.side[RIGHT].status_velocity = 1.48f;
   wheels.side[RIGHT].status_position = 46.8f;
 
+  
   pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
   if (!pb_encode(&stream, littlebot_Wheels_fields, &wheels)) {
-      // bluetooth.Write("Encoding failed");
+      // console.Printf("Encoding failed\n");
   } else {
     bluetooth.Write(tx_msg, stream.bytes_written);
   }
 
- 
+  xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+  console.Printf("Communication task started\n");
+  xSemaphoreGive(g_pUartLoggerSemaphore);
+  
   while(1) {
     /* Read velocity status queue */
-    xQueueReceive(g_pStatusVelLeftQueue, &feed_back_velocity[0], 0);
-    xQueueReceive(g_pStatusVelRightQueue, &feed_back_velocity[1], 0);
+    xQueueReceive(g_pStatusVelLeftQueue, &status_velocity[LEFT], 0);
+    xQueueReceive(g_pStatusVelRightQueue, &status_velocity[RIGHT], 0);
 
     /* Read position status queue */
-    xQueueReceive(g_pStatusPosLeftQueue, &feed_back_position[0], 0);
-    xQueueReceive(g_pStatusPosRightQueue, &feed_back_position[1], 0);
+    xQueueReceive(g_pStatusPosLeftQueue, &status_position[LEFT], 0);
+    xQueueReceive(g_pStatusPosRightQueue, &status_position[RIGHT], 0);
 
     /* Receive message from serial */
     // bluetooth.Read(rx_msg);
@@ -91,12 +98,12 @@ static void CommunicationTask(void *pvParameters) {
         rx_msg[0] = '\0'; 
       break;
       default:
-        velocity[0] = 0.0;
-        velocity[1] = 0.0;
+        command_velocity[LEFT] = 0.0f;
+        command_velocity[RIGHT] = 0.0f;
     }
 
-    xQueueSend(g_pCommandVelLeftQueue, &velocity[0], 0);
-    xQueueSend(g_pCommandVelRightQueue, &velocity[1], 0);
+    xQueueSend(g_pCommandVelLeftQueue, &command_velocity[LEFT], 0);
+    xQueueSend(g_pCommandVelRightQueue, &command_velocity[RIGHT], 0);
 
     xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
   }

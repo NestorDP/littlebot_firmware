@@ -44,6 +44,8 @@
 #include "littlebot_firmware/task_communication.h"
 #include "littlebot_firmware/priorities.h"
 
+SerialWrapper console;
+
 /* The mutex that protects concurrent access of UART from multiple tasks. */
 xSemaphoreHandle g_pUartLoggerSemaphore;
 
@@ -90,9 +92,8 @@ int main(void) {
     /* Create semaphore to protect the serial port used in logging. */
     g_pUartLoggerSemaphore = xSemaphoreCreateMutex();
 
-    SerialWrapper debug_console;
-    SerialWrapperConstructor(&debug_console, 115200, DEBUG_CONSOLE);
-    debug_console.Printf("LittleBot starting...\n");
+    SerialWrapperConstructor(&console, 115200, DEBUG_CONSOLE);
+    console.Printf("LittleBot starting...\n");
 
 
     /* Create the COMMUNICATION task. */
