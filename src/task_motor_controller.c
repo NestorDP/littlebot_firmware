@@ -32,10 +32,10 @@ static void vTaskMotorController(void *pvParameters) {
   uint8_t *side_motor;
   side_motor = (uint8_t*)pvParameters;
 
-  MotorInterface motor;
+  MotorWrapper motor;
   PidController pid;
-  
-  MotorInterfaceConstruct(&motor, *side_motor);
+
+  MotorWrapperConstruct(&motor, *side_motor);
   PidControllerConstruct(&pid, 11.0, 0.0, 0.0, MOTOR_CONTROLLER_TASK_DELAY/1000);
   pid.SetMaxSpeed(&pid, 22.0);
 

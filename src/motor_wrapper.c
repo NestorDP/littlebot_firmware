@@ -1,7 +1,7 @@
-#include "littlebot_firmware/motor_interface.h"
+#include "littlebot_firmware/motor_wrapper.h"
 
 
-void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
+void MotorWrapperConstruct(MotorWrapper *self, uint8_t side){
   self->motor_side_ = side;
   self->SetVelocity = fcSetVelocity;
   self->GetVelocity = fcGetVelocity;
@@ -18,7 +18,7 @@ void MotorInterfaceConstruct(MotorInterface *self, uint8_t side){
 }
 
 
-void fcSetVelocity(MotorInterface *self, float velocity){
+void fcSetVelocity(MotorWrapper *self, float velocity){
   if(velocity < 0){
     MotorVelocity(self->motor_side_, -1 * velocity, 1);
     EncoderSetPositionDirection(self->motor_side_, 1);
@@ -31,7 +31,7 @@ void fcSetVelocity(MotorInterface *self, float velocity){
 }
 
 
-float fcGetVelocity(MotorInterface *self) {
+float fcGetVelocity(MotorWrapper *self) {
   if (self->motor_side_ == 0) {
     return EncoderVelocityRightValue();
   } else {
@@ -40,7 +40,7 @@ float fcGetVelocity(MotorInterface *self) {
 }
 
 
-float fcGetPosition(MotorInterface *self) {
+float fcGetPosition(MotorWrapper *self) {
   if (self->motor_side_ == 0) {
     return EncoderPositionRightValue();
   } else {
@@ -50,6 +50,6 @@ float fcGetPosition(MotorInterface *self) {
 }
 
 
-uint8_t fcGetSide(MotorInterface *self){
+uint8_t fcGetSide(MotorWrapper *self){
   return self->motor_side_;
 }

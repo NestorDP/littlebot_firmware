@@ -27,15 +27,15 @@
 #include "littlebot_drivers/motor.h"
 #include "littlebot_drivers/encoder.h"
 
-typedef struct MotorInterfaceClass MotorInterface;
+typedef struct MotorWrapperClass MotorWrapper;
 
-typedef void (*ptfSetVelocity)(MotorInterface *self, float vel);
-typedef float (*ptfGetVelocity)(MotorInterface *self);
-typedef float (*ptfGetPosition)(MotorInterface *self);
-typedef uint8_t (*ptfGetSide)(MotorInterface *self);
+typedef void (*ptfSetVelocity)(MotorWrapper *self, float vel);
+typedef float (*ptfGetVelocity)(MotorWrapper *self);
+typedef float (*ptfGetPosition)(MotorWrapper *self);
+typedef uint8_t (*ptfGetSide)(MotorWrapper *self);
 
 //structure of function pointer
-struct MotorInterfaceClass{
+struct MotorWrapperClass{
     // Variables
     uint8_t motor_side_;
     uint8_t motor_direction_;
@@ -47,15 +47,15 @@ struct MotorInterfaceClass{
     ptfGetSide GetSide;
 };
 
-void MotorInterfaceConstruct(MotorInterface *self, uint8_t side);
+void MotorWrapperConstruct(MotorWrapper *self, uint8_t side);
 
-void fcSetVelocity(MotorInterface *self, float velocity);
+void fcSetVelocity(MotorWrapper *self, float velocity);
 
-float fcGetVelocity(MotorInterface *self);
+float fcGetVelocity(MotorWrapper *self);
 
-float fcGetPosition(MotorInterface *self);
+float fcGetPosition(MotorWrapper *self);
 
-uint8_t fcGetSide(MotorInterface *self);
+uint8_t fcGetSide(MotorWrapper *self);
 
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_WHEEL_CONTROL_H__
