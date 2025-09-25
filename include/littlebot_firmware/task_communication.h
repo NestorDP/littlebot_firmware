@@ -39,6 +39,7 @@
 #include "queue.h"
 #include "semphr.h"
 
+#include "littlebot_drivers/motor.h" /* To use motor macros */
 #include "littlebot_firmware/serial_wrapper.h"
 #include "littlebot_firmware/priorities.h"
 #include "littlebot_msg.pb.h"

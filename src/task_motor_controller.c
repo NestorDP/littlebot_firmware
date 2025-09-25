@@ -23,8 +23,6 @@
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128
 #define MOTOR_CONTROLLER_TASK_DELAY      100
-#define LEFT  1
-#define RIGHT 0
 
 extern xQueueHandle g_pCommandVelLeftQueue;
 extern xQueueHandle g_pStatusVelLeftQueue;

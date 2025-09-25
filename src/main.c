@@ -38,10 +38,10 @@
 #include "semphr.h"
 #include "task.h"
 
+#include "littlebot_drivers/motor.h" /* To use motor macros */
 #include "littlebot_firmware/serial_wrapper.h"
 #include "littlebot_firmware/task_motor_controller.h"
 #include "littlebot_firmware/task_communication.h"
-
 #include "littlebot_firmware/priorities.h"
 
 /* The mutex that protects concurrent access of UART from multiple tasks. */

@@ -23,8 +23,6 @@
  
 #define SERIAL_READ_TASK_STACK_SIZE 128
 #define SERIAL_READ_TASK_DELAY      100
-#define LEFT                        0
-#define RIGHT                       1
 
 extern xQueueHandle g_pCommandVelLeftQueue;
 extern xQueueHandle g_pStatusVelLeftQueue;
