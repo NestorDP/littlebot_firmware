@@ -50,12 +50,12 @@ SerialWrapper console;
 xSemaphoreHandle g_pUartLoggerSemaphore;
 
 /* The queue that holds variables to sharade between tasks. */
-xQueueHandle g_pCommandVelLeftQueue;
-xQueueHandle g_pCommandVelRightQueue;
-xQueueHandle g_pStatusVelLeftQueue;
-xQueueHandle g_pStatusVelRightQueue;
-xQueueHandle g_pStatusPosRightQueue;
-xQueueHandle g_pStatusPosLeftQueue;
+QueueHandle_t g_pCommandVelLeftQueue;
+QueueHandle_t g_pCommandVelRightQueue;
+QueueHandle_t g_pStatusVelLeftQueue;
+QueueHandle_t g_pStatusVelRightQueue;
+QueueHandle_t g_pStatusPosRightQueue;
+QueueHandle_t g_pStatusPosLeftQueue;
 
 /* The error routine that is called if the driver library encounters an error. */
 #ifdef DEBUG
@@ -68,8 +68,9 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
      * on entry to this function, so no processor interrupts will interrupt
      * this loop.
      */
-    (void)xTask;
-    (void)pcTaskName;
+    xTask;
+    console.Printf(pcTaskName);
+
     while(1) {}
 }
 
@@ -94,7 +95,6 @@ int main(void) {
 
     SerialWrapperConstructor(&console, 115200, DEBUG_CONSOLE);
     console.Printf("LittleBot starting...\n");
-
 
     /* Create the COMMUNICATION task. */
     if(CommunicationTaskInit() != 0) {

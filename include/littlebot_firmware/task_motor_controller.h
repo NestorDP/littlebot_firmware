@@ -37,6 +37,7 @@
 
 #include "littlebot_firmware/priorities.h"
 #include "littlebot_firmware/motor_wrapper.h"
+#include "littlebot_firmware/serial_wrapper.h"
 #include "littlebot_firmware/pid_controller.h"
 
 extern uint8_t side_m;

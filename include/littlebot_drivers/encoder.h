@@ -39,10 +39,14 @@
 #include "inc/hw_timer.h"
 #include "inc/hw_types.h"
 
-#define PERIODS_PER_SECOND    2
+#define LEFT_ENCODER 1
+#define RIGHT_ENCODER 0
+#define FORWARD_ENCODER 1
+#define BACKWARD_ENCODER 0
+#define PERIODS_PER_SECOND 2
 #define PULSES_PER_REVOLUTION 40
-#define _2PI                  6.2831853f
-#define ANGLE_STEP            _2PI / PULSES_PER_REVOLUTION
+#define _2PI 6.2831853f
+#define ANGLE_STEP _2PI / PULSES_PER_REVOLUTION
 
 void EncoderInit(void);
 

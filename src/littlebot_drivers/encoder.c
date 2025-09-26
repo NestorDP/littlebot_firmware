@@ -25,7 +25,6 @@ void EncoderInit(void) {
     EncoderLeftConfigure();
 }
 
-
 void EncoderRightConfigure(void) {
   SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI1);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
@@ -53,7 +52,6 @@ void EncoderRightConfigure(void) {
   GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_4);
 }
 
-
 void EncoderLeftConfigure(void) {
   SysCtlPeripheralEnable(SYSCTL_PERIPH_QEI0);
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
@@ -80,12 +78,10 @@ void EncoderLeftConfigure(void) {
 
   QEIPositionSet(QEI0_BASE, 0);
 
-  // 
   SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOC)){}
   GPIOPinTypeGPIOOutput(GPIO_PORTC_BASE, GPIO_PIN_7);
 }
-
 
 void EncoderRightHandler(void) {
   QEIIntClear(QEI1_BASE, QEIIntStatus(QEI1_BASE, true));
@@ -93,13 +89,11 @@ void EncoderRightHandler(void) {
   ui32EncoderPosRight = QEIPositionGet(QEI1_BASE);
 }
 
-
 void EncoderLeftHandler(void) {
   QEIIntClear(QEI0_BASE, QEIIntStatus(QEI0_BASE, true));
   ui32EncoderVelLeft = QEIVelocityGet(QEI0_BASE);
   ui32EncoderPosLeft = QEIPositionGet(QEI0_BASE);
 }
-
 
 float EncoderVelocityLeftValue (void) {
   return (((float)ui32EncoderVelLeft * PERIODS_PER_SECOND)/PULSES_PER_REVOLUTION) * _2PI;
@@ -117,17 +111,16 @@ float EncoderPositionRightValue (void) {
   return (float)ui32EncoderPosRight * ANGLE_STEP;
 }
 
-
 void EncoderSetPositionDirection(uint8_t side, uint8_t direction) {
-  if(side == 1){ 
-    if(direction == 1){
+  if(side == LEFT_ENCODER){ 
+    if(direction == FORWARD_ENCODER){
       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
     }
     else {
       GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 0);
     }
   } else {
-    if(direction == 1){
+    if(direction == FORWARD_ENCODER){
       GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
     }
     else {

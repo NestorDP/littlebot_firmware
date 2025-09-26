@@ -22,15 +22,19 @@
 #include "littlebot_firmware/task_motor_controller.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128
-#define MOTOR_CONTROLLER_TASK_DELAY      100
+#define MOTOR_CONTROLLER_TASK_DELAY      150
 
-extern xQueueHandle g_pCommandVelLeftQueue;
-extern xQueueHandle g_pStatusVelLeftQueue;
-extern xQueueHandle g_pStatusPosLeftQueue;
+extern QueueHandle_t g_pCommandVelLeftQueue;
+extern QueueHandle_t g_pStatusVelLeftQueue;
+extern QueueHandle_t g_pStatusPosLeftQueue;
 
-extern xQueueHandle g_pCommandVelRightQueue;
-extern xQueueHandle g_pStatusVelRightQueue;
-extern xQueueHandle g_pStatusPosRightQueue;
+extern QueueHandle_t g_pCommandVelRightQueue;
+extern QueueHandle_t g_pStatusVelRightQueue;
+extern QueueHandle_t g_pStatusPosRightQueue;
+
+extern xSemaphoreHandle g_pUartLoggerSemaphore;
+
+extern SerialWrapper console;
 
 const uint8_t side_left = LEFT;
 const uint8_t side_right = RIGHT;
@@ -52,28 +56,38 @@ static void vTaskMotorController(void *pvParameters) {
   PidController pid;
 
   MotorWrapperConstruct(&motor_device, *side_motor);
-  PidControllerConstruct(&pid, 11.0, 0.0, 0.0, MOTOR_CONTROLLER_TASK_DELAY/1000);
-  pid.SetMaxSpeed(&pid, 22.0);
+  // PidControllerConstruct(&pid, 11.0, 0.0, 0.0, MOTOR_CONTROLLER_TASK_DELAY/1000);
+  // pid.SetMaxSpeed(&pid, 22.0);
 
   // ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
   ui32WakeTime = xTaskGetTickCount();
+
+  if (*side_motor == LEFT) {
+    xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+    console.Printf("Left Motor Controller task started\n");
+    xSemaphoreGive(g_pUartLoggerSemaphore);
+  } else {
+    xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+    console.Printf("Right Motor Controller task started\n");
+    xSemaphoreGive(g_pUartLoggerSemaphore);
+  }
   
   while(1) {
-    status_velocity = motor_device.GetVelocity(&motor_device);
-    status_position = motor_device.GetPosition(&motor_device);
+    // status_velocity = motor_device.GetVelocity(&motor_device);
+    // status_position = motor_device.GetPosition(&motor_device);
 
     if(*side_motor == LEFT) {
-      xQueueReceive(g_pCommandVelLeftQueue, &command_velocity, ( TickType_t ) 0);
+      xQueueReceive(g_pCommandVelLeftQueue, &command_velocity, ( TickType_t )  0);
       xQueueSend(g_pStatusVelLeftQueue, &status_velocity, 0);
       xQueueSend(g_pStatusPosLeftQueue, &status_position, 0);
     } else {
       xQueueReceive(g_pCommandVelRightQueue, &command_velocity, ( TickType_t ) 0);
-      xQueueSend(g_pStatusVelRightQueue, &status_velocity, 0);
+      xQueueSend(g_pStatusVelRightQueue, &status_velocity, 0);    
       xQueueSend(g_pStatusPosRightQueue, &status_position, 0);
     }
 
-    controled_velocity = pid.Controller(&pid, command_velocity, status_velocity);
-    motor_device.SetVelocity(&motor_device, controled_velocity);
+    // controled_velocity = pid.Controller(&pid, command_velocity, status_velocity);
+    // motor_device.SetVelocity(&motor_device, controled_velocity);
 
     xTaskDelayUntil(&ui32WakeTime,  pdMS_TO_TICKS(MOTOR_CONTROLLER_TASK_DELAY));
   }    

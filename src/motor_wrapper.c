@@ -17,7 +17,6 @@ void MotorWrapperConstruct(MotorWrapper *self, uint8_t side){
   MotorConfigure();
 }
 
-
 void fcSetVelocity(MotorWrapper *self, float velocity){
   if(velocity < 0){
     MotorVelocity(self->motor_side_, -1 * velocity, 1);
@@ -30,7 +29,6 @@ void fcSetVelocity(MotorWrapper *self, float velocity){
   }
 }
 
-
 float fcGetVelocity(MotorWrapper *self) {
   if (self->motor_side_ == RIGHT) {
     return EncoderVelocityRightValue();
@@ -39,16 +37,13 @@ float fcGetVelocity(MotorWrapper *self) {
   }
 }
 
-
 float fcGetPosition(MotorWrapper *self) {
   if (self->motor_side_ == RIGHT) {
     return EncoderPositionRightValue();
   } else {
     return EncoderPositionLeftValue();
   }
-  
 }
-
 
 uint8_t fcGetSide(MotorWrapper *self){
   return self->motor_side_;

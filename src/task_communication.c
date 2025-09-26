@@ -21,16 +21,16 @@
 
 #include "littlebot_firmware/task_communication.h"
  
-#define SERIAL_READ_TASK_STACK_SIZE 128
+#define SERIAL_READ_TASK_STACK_SIZE 512
 #define SERIAL_READ_TASK_DELAY      100
 
-extern xQueueHandle g_pCommandVelLeftQueue;
-extern xQueueHandle g_pStatusVelLeftQueue;
-extern xQueueHandle g_pStatusPosLeftQueue;
+extern QueueHandle_t g_pCommandVelLeftQueue;
+extern QueueHandle_t g_pStatusVelLeftQueue;
+extern QueueHandle_t g_pStatusPosLeftQueue;
 
-extern xQueueHandle g_pCommandVelRightQueue;
-extern xQueueHandle g_pStatusVelRightQueue;
-extern xQueueHandle g_pStatusPosRightQueue;
+extern QueueHandle_t g_pCommandVelRightQueue;
+extern QueueHandle_t g_pStatusVelRightQueue;
+extern QueueHandle_t g_pStatusPosRightQueue;
 
 extern xSemaphoreHandle g_pUartLoggerSemaphore;
 
@@ -43,7 +43,7 @@ static void CommunicationTask(void *pvParameters) {
   uint32_t ui32ReadDelay;
 
   static char rx_msg[100] = "\0";
-  static char tx_msg[100] = "\0";
+  static char tx_msg[164] = "\0";
   float command_velocity[2] = {0.0f, 0.0f};
   float status_velocity[2] = {0.0f, 0.0f};
   float status_position[2] = {0.0f, 0.0f};
@@ -55,49 +55,49 @@ static void CommunicationTask(void *pvParameters) {
   SerialWrapper bluetooth;
   SerialWrapperConstructor(&bluetooth, 115200, DATA_STREAM);
 
-  littlebot_Wheels wheels = littlebot_Wheels_init_zero;
+  /* Protobuf variables */
+  static littlebot_Wheels wheels = littlebot_Wheels_init_zero;
   wheels.side_count = 2;
-  wheels.side[LEFT].command_velocity = 1.5f;
-  wheels.side[LEFT].status_velocity = 1.45f;
-  wheels.side[LEFT].status_position = 45.2f;
-  wheels.side[RIGHT].command_velocity = 1.5f;
-  wheels.side[RIGHT].status_velocity = 1.48f;
-  wheels.side[RIGHT].status_position = 46.8f;
 
-  
-  pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
-  if (!pb_encode(&stream, littlebot_Wheels_fields, &wheels)) {
-      // console.Printf("Encoding failed\n");
-  } else {
-    bluetooth.Write(tx_msg, stream.bytes_written);
-  }
-
+  /* Initialize Communication Task */
   xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
   console.Printf("Communication task started\n");
   xSemaphoreGive(g_pUartLoggerSemaphore);
   
+  /* Wait for motor controllers to start */
+  vTaskDelay(200 / portTICK_RATE_MS);
+  
   while(1) {
-    /* Read velocity status queue */
+    /* Read wheels status queue */
     xQueueReceive(g_pStatusVelLeftQueue, &status_velocity[LEFT], 0);
-    xQueueReceive(g_pStatusVelRightQueue, &status_velocity[RIGHT], 0);
-
-    /* Read position status queue */
     xQueueReceive(g_pStatusPosLeftQueue, &status_position[LEFT], 0);
+    xQueueReceive(g_pStatusVelRightQueue, &status_velocity[RIGHT], 0);
     xQueueReceive(g_pStatusPosRightQueue, &status_position[RIGHT], 0);
+
+    /* Load the status into the protobuf message fields */
+    wheels.side[LEFT].status_velocity  = status_velocity[LEFT];
+    wheels.side[LEFT].status_position  = status_position[LEFT];
+    wheels.side[RIGHT].status_velocity = status_velocity[RIGHT];
+    wheels.side[RIGHT].status_position = status_position[RIGHT];
+
+    /* Encode and send wheels status message */
+    pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
+    pb_encode(&stream, littlebot_Wheels_fields, &wheels);
+    bluetooth.Write(tx_msg, stream.bytes_written);
 
     /* Receive message from serial */
     // bluetooth.Read(rx_msg);
 
     switch (rx_msg[0]) {
-      case 'W':
-        // bluetooth.Write("1");
+    case 'W':
+        // Additional write request - stream is out of scope here, skip for now
         rx_msg[0] = '\0';
       break;
-      case 'R':
-        // bluetooth.Write(tx_msg);
+    case 'R':
+        // Reset command
         rx_msg[0] = '\0'; 
       break;
-      default:
+    default:
         command_velocity[LEFT] = 0.0f;
         command_velocity[RIGHT] = 0.0f;
     }
@@ -112,7 +112,7 @@ static void CommunicationTask(void *pvParameters) {
 
 uint32_t CommunicationTaskInit(void) {
     if( xTaskCreate(CommunicationTask,
-                    (const portCHAR *)"Serial read",
+                    (const portCHAR *)"Communication Task",
                     SERIAL_READ_TASK_STACK_SIZE,
                     NULL,
                     tskIDLE_PRIORITY + PRIORITY_SERIAL_COMMUNICATION,
