@@ -117,6 +117,7 @@ int main(void) {
     /* In case the scheduler returns for some reason, print an error and loop
      * forever.
      */
-
-    while(1) {}
+    while(1) {
+        console.Printf("Scheduler returned unexpectedly\n");
+    }
 }

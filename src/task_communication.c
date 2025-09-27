@@ -37,6 +37,7 @@
 
 #include "littlebot_firmware/task_communication.h"
 #include "littlebot_firmware/types.h"
+#include <string.h>
  
 #define SERIAL_READ_TASK_STACK_SIZE 512  /**< Stack size for communication task */
 #define SERIAL_READ_TASK_DELAY      100  /**< Task delay in milliseconds */
@@ -64,16 +65,8 @@ static void CommunicationTask(void *pvParameters) {
 
   /* Initialize wheels data */
   WheelsData_t wheels_data = {
-    .left = {
-      .command_velocity = 1.0f,
-      .status_velocity = 0.0f,
-      .status_position = 0.0f
-    },
-    .right = {
-      .command_velocity = 2.0f,
-      .status_velocity = 1.0f,
-      .status_position = 0.0f
-    }
+    .left = {0.0f, 0.0f, 0.0f},
+    .right = {0.0f, 0.0f, 0.0f}
   };
   
   ui32ReadDelay = SERIAL_READ_TASK_DELAY;
@@ -84,8 +77,8 @@ static void CommunicationTask(void *pvParameters) {
   SerialWrapperConstructor(&bluetooth, 115200, DATA_STREAM);
 
   /* Protobuf variables */
-  static littlebot_Wheels wheels = littlebot_Wheels_init_zero;
-  wheels.side_count = 2;
+  static littlebot_Wheels wheels_pb_msg = littlebot_Wheels_init_zero;
+  wheels_pb_msg.side_count = 2;
 
   /* Initialize Communication Task */
   xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
@@ -103,33 +96,75 @@ static void CommunicationTask(void *pvParameters) {
     xQueueReceive(g_pStatusPosRightQueue, &wheels_data.right.status_position, 0);
 
     /* Load the status into the protobuf message fields */
-    wheels.side[LEFT].command_velocity = wheels_data.left.command_velocity;
-    wheels.side[LEFT].status_velocity = wheels_data.left.status_velocity;
-    wheels.side[LEFT].status_position = wheels_data.left.status_position;
-    wheels.side[RIGHT].command_velocity = wheels_data.right.command_velocity;
-    wheels.side[RIGHT].status_velocity = wheels_data.right.status_velocity;
-    wheels.side[RIGHT].status_position = wheels_data.right.status_position;
+    wheels_pb_msg.side[LEFT].command_velocity = wheels_data.left.command_velocity;
+    wheels_pb_msg.side[LEFT].status_velocity = wheels_data.left.status_velocity;
+    wheels_pb_msg.side[LEFT].status_position = wheels_data.left.status_position;
+    wheels_pb_msg.side[RIGHT].command_velocity = wheels_data.right.command_velocity;
+    wheels_pb_msg.side[RIGHT].status_velocity = wheels_data.right.status_velocity;
+    wheels_pb_msg.side[RIGHT].status_position = wheels_data.right.status_position;
 
-    /* Encode and send wheels status message */
-    pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
-    pb_encode(&stream, littlebot_Wheels_fields, &wheels);
-    bluetooth.Write(tx_msg, stream.bytes_written);
+    /* Receive message from serial and process requests */
+    bluetooth.Read(rx_msg);
 
-    /* Receive message from serial */
-    // bluetooth.Read(rx_msg);
-
-    switch (rx_msg[0]) {
-    case 'W':
-        // Additional write request - stream is out of scope here, skip for now
+    /* Check if the receive buffer is not empty */
+    if (rx_msg[0] != '\0' && strlen(rx_msg) > 0) {
+        
+        /* Check for valid message format [X...] */
+        if (rx_msg[0] == '[' && strlen(rx_msg) > 2) {
+            char command = rx_msg[1];  /* Extract command after '[' */
+            
+            switch (command) {
+            case 'S': {              
+                /* Encode and send wheels status message with 'S' prefix */
+                pb_ostream_t output_stream = pb_ostream_from_buffer(
+					(uint8_t *)&tx_msg[1],
+					sizeof(tx_msg)-1);
+                if (pb_encode(&output_stream, littlebot_Wheels_fields, &wheels_pb_msg)) {
+                    tx_msg[0] = 'S';  /* Add status response identifier */
+                    bluetooth.Write(tx_msg, output_stream.bytes_written + 1);  /* +1 for the 'S' */
+                }
+                break;
+			} 
+            case 'C': {				
+				/* Calculate message length (total - '[C' - ']') */
+				size_t msg_len = strlen(rx_msg) - 3;  /* Remove '[C' and ']' */
+				
+				if (msg_len > 0) {
+					/* Create input stream from received data */
+					pb_istream_t input_stream = pb_istream_from_buffer(
+						(uint8_t *)&rx_msg[2],  /* Skip '[C' */
+						msg_len
+					);
+					
+					/* Decode the protobuf message */
+					if (pb_decode(&input_stream, littlebot_Wheels_fields, &wheels_pb_msg)) {
+						/* Successfully decoded - update command velocities */
+						if (wheels_pb_msg.side_count >= 2) {
+							wheels_data.left.command_velocity = wheels_pb_msg.side[LEFT].command_velocity;
+							wheels_data.right.command_velocity = wheels_pb_msg.side[RIGHT].command_velocity;
+						}
+					} else {
+						/* Decoding failed */
+						xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+						console.Printf("Protobuf decoding failed\n");
+						xSemaphoreGive(g_pUartLoggerSemaphore);
+					}
+				}
+                break;
+			}
+                
+            default: {
+                /* Unknown command */
+                xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+                console.Printf("Unknown command received\n");
+                xSemaphoreGive(g_pUartLoggerSemaphore);
+                break;
+			}
+            }
+        }
+        
+        /* Clear the receive buffer */
         rx_msg[0] = '\0';
-      break;
-    case 'R':
-        // Reset command
-        rx_msg[0] = '\0'; 
-      break;
-    default:
-        // wheels_data.left.command_velocity = 0.0f;
-        // wheels_data.right.command_velocity = 0.0f;
     }
 
     xQueueSend(g_pCommandVelLeftQueue, &wheels_data.left.command_velocity, 0);
