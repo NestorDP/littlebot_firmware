@@ -64,13 +64,13 @@ int32_t UartPortRead(char *buffer) {
 
     while (index < max_buffer_length && UARTCharsAvail(UART1_BASE)) {
         int32_t received_char = UARTCharGet(UART1_BASE);
-        
-        // Check for error (UARTCharGet returns -1 on error)
+
+        /* Check for error (UARTCharGet returns -1 on error) */
         if (received_char < 0) {
-            return -1;  // Error occurred, stop reading
+            return -1;
         }
         
-        buffer[index] = (char)(received_char & 0xFF);  // Safe conversion  
+        buffer[index] = (char)(received_char & 0xFF);  
         if (buffer[index] == '\n') {
             index++;
             break;
@@ -90,11 +90,17 @@ int32_t UartPortRead(char *buffer) {
 
 int32_t UartPortWrite (char *msg, size_t length) {
   uint32_t index;
-  
-  for(index = 0; index < length; index++)
-  {
+
+  /* Send start delimiter */
+  UARTCharPut(UART1_BASE, '[');
+
+  /* Send message content */
+  for(index = 0; index < length; index++) {
       UARTCharPut(UART1_BASE, msg[index]);
   }
+
+  /* Send end delimiter */
+  UARTCharPut(UART1_BASE, ']');
   UARTCharPut(UART1_BASE, '\n');
   return 0;
 }
