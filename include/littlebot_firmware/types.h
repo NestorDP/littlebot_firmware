@@ -68,8 +68,9 @@ typedef enum {
  * @brief Motor side enumeration (for consistency with existing code)
  */
 typedef enum {
-    MOTOR_RIGHT = 0,
-    MOTOR_LEFT = 1
+    MOTOR_RIGHT = 1,
+    MOTOR_LEFT = 0
 } MotorSide_t;
+
 
 #endif // INCLUDE_LITTLEBOT_FIRMWARE_TYPES_H__

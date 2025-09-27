@@ -46,11 +46,7 @@ static void vTaskMotorController(void *pvParameters) {
   // uint32_t ui32MotorTaskDelay; 
 
 
-  WheelData_t wheel_data = {
-    .command_velocity = 10.0f,
-    .status_velocity = 20.0f,
-    .status_position = 30.0f,
-  };
+  WheelData_t wheel_data;
 
   uint8_t *side_motor;
   side_motor = (uint8_t*)pvParameters;
@@ -65,32 +61,44 @@ static void vTaskMotorController(void *pvParameters) {
   // ui32MotorTaskDelay = MOTOR_CONTROLLER_TASK_DELAY ;
   ui32WakeTime = xTaskGetTickCount();
 
-  if (*side_motor == LEFT) {
+  if (*side_motor == 0) {
     xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
     console.Printf("Left Motor Controller task started\n");
     xSemaphoreGive(g_pUartLoggerSemaphore);
+    // wheel_data.command_velocity = 10.0f;
+    // wheel_data.status_velocity = 20.0f;
+    // wheel_data.status_position = 30.0f;
   } else {
     xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
     console.Printf("Right Motor Controller task started\n");
     xSemaphoreGive(g_pUartLoggerSemaphore);
+    // wheel_data.command_velocity = -100.0f;
+    // wheel_data.status_velocity = -200.0f;
+    // wheel_data.status_position = -300.0f;
   }
   
   while(1) {
-    // status_velocity = motor_device.GetVelocity(&motor_device);
-    // status_position = motor_device.GetPosition(&motor_device);
+    wheel_data.status_velocity = motor_device.GetVelocity(&motor_device);
+    wheel_data.status_position = motor_device.GetPosition(&motor_device);
 
-    if(*side_motor == LEFT) {
+    if(*side_motor == 0) {
       xQueueReceive(g_pCommandVelLeftQueue, &wheel_data.command_velocity, ( TickType_t )  0);
       xQueueSend(g_pStatusVelLeftQueue, &wheel_data.status_velocity, 0);
       xQueueSend(g_pStatusPosLeftQueue, &wheel_data.status_position, 0);
+      xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+      console.Printf("Left Motor DATA\n");
+      xSemaphoreGive(g_pUartLoggerSemaphore);
     } else {
       xQueueReceive(g_pCommandVelRightQueue, &wheel_data.command_velocity, ( TickType_t ) 0);
       xQueueSend(g_pStatusVelRightQueue, &wheel_data.status_velocity, 0);
       xQueueSend(g_pStatusPosRightQueue, &wheel_data.status_position, 0);
+      xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
+      console.Printf("Right Motor DATA\n");
+      xSemaphoreGive(g_pUartLoggerSemaphore);
     }
 
     // controled_velocity = pid.Controller(&pid, command_velocity, status_velocity);
-    // motor_device.SetVelocity(&motor_device, controled_velocity);
+    motor_device.SetVelocity(&motor_device, wheel_data.command_velocity);
 
     xTaskDelayUntil(&ui32WakeTime,  pdMS_TO_TICKS(MOTOR_CONTROLLER_TASK_DELAY));
   }    
