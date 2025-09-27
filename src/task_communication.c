@@ -20,6 +20,7 @@
  */
 
 #include "littlebot_firmware/task_communication.h"
+#include "littlebot_firmware/types.h"
  
 #define SERIAL_READ_TASK_STACK_SIZE 512
 #define SERIAL_READ_TASK_DELAY      100
@@ -44,10 +45,21 @@ static void CommunicationTask(void *pvParameters) {
 
   static char rx_msg[100] = "\0";
   static char tx_msg[164] = "\0";
-  float command_velocity[2] = {0.0f, 0.0f};
-  float status_velocity[2] = {0.0f, 0.0f};
-  float status_position[2] = {0.0f, 0.0f};
 
+  /* Initialize wheels data */
+  WheelsData_t wheels_data = {
+    .left = {
+      .command_velocity = 1.0f,
+      .status_velocity = 0.0f,
+      .status_position = 0.0f
+    },
+    .right = {
+      .command_velocity = 2.0f,
+      .status_velocity = 1.0f,
+      .status_position = 0.0f
+    }
+  };
+  
   ui32ReadDelay = SERIAL_READ_TASK_DELAY;
   ui32WakeTime = xTaskGetTickCount();
 
@@ -69,16 +81,18 @@ static void CommunicationTask(void *pvParameters) {
   
   while(1) {
     /* Read wheels status queue */
-    xQueueReceive(g_pStatusVelLeftQueue, &status_velocity[LEFT], 0);
-    xQueueReceive(g_pStatusPosLeftQueue, &status_position[LEFT], 0);
-    xQueueReceive(g_pStatusVelRightQueue, &status_velocity[RIGHT], 0);
-    xQueueReceive(g_pStatusPosRightQueue, &status_position[RIGHT], 0);
+    xQueueReceive(g_pStatusVelLeftQueue, &wheels_data.left.status_velocity, 0);
+    xQueueReceive(g_pStatusPosLeftQueue, &wheels_data.left.status_position, 0);
+    xQueueReceive(g_pStatusVelRightQueue, &wheels_data.right.status_velocity, 0);
+    xQueueReceive(g_pStatusPosRightQueue, &wheels_data.right.status_position, 0);
 
     /* Load the status into the protobuf message fields */
-    wheels.side[LEFT].status_velocity  = status_velocity[LEFT];
-    wheels.side[LEFT].status_position  = status_position[LEFT];
-    wheels.side[RIGHT].status_velocity = status_velocity[RIGHT];
-    wheels.side[RIGHT].status_position = status_position[RIGHT];
+    wheels.side[LEFT].command_velocity = wheels_data.left.command_velocity;
+    wheels.side[LEFT].status_velocity = wheels_data.left.status_velocity;
+    wheels.side[LEFT].status_position = wheels_data.left.status_position;
+    wheels.side[RIGHT].command_velocity = wheels_data.right.command_velocity;
+    wheels.side[RIGHT].status_velocity = wheels_data.right.status_velocity;
+    wheels.side[RIGHT].status_position = wheels_data.right.status_position;
 
     /* Encode and send wheels status message */
     pb_ostream_t stream = pb_ostream_from_buffer((uint8_t *)tx_msg, sizeof(tx_msg));
@@ -98,12 +112,12 @@ static void CommunicationTask(void *pvParameters) {
         rx_msg[0] = '\0'; 
       break;
     default:
-        command_velocity[LEFT] = 0.0f;
-        command_velocity[RIGHT] = 0.0f;
+        // wheels_data.left.command_velocity = 0.0f;
+        // wheels_data.right.command_velocity = 0.0f;
     }
 
-    xQueueSend(g_pCommandVelLeftQueue, &command_velocity[LEFT], 0);
-    xQueueSend(g_pCommandVelRightQueue, &command_velocity[RIGHT], 0);
+    xQueueSend(g_pCommandVelLeftQueue, &wheels_data.left.command_velocity, 0);
+    xQueueSend(g_pCommandVelRightQueue, &wheels_data.right.command_velocity, 0);
 
     xTaskDelayUntil(&ui32WakeTime, ui32ReadDelay / portTICK_RATE_MS);
   }

@@ -20,6 +20,7 @@
  */
 
 #include "littlebot_firmware/task_motor_controller.h"
+#include "littlebot_firmware/types.h"
 
 #define MOTOR_CONTROLLER_TASK_STACK_SIZE 128
 #define MOTOR_CONTROLLER_TASK_DELAY      150
@@ -44,10 +45,12 @@ static void vTaskMotorController(void *pvParameters) {
   portTickType ui32WakeTime;
   // uint32_t ui32MotorTaskDelay; 
 
-  float command_velocity = 0.0f;
-  float status_velocity = 10.0f;
-  float status_position = 20.0f;
-  float controled_velocity = 0.0f;
+
+  WheelData_t wheel_data = {
+    .command_velocity = 10.0f,
+    .status_velocity = 20.0f,
+    .status_position = 30.0f,
+  };
 
   uint8_t *side_motor;
   side_motor = (uint8_t*)pvParameters;
@@ -77,13 +80,13 @@ static void vTaskMotorController(void *pvParameters) {
     // status_position = motor_device.GetPosition(&motor_device);
 
     if(*side_motor == LEFT) {
-      xQueueReceive(g_pCommandVelLeftQueue, &command_velocity, ( TickType_t )  0);
-      xQueueSend(g_pStatusVelLeftQueue, &status_velocity, 0);
-      xQueueSend(g_pStatusPosLeftQueue, &status_position, 0);
+      xQueueReceive(g_pCommandVelLeftQueue, &wheel_data.command_velocity, ( TickType_t )  0);
+      xQueueSend(g_pStatusVelLeftQueue, &wheel_data.status_velocity, 0);
+      xQueueSend(g_pStatusPosLeftQueue, &wheel_data.status_position, 0);
     } else {
-      xQueueReceive(g_pCommandVelRightQueue, &command_velocity, ( TickType_t ) 0);
-      xQueueSend(g_pStatusVelRightQueue, &status_velocity, 0);    
-      xQueueSend(g_pStatusPosRightQueue, &status_position, 0);
+      xQueueReceive(g_pCommandVelRightQueue, &wheel_data.command_velocity, ( TickType_t ) 0);
+      xQueueSend(g_pStatusVelRightQueue, &wheel_data.status_velocity, 0);
+      xQueueSend(g_pStatusPosRightQueue, &wheel_data.status_position, 0);
     }
 
     // controled_velocity = pid.Controller(&pid, command_velocity, status_velocity);
