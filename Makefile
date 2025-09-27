@@ -240,9 +240,8 @@ help :
 	@echo - NANOPB_GENERATOR: $(NANOPB_GENERATOR)
 	@echo
 
-#------------------------------------------------------------------------------
 # Documentation targets
-#------------------------------------------------------------------------------
+#---------------------
 
 # Generate documentation with Doxygen
 docs:
@@ -262,7 +261,7 @@ docs-clean:
 	@rm -rf docs/html docs/latex docs/man docs/rtf docs/xml
 	@echo "Documentation cleaned."
 
-# View documentation (Linux only)
+# View documentation in the default web browser
 docs-view: docs
 	@if command -v xdg-open >/dev/null 2>&1; then \
 		xdg-open docs/html/index.html; \
