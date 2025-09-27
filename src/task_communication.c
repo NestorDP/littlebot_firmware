@@ -19,11 +19,27 @@
  * SOFTWARE.
  */
 
+/**
+ * @file task_communication.c
+ * @brief Communication task implementation for LittleBot firmware
+ * @author Nestor D. Pereira Neto
+ * @date 2025
+ * 
+ * This file implements the communication task responsible for:
+ * - Reading motor status from FreeRTOS queues
+ * - Encoding data using Protocol Buffers (nanopb)
+ * - Transmitting data via Bluetooth/UART
+ * - Processing incoming commands
+ * 
+ * @defgroup Communication Communication Task
+ * @{
+ */
+
 #include "littlebot_firmware/task_communication.h"
 #include "littlebot_firmware/types.h"
  
-#define SERIAL_READ_TASK_STACK_SIZE 512
-#define SERIAL_READ_TASK_DELAY      100
+#define SERIAL_READ_TASK_STACK_SIZE 512  /**< Stack size for communication task */
+#define SERIAL_READ_TASK_DELAY      100  /**< Task delay in milliseconds */
 
 extern QueueHandle_t g_pCommandVelLeftQueue;
 extern QueueHandle_t g_pStatusVelLeftQueue;
@@ -124,6 +140,19 @@ static void CommunicationTask(void *pvParameters) {
 }
 
 
+/**
+ * @brief Initialize and create the communication task
+ * 
+ * Creates the FreeRTOS communication task responsible for handling
+ * robot status transmission and command reception via Bluetooth/UART.
+ * 
+ * @return 0 on success, 1 on failure
+ * 
+ * @note This function should be called during system initialization
+ *       before starting the FreeRTOS scheduler.
+ * 
+ * @see CommunicationTask
+ */
 uint32_t CommunicationTaskInit(void) {
     if( xTaskCreate(CommunicationTask,
                     (const portCHAR *)"Communication Task",
@@ -137,3 +166,5 @@ uint32_t CommunicationTaskInit(void) {
     /* Success. */
     return(0);
 }
+
+/** @} */ // end of Communication group

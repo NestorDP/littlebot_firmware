@@ -240,5 +240,36 @@ help :
 	@echo - NANOPB_GENERATOR: $(NANOPB_GENERATOR)
 	@echo
 
+#------------------------------------------------------------------------------
+# Documentation targets
+#------------------------------------------------------------------------------
 
-.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help size
+# Generate documentation with Doxygen
+docs:
+	@echo "Generating documentation with Doxygen..."
+	@if command -v doxygen >/dev/null 2>&1; then \
+		doxygen Doxyfile; \
+		echo "Documentation generated in docs/html/"; \
+		echo "Open docs/html/index.html in your browser"; \
+	else \
+		echo "Error: Doxygen not installed. Install with:"; \
+		echo "  Ubuntu/Debian: sudo apt install doxygen"; \
+	fi
+
+# Clean documentation
+docs-clean:
+	@echo "Cleaning documentation..."
+	@rm -rf docs/html docs/latex docs/man docs/rtf docs/xml
+	@echo "Documentation cleaned."
+
+# View documentation (Linux only)
+docs-view: docs
+	@if command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open docs/html/index.html; \
+	else \
+		echo "Open docs/html/index.html in your browser"; \
+	fi
+
+#------------------------------------------------------------------------------
+
+.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help size docs docs-clean docs-view

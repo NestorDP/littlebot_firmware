@@ -105,4 +105,11 @@ dkms.conf
 
 gcc/
 
+# Doxygen generated documentation
+docs/html/
+docs/latex/
+docs/man/
+docs/rtf/
+docs/xml/
+
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,visualstudiocode
