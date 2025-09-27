@@ -23,7 +23,7 @@
  * @file task_communication.c
  * @brief Communication task implementation for LittleBot firmware
  * @author Nestor D. Pereira Neto
- * @date 2025
+ * @date 2022-2025
  * 
  * This file implements the communication task responsible for:
  * - Reading motor status from FreeRTOS queues
