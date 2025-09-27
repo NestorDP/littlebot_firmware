@@ -65,16 +65,10 @@ static void vTaskMotorController(void *pvParameters) {
     xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
     console.Printf("Left Motor Controller task started\n");
     xSemaphoreGive(g_pUartLoggerSemaphore);
-    // wheel_data.command_velocity = 10.0f;
-    // wheel_data.status_velocity = 20.0f;
-    // wheel_data.status_position = 30.0f;
   } else {
     xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
     console.Printf("Right Motor Controller task started\n");
     xSemaphoreGive(g_pUartLoggerSemaphore);
-    // wheel_data.command_velocity = -100.0f;
-    // wheel_data.status_velocity = -200.0f;
-    // wheel_data.status_position = -300.0f;
   }
   
   while(1) {
@@ -85,16 +79,10 @@ static void vTaskMotorController(void *pvParameters) {
       xQueueReceive(g_pCommandVelLeftQueue, &wheel_data.command_velocity, ( TickType_t )  0);
       xQueueSend(g_pStatusVelLeftQueue, &wheel_data.status_velocity, 0);
       xQueueSend(g_pStatusPosLeftQueue, &wheel_data.status_position, 0);
-      xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
-      console.Printf("Left Motor DATA\n");
-      xSemaphoreGive(g_pUartLoggerSemaphore);
     } else {
       xQueueReceive(g_pCommandVelRightQueue, &wheel_data.command_velocity, ( TickType_t ) 0);
       xQueueSend(g_pStatusVelRightQueue, &wheel_data.status_velocity, 0);
       xQueueSend(g_pStatusPosRightQueue, &wheel_data.status_position, 0);
-      xSemaphoreTake(g_pUartLoggerSemaphore, portMAX_DELAY);
-      console.Printf("Right Motor DATA\n");
-      xSemaphoreGive(g_pUartLoggerSemaphore);
     }
 
     // controled_velocity = pid.Controller(&pid, command_velocity, status_velocity);
