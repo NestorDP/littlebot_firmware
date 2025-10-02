@@ -248,6 +248,8 @@ docs:
 	@echo "Generating documentation with Doxygen..."
 	@if command -v doxygen >/dev/null 2>&1; then \
 		doxygen docs/Doxyfile; \
+		mkdir -p docs/html/docs/images; \
+		cp docs/images/* docs/html/docs/images/ 2>/dev/null || true; \
 		echo "Documentation generated in docs/html/"; \
 		echo "Open docs/html/index.html in your browser"; \
 	else \
