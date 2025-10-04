@@ -147,10 +147,10 @@ TARGET_IMAGE  = image.bin
 
 # Make rules:
 #---------------------
-print-%  : ; @echo $* = $($*)
-
+.PHONY :  all
 all : $(TARGET_IMAGE) size
 
+.PHONY :  rebuild
 rebuild : clean all
 
 $(TARGET_IMAGE) : $(OBJ_DIR) $(ELF_IMAGE)
@@ -165,8 +165,10 @@ $(ELF_IMAGE) : $(OBJS) $(LINKER_SCRIPT)
 	$(LD) -L $(OBJ_DIR) -L $(TIVAWARE_DIR)/driverlib/gcc -T $(LINKER_SCRIPT) $(OBJS) \
     --gc-sections -o $@ -ldriver '$(LIBC)' '$(LIBGCC)' '$(LIBM)' '$(LIBNOSYS)'
 
+.PHONY : debug
 debug : _debug_flags all
 
+.PHONY : debug_rebuild
 debug_rebuild : _debug_flags rebuild
 
 _debug_flags :
@@ -204,46 +206,63 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(DEP_FRTOS_CONFIG)
 
 # Size code:
 #---------------------
+.PHONY : size
 size : 
 	$(SIZE) $(ELF_IMAGE)
 
-
 # Cleanup directives:
 #---------------------
+.PHONY : clean_obj
 clean_obj :
 	$(RM) -r $(OBJ_DIR)
 
+.PHONY : clean_intermediate
 clean_intermediate : clean_obj
 	$(RM) *.elf
 	$(RM) *.img
 	$(RM) ${SRC_DIR}*.pb.c
 	$(RM) ${SRC_DIR}*.pb.h
 	
+.PHONY : clean
 clean : clean_intermediate
 	$(RM) *.bin
 
+# Debug target for file type detection
+#--------------------
+.PHONY : debug-filetype
+debug-filetype :
+	@echo "SRC_DIR: $(SRC_DIR)"
+	@echo "SRC_SOURCES: $(SRC_SOURCES)"
+
 # Short help instructions:
 #---------------------
+.PHONY : help
 help :
+	@echo "LittleBot Firmware Makefile"
+	@echo "==========================="
+	@echo ""
+	@echo "Targets:"
+	@echo "  all       	     - Build the firmware and create the target image '$(TARGET_IMAGE)'"
+	@echo "  rebuild   	     - Rebuild everything from scratch"
+	@echo "  debug     	     - Build with debug symbols"
+	@echo "  debug_rebuild      - Rebuild with debug symbols"
+	@echo "  size     	     - Show binary size info for '$(ELF_IMAGE)'"
+	@echo "  clean_obj 	     - Remove object files"
+	@echo "  clean_intermediate - Remove intermediate files (keep image)"
+	@echo "  clean     	     - Remove all generated files (including '$(TARGET_IMAGE)')"
+	@echo "  docs      	     - Generate Doxygen documentation"
+	@echo "  docs-view 	     - Generate and open Doxygen documentation"
+	@echo "  docs-clean	     - Clean generated documentation"
+	@echo "  help     	     - Show this help message"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make all           # Build firmware"
+	@echo "  make debug         # Build with debug symbols"
+	@echo "  make docs          # Generate documentation"
 	@echo
-	@echo Valid targets:
-	@echo - all: builds missing dependencies and creates the target image \'$(TARGET_IMAGE)\'.
-	@echo - rebuild: rebuilds all dependencies and creates the target image \'$(TARGET_IMAGE)\'.
-	@echo - debug: same as \'all\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - debug_rebuild: same as \'rebuild\', also includes debugging symbols to \'$(ELF_IMAGE)\'.
-	@echo - clean_obj: deletes all object files, only keeps \'$(ELF_IMAGE)\' and \'$(TARGET_IMAGE)\'.
-	@echo - clean_intermediate: deletes all intermediate binaries, only keeps the target image \'$(TARGET_IMAGE)\'.
-	@echo - clean: deletes all intermediate binaries, incl. the target image \'$(TARGET_IMAGE)\'.
-	@echo - help: displays these help instructions.
-	@echo - $(PROTOC)
-	@echo - $(PROTOC_OPTS)
-	@echo - NANOPB_GENERATOR: $(NANOPB_GENERATOR)
-	@echo
-
 # Documentation targets
 #---------------------
-
-# Generate documentation with Doxygen
+.PHONY : docs
 docs:
 	@echo "Generating documentation with Doxygen..."
 	@if command -v doxygen >/dev/null 2>&1; then \
@@ -257,20 +276,18 @@ docs:
 		echo "  Ubuntu/Debian: sudo apt install doxygen"; \
 	fi
 
-# Clean documentation
+.PHONY : docs-clean
 docs-clean:
 	@echo "Cleaning documentation..."
 	@rm -rf docs/html docs/latex docs/man docs/rtf docs/xml
 	@echo "Documentation cleaned."
 
-# View documentation in the default web browser
+.PHONY : docs-view
 docs-view: docs
 	@if command -v xdg-open >/dev/null 2>&1; then \
 		xdg-open docs/html/index.html; \
 	else \
 		echo "Open docs/html/index.html in your browser"; \
 	fi
-
 #------------------------------------------------------------------------------
-
-.PHONY :  all rebuild clean clean_intermediate clean_obj debug debug_rebuild _debug_flags help size docs docs-clean docs-view
+# End of Makefile
