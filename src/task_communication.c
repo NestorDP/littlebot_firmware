@@ -96,12 +96,18 @@ static void CommunicationTask(void *pvParameters) {
     xQueueReceive(g_pStatusPosRightQueue, &wheels_data.right.status_position, 0);
 
     /* Load the status into the protobuf message fields */
-    wheels_pb_msg.side[LEFT].command_velocity = wheels_data.left.command_velocity;
-    wheels_pb_msg.side[LEFT].status_velocity = wheels_data.left.status_velocity;
-    wheels_pb_msg.side[LEFT].status_position = wheels_data.left.status_position;
-    wheels_pb_msg.side[RIGHT].command_velocity = wheels_data.right.command_velocity;
-    wheels_pb_msg.side[RIGHT].status_velocity = wheels_data.right.status_velocity;
-    wheels_pb_msg.side[RIGHT].status_position = wheels_data.right.status_position;
+    wheels_pb_msg.side[LEFT].has_command_velocity = true;
+    wheels_pb_msg.side[LEFT].command_velocity = 1.5f;  /* Placeholder for command velocity */
+    wheels_pb_msg.side[LEFT].has_status_velocity = true;
+    wheels_pb_msg.side[LEFT].status_velocity = wheels_data.left.status_velocity;   /* Placeholder for status velocity */
+    wheels_pb_msg.side[LEFT].has_status_position = true;
+    wheels_pb_msg.side[LEFT].status_position = wheels_data.left.status_position;    /* Placeholder for status position */
+    wheels_pb_msg.side[RIGHT].has_command_velocity = true;
+    wheels_pb_msg.side[RIGHT].command_velocity = 1.5f;  /* Placeholder for command velocity */
+    wheels_pb_msg.side[RIGHT].has_status_velocity = true;
+    wheels_pb_msg.side[RIGHT].status_velocity = wheels_data.right.status_velocity;   /* Placeholder for status velocity */
+    wheels_pb_msg.side[RIGHT].has_status_position = true;
+    wheels_pb_msg.side[RIGHT].status_position = wheels_data.right.status_position;    /* Placeholder for status position */
 
     /* Receive message from serial and process requests */
     bluetooth.Read(rx_msg);
