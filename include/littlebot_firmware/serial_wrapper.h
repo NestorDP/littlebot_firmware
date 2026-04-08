@@ -28,8 +28,10 @@
 
 #include "littlebot_drivers/uart_port.h"
 
+// forward declaration of SerialWrapper structure
 typedef struct SerialWrapperClass SerialWrapper;
 
+// function pointer types
 typedef int32_t (*ptfRead)(char *msg);
 typedef void (*ptfWrite)(char *msg, size_t length);
 typedef void (*ptfPrintf)(char *msg);
