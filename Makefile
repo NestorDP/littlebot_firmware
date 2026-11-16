@@ -247,7 +247,7 @@ help :
 docs:
 	@echo "Generating documentation with Doxygen..."
 	@if command -v doxygen >/dev/null 2>&1; then \
-		doxygen Doxyfile; \
+		doxygen docs/Doxyfile; \
 		echo "Documentation generated in docs/html/"; \
 		echo "Open docs/html/index.html in your browser"; \
 	else \
