@@ -111,5 +111,6 @@ docs/latex/
 docs/man/
 docs/rtf/
 docs/xml/
+docs/_build/
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,visualstudiocode
